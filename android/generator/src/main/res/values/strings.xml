@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">通知生成器</string>
+    <string name="header_title">通知生成器</string>
+    <string name="header_subtitle">内置自然语言语料，随机弹出第三方通知，用来演示拦截器的分流效果</string>
+    <string name="label_package">本应用包名</string>
+    <string name="label_permission">通知权限</string>
+    <string name="permission_granted">已允许</string>
+    <string name="permission_missing">未允许（点击下方按钮授权）</string>
+    <string name="action_grant">申请通知权限</string>
+    <string name="action_post_one">随机弹一条</string>
+    <string name="action_post_ten">连发 10 条</string>
+    <string name="action_auto_start">自动：每 2.5 秒</string>
+    <string name="action_auto_stop">停止自动</string>
+    <string name="action_loud_mode">响铃模式：噪声类别也用会响的渠道（验证拦截是否漏响）</string>
+    <string name="action_clear">清空通知</string>
+    <string name="action_listener_settings">打开通知使用权</string>
+    <string name="hint_whitelist">演示建议：在拦截器里导入「生成器分流」示例规则，只保留私聊/验证码/银行/物流/日程，其余自动取消。</string>
+    <string name="section_log">生成记录</string>
+    <string name="log_empty">还没有生成任何通知。</string>
+    <string name="auto_stopped">已停止自动生成</string>
+</resources>

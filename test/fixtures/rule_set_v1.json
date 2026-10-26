@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "globalEnabled": true,
+  "defaultAction": "allow",
+  "rules": [
+    {
+      "id": "r1",
+      "name": "屏蔽电商营销",
+      "enabled": true,
+      "action": "intercept",
+      "match": {
+        "mode": "all",
+        "packages": ["com.example.shop"],
+        "keywordsAny": ["秒杀", "红包"],
+        "titleRegex": "优惠|限时",
+        "textRegex": null,
+        "channelIds": ["marketing"],
+        "isOngoing": false,
+        "isClearable": true,
+        "quietHours": { "from": "22:00", "to": "08:00", "days": [1, 2, 3, 4, 5, 6, 7] }
+      }
+    }
+  ]
+}

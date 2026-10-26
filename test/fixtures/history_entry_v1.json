@@ -1,0 +1,32 @@
+{
+  "id": "h1",
+  "timestamp": 1760000000000,
+  "snapshot": {
+    "key": "0|com.example.shop|1|null|10001",
+    "id": 1,
+    "packageName": "com.example.shop",
+    "appLabel": "示例商城",
+    "postTime": 1760000000000,
+    "title": "限时优惠",
+    "text": "今日秒杀开始",
+    "bigText": null,
+    "textLines": ["行1", "行2"],
+    "subText": null,
+    "tickerText": null,
+    "category": "promo",
+    "channelId": "marketing",
+    "channelName": "营销",
+    "groupKey": null,
+    "isGroupSummary": false,
+    "isOngoing": false,
+    "isClearable": true,
+    "priority": 0,
+    "progress": -1,
+    "extras": { "android.title": "限时优惠" }
+  },
+  "action": "intercept",
+  "matchedRuleId": "r1",
+  "matchedRuleName": "屏蔽电商营销",
+  "cancelStatus": "success",
+  "note": null
+}

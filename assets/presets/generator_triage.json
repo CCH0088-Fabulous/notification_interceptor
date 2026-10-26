@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "globalEnabled": true,
+  "defaultAction": "allow",
+  "rules": [
+    {
+      "id": "preset-gen-keep-facts",
+      "name": "生成器 · 保留验证码/银行/物流/日程",
+      "enabled": true,
+      "action": "allow",
+      "match": {
+        "mode": "all",
+        "packages": ["dev.poc.notifgen"],
+        "keywordsAny": [],
+        "titleRegex": null,
+        "textRegex": null,
+        "channelIds": ["gen_code", "gen_bank", "gen_logistics", "gen_calendar"],
+        "isOngoing": null,
+        "isClearable": null,
+        "quietHours": null
+      }
+    },
+    {
+      "id": "preset-gen-keep-keywords",
+      "name": "生成器 · 关键词兜底保留",
+      "enabled": true,
+      "action": "allow",
+      "match": {
+        "mode": "all",
+        "packages": ["dev.poc.notifgen"],
+        "keywordsAny": ["验证码", "入账", "取件码", "会议"],
+        "titleRegex": null,
+        "textRegex": null,
+        "channelIds": [],
+        "isOngoing": null,
+        "isClearable": null,
+        "quietHours": null
+      }
+    },
+    {
+      "id": "preset-gen-keep-chat",
+      "name": "生成器 · 保留私聊与群聊",
+      "enabled": true,
+      "action": "allow",
+      "match": {
+        "mode": "all",
+        "packages": ["dev.poc.notifgen"],
+        "keywordsAny": [],
+        "titleRegex": null,
+        "textRegex": null,
+        "channelIds": ["gen_chat", "gen_group"],
+        "isOngoing": null,
+        "isClearable": null,
+        "quietHours": null
+      }
+    },
+    {
+      "id": "preset-gen-drop-rest",
+      "name": "生成器 · 其余全部拦截",
+      "enabled": true,
+      "action": "intercept",
+      "match": {
+        "mode": "all",
+        "packages": ["dev.poc.notifgen"],
+        "keywordsAny": [],
+        "titleRegex": null,
+        "textRegex": null,
+        "channelIds": [],
+        "isOngoing": null,
+        "isClearable": null,
+        "quietHours": null
+      }
+    }
+  ]
+}

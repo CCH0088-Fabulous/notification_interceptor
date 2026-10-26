@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+        通知生成器：内置自然语言语料，随机弹出各类通知，用来演示"第三方 App 发通知"
+        这一侧的真实输入。它与拦截器必须是两个包——拦截器放行自身通知，同包就无法演示过滤。
+    -->
+    <application
+        android:allowBackup="false"
+        android:label="@string/app_name">
+
+        <activity
+            android:name=".GeneratorActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".GenReceiver"
+            android:exported="true" />
+    </application>
+</manifest>

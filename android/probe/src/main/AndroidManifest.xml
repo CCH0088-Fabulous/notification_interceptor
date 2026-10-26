@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+        测试探针：只用于在验收环境里制造各种形态的通知。
+        没有界面，全部通过 adb broadcast 驱动，便于脚本化与可重复。
+    -->
+    <application android:label="Notification Probe">
+        <receiver
+            android:name=".ProbeReceiver"
+            android:exported="true" />
+    </application>
+</manifest>
