@@ -240,6 +240,22 @@ function Get-GeneratorTags {
     return $present
 }
 
+# 从生成器日志读取"发送方 ground truth"：tag → keep/drop。
+# 生成器 post() 会输出 GEN|post|<tag>|<category>|<verdict>|<text>，
+# verdict ∈ {keep, drop, drop-loud}，后两者都归一化为 drop。
+# 这是唯一权威来源：期望值来自发送方自己声明的意图，不再由测试脚本按渠道/关键词推导，
+# 从而"规则配置写错"与"引擎实现写错"都能被 e2e 暴露出来。
+function Read-GeneratorVerdicts {
+    $map = @{}
+    foreach ($line in (Adb logcat -d -s NotifGen)) {
+        if ($line -match 'GEN\|post\|(gen_[^|]+)\|[^|]+\|(keep|drop-loud|drop)\|') {
+            $verdict = if ($matches[2] -eq 'keep') { 'keep' } else { 'drop' }
+            $map[$matches[1]] = $verdict
+        }
+    }
+    return $map
+}
+
 # 把仓库里的预设 JSON 直接写到设备上的规则文件（与 UI 的“导入分流规则”用的是同一份）。
 function Set-RulesFile {
     param([string]$RelativePath)
@@ -565,8 +581,6 @@ if ($Bulk -gt 0 -and (-not $Only -or $Only -eq 'bulk-triage')) {
     $watch = [System.Diagnostics.Stopwatch]::StartNew()
     $roundSize = [Math]::Max(1, $BulkRound)
     $rounds = [int][Math]::Ceiling($Bulk / $roundSize)
-    $keepChannels = @('gen_code', 'gen_bank', 'gen_logistics', 'gen_calendar', 'gen_chat', 'gen_group')
-    $keywords = @('验证码', '入账', '取件码', '会议')
 
     Set-RulesFile 'assets\presets\generator_triage.json'
     # 历史上限 1000 条且按最新保留：旧数据会把新样本挤出窗口，
@@ -576,6 +590,7 @@ if ($Bulk -gt 0 -and (-not $Only -or $Only -eq 'bulk-triage')) {
     Start-Sleep -Milliseconds 800
 
     $samples = New-Object System.Collections.Generic.List[object]
+    $verdicts = @{}   # tag → keep/drop，逐轮从生成器日志累积
     $requested = 0
     $zeroRounds = 0
     Write-Host ("批量采样：目标 {0} 条（{1} 轮 × 最多 {2} 条）" -f $Bulk, $rounds, $roundSize)
@@ -584,6 +599,7 @@ if ($Bulk -gt 0 -and (-not $Only -or $Only -eq 'bulk-triage')) {
         if ($want -le 0) { break }
         # 每轮独立开窗：查询量恒定在一轮之内，不会被全库扫描拖慢，也不会因轮转丢样本。
         $since = Get-DeviceMillis
+        Adb logcat -c | Out-Null   # 清 buffer，只解析本轮发出的 GEN|post
         Adb shell am broadcast -n "$Generator/.GenReceiver" -a "$Generator.POST" --ei count $want --el seed $r | Out-Null
         $requested += $want
 
@@ -602,6 +618,9 @@ if ($Bulk -gt 0 -and (-not $Only -or $Only -eq 'bulk-triage')) {
             Start-Sleep -Milliseconds 1200
         }
         foreach ($item in $round) { $samples.Add($item) }
+        # 读本轮发送方的 ground truth，累积到总映射
+        $roundVerdicts = Read-GeneratorVerdicts
+        foreach ($k in $roundVerdicts.Keys) { $verdicts[$k] = $roundVerdicts[$k] }
         Write-Host ("  第 {0}/{1} 轮：{2}/{3}（累计 {4}）" -f $r, $rounds, $round.Count, $want, $samples.Count)
         if ($round.Count -eq 0) { $zeroRounds++ }
         Adb shell am broadcast -n "$Generator/.GenReceiver" -a "$Generator.CLEAR" | Out-Null
@@ -610,21 +629,22 @@ if ($Bulk -gt 0 -and (-not $Only -or $Only -eq 'bulk-triage')) {
     $watch.Stop()
 
     $uniqueTags = @($samples | ForEach-Object { Get-NotificationTag $_.snapshot.key } | Sort-Object -Unique).Count
+    # 防御：采样里的 tag 必须都能从生成器日志拿到 ground truth。
+    # 有 unresolved 说明 logcat 轮转丢行，这批数据不能用于显著性检验，必须 FAIL。
+    $unresolved = @($samples | Where-Object {
+            -not $verdicts.ContainsKey((Get-NotificationTag $_.snapshot.key))
+        })
     foreach ($entry in $samples) {
-        $keep = $entry.snapshot.channelId -in $keepChannels
-        if (-not $keep) {
-            foreach ($k in $keywords) {
-                if ("$($entry.snapshot.title)$($entry.snapshot.text)" -match [regex]::Escape($k)) { $keep = $true; break }
-            }
-        }
-        Add-Record -Scenario 'bulk-triage' -Entry $entry -Expected $(if ($keep) { 'keep' } else { 'drop' })
+        $tag = Get-NotificationTag $entry.snapshot.key
+        $expect = if ($verdicts.ContainsKey($tag)) { $verdicts[$tag] } else { 'drop' }
+        Add-Record -Scenario 'bulk-triage' -Entry $entry -Expected $expect
     }
     $dropped = @($samples | Where-Object { $_.action -eq 'intercept' }).Count
     $kept = $samples.Count - $dropped
-    $status = if ($zeroRounds -gt 0) { 'FAIL' } else { 'PASS' }
+    $status = if (($zeroRounds -gt 0) -or ($unresolved.Count -gt 0)) { 'FAIL' } else { 'PASS' }
     Add-Result 'bulk-triage' $status `
-    ("samples={0} uniqueTags={1} keep={2} drop={3} requested={4} round={5} zeroRounds={6}" -f `
-            $samples.Count, $uniqueTags, $kept, $dropped, $requested, $roundSize, $zeroRounds) `
+    ("samples={0} uniqueTags={1} keep={2} drop={3} requested={4} round={5} zeroRounds={6} unresolved={7}" -f `
+            $samples.Count, $uniqueTags, $kept, $dropped, $requested, $roundSize, $zeroRounds, $unresolved.Count) `
         $watch.Elapsed.TotalSeconds
 }
 
@@ -767,13 +787,12 @@ if (-not $Only -or $Only -eq 'rules-hot-reload') {
 # 生成器分流：内置语料随机弹 24 条，只有白名单类别应留在通知栏
 if (-not $Only -or $Only -eq 'generator-triage') {
     $watch = [System.Diagnostics.Stopwatch]::StartNew()
-    $keepChannels = @('gen_code', 'gen_bank', 'gen_logistics', 'gen_calendar', 'gen_chat', 'gen_group')
     Set-RulesFile 'assets\presets\generator_triage.json'
     Adb shell am broadcast -n "$Generator/.GenReceiver" -a "$Generator.CLEAR" | Out-Null
     Start-Sleep -Milliseconds 600
 
     $since = Get-DeviceMillis
-    Adb logcat -b events -c | Out-Null
+    Adb logcat -c | Out-Null   # 清 main+events：main 供 GEN|post 解析，events 供响铃统计
     Adb shell am broadcast -n "$Generator/.GenReceiver" -a "$Generator.POST" --ei count 24 --el seed 42 | Out-Null
 
     # 等历史里出现 24 条带 gen_* 渠道的条目。
@@ -790,27 +809,39 @@ if (-not $Only -or $Only -eq 'generator-triage') {
         $watch.Stop()
         Add-Result 'generator-triage' 'FAIL' ("只处理了 {0}/24 条" -f $entries.Count) $watch.Elapsed.TotalSeconds
     } else {
+        # ground truth 单源：期望值读生成器日志 GEN|post 的 keep/drop，不再按渠道/关键词推导。
+        $verdicts = Read-GeneratorVerdicts
         $present = Get-GeneratorTags
-        $dropEntries = @($entries | Where-Object { $_.snapshot.channelId -notin $keepChannels })
-        $keepEntries = @($entries | Where-Object { $_.snapshot.channelId -in $keepChannels })
-        # 逐条记录期望：渠道在白名单内 → keep，否则检查关键词兜底，再否则 drop
-        $keywords = @('验证码', '入账', '取件码', '会议')
+        # 防御：拿不到某条 tag 的 ground truth 时，必须显式报错而不是静默按 drop 处理，
+        # 否则 logcat 轮转/生成器未输出会导致测试假阳性（恒 PASS）。
+        $unresolved = @($entries | Where-Object {
+                -not $verdicts.ContainsKey((Get-NotificationTag $_.snapshot.key))
+            })
+        # 逐条记录期望：tag 在生成器判定里 → keep，否则 drop
         foreach ($entry in $entries) {
-            $keepByChannel = $entry.snapshot.channelId -in $keepChannels
-            $keepByKeyword = $false
-            foreach ($k in $keywords) {
-                if ("$($entry.snapshot.title)$($entry.snapshot.text)" -match [regex]::Escape($k)) { $keepByKeyword = $true; break }
-            }
-            $expect = if ($keepByChannel -or $keepByKeyword) { 'keep' } else { 'drop' }
+            $tag = Get-NotificationTag $entry.snapshot.key
+            $expect = if ($verdicts.ContainsKey($tag)) { $verdicts[$tag] } else { 'drop' }
             Add-Record -Scenario 'generator-triage' -Entry $entry -Expected $expect
         }
         Add-EventStats -Scenario 'generator-triage' -Package $Generator
-        $expectedKeepTags = @($keepEntries | ForEach-Object { Get-NotificationTag $_.snapshot.key })
-        # 白名单里实际生成出来的那些必须还在；不在白名单的类别一条都不能留
+        # 应保留的 tag：生成器判定为 keep 的那些
+        $expectedKeepTags = @($entries | Where-Object {
+                $t = Get-NotificationTag $_.snapshot.key
+                $verdicts.ContainsKey($t) -and $verdicts[$t] -eq 'keep'
+            } | ForEach-Object { Get-NotificationTag $_.snapshot.key })
+        # 白名单里实际生成出来的那些必须还在；不在白名单的一条都不能留
         $missing = @($expectedKeepTags | Where-Object { -not $present.ContainsKey($_) })
-        $keepCategories = @('code', 'bank', 'logistics', 'calendar', 'chat', 'group')
-        $intruders = @($present.Keys | Where-Object { $present[$_] -notin $keepCategories })
-        $cancelFailed = @($dropEntries | Where-Object { $_.action -ne 'intercept' -or $_.cancelStatus -ne 'success' })
+        # 残留判定：还在通知栏、但发送方本意是 drop 的 tag
+        $intruders = @($present.Keys | Where-Object {
+                $v = if ($verdicts.ContainsKey($_)) { $verdicts[$_] } else { 'keep' }
+                $v -ne 'keep'
+            })
+        # 应拦的（drop）必须真的被拦成功
+        $cancelFailed = @($entries | Where-Object {
+                $t = Get-NotificationTag $_.snapshot.key
+                $isDrop = $verdicts.ContainsKey($t) -and $verdicts[$t] -eq 'drop'
+                $isDrop -and ($_.action -ne 'intercept' -or $_.cancelStatus -ne 'success')
+            })
         # 允许的通知应该"长久"留下：8 秒后再查一次，集合不变
         Start-Sleep -Seconds 8
         $presentLater = Get-GeneratorTags
@@ -818,12 +849,13 @@ if (-not $Only -or $Only -eq 'generator-triage') {
         $watch.Stop()
 
         $ok = ($missing.Count -eq 0) -and ($intruders.Count -eq 0) -and
-              ($cancelFailed.Count -eq 0) -and ($unstable.Count -eq 0)
-        $detail = "generated={0} kept={1}/{2} present={3} missing={4} intruders={5} cancelFailed={6} unstable={7}" -f `
-            $entries.Count, $keepEntries.Count, $expectedKeepTags.Count, $present.Count,
-            $missing.Count, $intruders.Count, $cancelFailed.Count, $unstable.Count
+              ($cancelFailed.Count -eq 0) -and ($unstable.Count -eq 0) -and
+              ($unresolved.Count -eq 0)
+        $detail = "generated={0} kept={1} present={2} missing={3} intruders={4} cancelFailed={5} unstable={6} unresolved={7}" -f `
+            $entries.Count, $expectedKeepTags.Count, $present.Count,
+            $missing.Count, $intruders.Count, $cancelFailed.Count, $unstable.Count, $unresolved.Count
         if (-not $ok) {
-            $detail += " | missing=[$($missing -join ',')] intruders=[$($intruders -join ',')]"
+            $detail += " | missing=[$($missing -join ',')] intruders=[$($intruders -join ',')] unresolved=[$(($unresolved | ForEach-Object { Get-NotificationTag $_.snapshot.key }) -join ',')]"
         }
         if ($ok) { Add-Result 'generator-triage' 'PASS' $detail $watch.Elapsed.TotalSeconds }
         else { Add-Result 'generator-triage' 'FAIL' $detail $watch.Elapsed.TotalSeconds }
