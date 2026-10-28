@@ -10,6 +10,10 @@
 
 ---
 
+## 本轮规则创建扩展（2026-10-28）
+
+规则 domain 新增 `simple_rule_draft.dart`（简化表单到既有 RuleSpec）和 `rule_topic.dart`（可编辑主题词起点）。presentation 新增 `rule_wizard_page.dart` 与局部字体/黑白主题 `rule_creation_theme.dart`。原生引擎及跨语言 schema 不变。`assets/licenses/` 保存字体 OFL。`docs/usage/rule-creation.md` 记录用法与限制；手动通知验证继续使用现有生成器与 probe，并遵守 `GENERATOR_CONTRACT.md`；临时模拟器自动点击脚本不作为交付工具。不建立 `integration_test/`，不修改通知生成器。
+
 ## 1. 设计原则
 
 | 编号 | 原则 | 落地方式 |

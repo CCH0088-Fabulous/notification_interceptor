@@ -48,13 +48,27 @@ class NotificationRecord {
   final int progress;
   final Map<String, String> extras;
 
+  /// 仅标注系统实际返回的隐藏提示，不修改原始字段或匹配内容。
+  bool get isContentHidden => [text, bigText, ...textLines].any(
+    (value) =>
+        value?.trim().toLowerCase() == 'sensitive notification content hidden',
+  );
+
   String get displayTitle {
+    if (isContentHidden &&
+        (title == null ||
+            title!.trim().isEmpty ||
+            title == appLabel ||
+            title == packageName)) {
+      return '通知内容已隐藏';
+    }
     if (title != null && title!.trim().isNotEmpty) return title!;
     if (appLabel != null && appLabel!.isNotEmpty) return appLabel!;
     return packageName;
   }
 
   String get displayBody {
+    if (isContentHidden) return '系统已隐藏通知内容，无法读取原文';
     if (text != null && text!.trim().isNotEmpty) return text!;
     if (bigText != null && bigText!.trim().isNotEmpty) return bigText!;
     if (textLines.isNotEmpty) return textLines.join(' / ');
@@ -66,18 +80,20 @@ class NotificationRecord {
 
   /// 与 Kotlin `NotificationSnapshot.searchableText` 保持同样的顺序。
   String get searchableText => [
-        title ?? '',
-        text ?? '',
-        bigText ?? '',
-        subText ?? '',
-        ...textLines,
-      ].join('\n');
+    title ?? '',
+    text ?? '',
+    bigText ?? '',
+    subText ?? '',
+    ...textLines,
+  ].join('\n');
 
   factory NotificationRecord.fromJson(Map<String, dynamic> json) {
     final rawExtras = json['extras'];
     final extras = <String, String>{};
     if (rawExtras is Map) {
-      rawExtras.forEach((key, value) => extras[key.toString()] = value.toString());
+      rawExtras.forEach(
+        (key, value) => extras[key.toString()] = value.toString(),
+      );
     }
     return NotificationRecord(
       key: asStringOrNull(json['key']) ?? '',
@@ -105,26 +121,26 @@ class NotificationRecord {
   }
 
   Map<String, dynamic> toJson() => {
-        'key': key,
-        'id': id,
-        'packageName': packageName,
-        'appLabel': appLabel,
-        'postTime': postTime,
-        'title': title,
-        'text': text,
-        'bigText': bigText,
-        'textLines': textLines,
-        'subText': subText,
-        'tickerText': tickerText,
-        'category': category,
-        'channelId': channelId,
-        'channelName': channelName,
-        'groupKey': groupKey,
-        'isGroupSummary': isGroupSummary,
-        'isOngoing': isOngoing,
-        'isClearable': isClearable,
-        'priority': priority,
-        'progress': progress,
-        'extras': extras,
-      };
+    'key': key,
+    'id': id,
+    'packageName': packageName,
+    'appLabel': appLabel,
+    'postTime': postTime,
+    'title': title,
+    'text': text,
+    'bigText': bigText,
+    'textLines': textLines,
+    'subText': subText,
+    'tickerText': tickerText,
+    'category': category,
+    'channelId': channelId,
+    'channelName': channelName,
+    'groupKey': groupKey,
+    'isGroupSummary': isGroupSummary,
+    'isOngoing': isOngoing,
+    'isClearable': isClearable,
+    'priority': priority,
+    'progress': progress,
+    'extras': extras,
+  };
 }

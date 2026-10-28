@@ -8,11 +8,7 @@ import 'widgets/notification_card.dart';
 
 /// 实时通知流：权限引导 + 实时列表。
 class FeedPage extends StatelessWidget {
-  const FeedPage({
-    super.key,
-    required this.feed,
-    required this.access,
-  });
+  const FeedPage({super.key, required this.feed, required this.access});
 
   final FeedController feed;
   final AccessController access;
@@ -23,6 +19,9 @@ class FeedPage extends StatelessWidget {
       listenable: Listenable.merge([feed, access]),
       builder: (context, _) {
         final status = access.status;
+        final items = feed.items
+            .where((item) => !item.record.isGroupSummary)
+            .toList(growable: false);
         return Column(
           children: [
             if (!status.granted)
@@ -42,7 +41,12 @@ class FeedPage extends StatelessWidget {
                 isError: false,
               )
             else
-              _ListeningBar(intercepted: feed.interceptCount, total: feed.items.length),
+              _ListeningBar(
+                intercepted: items
+                    .where((item) => item.decision?.shouldIntercept ?? false)
+                    .length,
+                total: items.length,
+              ),
             _Toolbar(
               loading: feed.loading,
               onRefresh: feed.refreshActive,
@@ -51,20 +55,25 @@ class FeedPage extends StatelessWidget {
             if (feed.error != null)
               _ErrorRow(message: feed.error!, onRetry: feed.refreshActive),
             Expanded(
-              child: feed.items.isEmpty
+              child: items.isEmpty
                   ? EmptyState(
                       icon: Icons.notifications_none,
                       title: '还没有收到通知',
                       message: status.granted
                           ? '等待其他应用发出通知，或点上方刷新拉取当前活动通知。'
                           : '完成授权后，这里会实时显示其他应用的通知。',
-                      action: status.granted ? null : FilledButton(onPressed: access.openSettings, child: const Text('去授权')),
+                      action: status.granted
+                          ? null
+                          : FilledButton(
+                              onPressed: access.openSettings,
+                              child: const Text('去授权'),
+                            ),
                     )
                   : ListView.builder(
                       padding: const EdgeInsets.only(bottom: 24),
-                      itemCount: feed.items.length,
+                      itemCount: items.length,
                       itemBuilder: (context, index) {
-                        final item = feed.items[index];
+                        final item = items[index];
                         return NotificationCard(
                           item: item,
                           onCancel: () => _cancel(context, item),
@@ -82,9 +91,7 @@ class FeedPage extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
     final cancelled = await feed.cancel(item.record);
     messenger.showSnackBar(
-      SnackBar(
-        content: Text(cancelled ? '已请求取消通知' : '取消失败：服务未连接或无权限'),
-      ),
+      SnackBar(content: Text(cancelled ? '已请求取消通知' : '取消失败：服务未连接或无权限')),
     );
   }
 }
@@ -108,18 +115,16 @@ class _ListeningBar extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             '监听中',
-            style: Theme.of(context)
-                .textTheme
-                .labelLarge
-                ?.copyWith(color: scheme.onPrimaryContainer),
+            style: Theme.of(
+              context,
+            ).textTheme.labelLarge?.copyWith(color: scheme.onPrimaryContainer),
           ),
           const Spacer(),
           Text(
             '本次会话：$total 条 · 拦截 $intercepted 条',
-            style: Theme.of(context)
-                .textTheme
-                .labelSmall
-                ?.copyWith(color: scheme.onPrimaryContainer),
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(color: scheme.onPrimaryContainer),
           ),
         ],
       ),
@@ -145,8 +150,12 @@ class _PermissionBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final background = isError ? scheme.errorContainer : scheme.secondaryContainer;
-    final foreground = isError ? scheme.onErrorContainer : scheme.onSecondaryContainer;
+    final background = isError
+        ? scheme.errorContainer
+        : scheme.secondaryContainer;
+    final foreground = isError
+        ? scheme.onErrorContainer
+        : scheme.onSecondaryContainer;
     return Container(
       width: double.infinity,
       color: background,
@@ -154,7 +163,11 @@ class _PermissionBanner extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(isError ? Icons.lock_outline : Icons.link_off, color: foreground, size: 20),
+          Icon(
+            isError ? Icons.lock_outline : Icons.link_off,
+            color: foreground,
+            size: 20,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -162,18 +175,16 @@ class _PermissionBanner extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: foreground),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(color: foreground),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   message,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: foreground),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: foreground),
                 ),
               ],
             ),
@@ -249,10 +260,9 @@ class _ErrorRow extends StatelessWidget {
           Expanded(
             child: Text(
               message,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: scheme.onErrorContainer),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: scheme.onErrorContainer),
             ),
           ),
           TextButton(onPressed: onRetry, child: const Text('重试')),

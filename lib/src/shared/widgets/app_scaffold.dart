@@ -6,6 +6,10 @@ import '../../features/feed/presentation/feed_page.dart';
 import '../../features/history/presentation/history_controller.dart';
 import '../../features/history/presentation/history_page.dart';
 import '../../features/rules/domain/rule_spec.dart';
+import '../../features/rules/domain/simple_rule_draft.dart';
+import '../../features/feed/domain/notification_record.dart';
+import '../../features/rules/presentation/rule_wizard_page.dart';
+import '../../features/rules/presentation/rule_creation_theme.dart';
 import '../../features/rules/presentation/rule_editor_page.dart';
 import '../../features/rules/presentation/rules_controller.dart';
 import '../../features/rules/presentation/rules_page.dart';
@@ -62,6 +66,11 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
       appBar: AppBar(
         title: Text(_titles[_index]),
         actions: [
+          if (_index == 1)
+            TextButton(
+              onPressed: () => _openAdvancedEditor(),
+              child: const Text('高级创建'),
+            ),
           if (_index == 0)
             IconButton(
               tooltip: '刷新',
@@ -128,22 +137,82 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
     );
   }
 
+  Future<List<NotificationRecord>> _ruleSamples() async {
+    final active = await widget.feed.loadSamples();
+    await widget.history.load();
+    if (widget.history.error != null) throw StateError('历史读取失败');
+    final records = <String, NotificationRecord>{};
+    for (final record in [
+      ...widget.history.entries.map((entry) => entry.record),
+      ...widget.feed.items.map((item) => item.record),
+      ...active,
+    ]) {
+      if (record.key.isNotEmpty &&
+          record.packageName.trim().isNotEmpty &&
+          !record.isGroupSummary) {
+        records[record.key] = record;
+      }
+    }
+    return records.values.toList()
+      ..sort((a, b) => b.postTime.compareTo(a.postTime));
+  }
+
   Future<void> _openEditor([RuleSpec? initial]) async {
-    final result = await Navigator.of(context).push<RuleSpec>(
+    await widget.rules.load();
+    if (!mounted) return;
+    if (widget.rules.error != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('规则读取失败，请重试')));
+      return;
+    }
+    if (initial != null && !SimpleRuleDraft.canEdit(initial)) {
+      await _openAdvancedEditor(initial);
+      return;
+    }
+    final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (context) => RuleEditorPage(
-          initial: initial,
-          loadPackages: () async {
-            await widget.rules.loadSeenPackages();
-            return widget.rules.seenPackages;
-          },
-          loadSamples: widget.feed.loadSamples,
-          evaluate: (sample, draft) => widget.rules.evaluate(sample, draft: draft),
+        builder: (context) => Theme(
+          data: RuleCreationTheme.build(),
+          child: RuleWizardPage(
+            controller: widget.rules,
+            initial: initial,
+            loadPackages: () async {
+              await widget.rules.loadSeenPackages();
+              if (widget.rules.error != null) throw StateError('应用列表读取失败');
+              return widget.rules.seenPackages;
+            },
+            loadSamples: _ruleSamples,
+          ),
         ),
       ),
     );
-    if (result != null) {
-      await widget.rules.upsert(result);
+    if (saved == true && mounted) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('规则已保存')));
     }
+  }
+
+  Future<void> _openAdvancedEditor([RuleSpec? initial]) async {
+    final result = await Navigator.of(context).push<RuleSpec>(
+      MaterialPageRoute(
+        builder: (context) => Theme(
+          data: RuleCreationTheme.build(),
+          child: RuleEditorPage(
+            initial: initial,
+            loadPackages: () async {
+              await widget.rules.loadSeenPackages();
+              if (widget.rules.error != null) throw StateError('应用列表读取失败');
+              return widget.rules.seenPackages;
+            },
+            loadSamples: _ruleSamples,
+            evaluate: (sample, draft) =>
+                widget.rules.evaluate(sample, draft: draft),
+          ),
+        ),
+      ),
+    );
+    if (result != null) await widget.rules.upsert(result);
   }
 }

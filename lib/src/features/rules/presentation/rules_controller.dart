@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 import '../../../shared/domain/decision.dart';
@@ -10,7 +12,8 @@ import '../domain/rules_repository.dart';
 
 /// 规则编辑与持久化的唯一状态源。保存后立即回写原生校验结果。
 class RulesController extends ChangeNotifier {
-  RulesController({required RulesRepository repository}) : _repository = repository;
+  RulesController({required RulesRepository repository})
+    : _repository = repository;
 
   final RulesRepository _repository;
 
@@ -46,6 +49,7 @@ class RulesController extends ChangeNotifier {
   Future<void> loadSeenPackages() async {
     try {
       _seenPackages = await _repository.seenPackages();
+      _error = null;
       notifyListeners();
     } catch (error) {
       _error = error.toString();
@@ -56,19 +60,46 @@ class RulesController extends ChangeNotifier {
   Future<void> setGlobalEnabled(bool enabled) =>
       _persist(_ruleSet.copyWith(globalEnabled: enabled));
 
-  Future<void> upsert(RuleSpec rule) {
+  /// 新保留规则排在首个移出规则之前；旧规则顺序不变，编辑原位替换。
+  RuleSet candidateFor(RuleSpec rule) {
     final rules = [..._ruleSet.rules];
     final index = rules.indexWhere((item) => item.id == rule.id);
     if (index >= 0) {
       rules[index] = rule;
     } else {
-      rules.add(rule);
+      final firstDrop = rules.indexWhere(
+        (r) => r.action == RuleAction.intercept,
+      );
+      if (rule.action == RuleAction.allow && firstDrop >= 0) {
+        rules.insert(firstDrop, rule);
+      } else {
+        rules.add(rule);
+      }
     }
-    return _persist(_ruleSet.copyWith(rules: rules));
+    return _ruleSet.copyWith(rules: rules);
   }
 
-  Future<void> remove(String id) =>
-      _persist(_ruleSet.copyWith(rules: _ruleSet.rules.where((r) => r.id != id).toList()));
+  Future<void> upsert(RuleSpec rule) => _persist(candidateFor(rule));
+
+  /// 只有预览的基础规则未变化时才保存；失败保留草稿，由页面呈现错误。
+  Future<void> saveDraft(RuleSpec rule, {required RuleSet previewBase}) async {
+    if (jsonEncode(previewBase.toJson()) != jsonEncode(_ruleSet.toJson())) {
+      throw StateError('已有规则发生变化，请重新预览');
+    }
+    final latest = await _repository.load();
+    if (jsonEncode(previewBase.toJson()) != jsonEncode(latest.toJson())) {
+      _ruleSet = latest;
+      _issues = validateRuleSet(latest);
+      notifyListeners();
+      throw StateError('已有规则发生变化，请重新预览');
+    }
+    await _persist(candidateFor(rule));
+    if (_error != null) throw StateError('保存失败，请重试');
+  }
+
+  Future<void> remove(String id) => _persist(
+    _ruleSet.copyWith(rules: _ruleSet.rules.where((r) => r.id != id).toList()),
+  );
 
   /// 整体替换（导入预设/备份时使用），保留全局开关之外的一切原样写入。
   Future<void> replaceAll(RuleSet next) => _persist(next);
@@ -80,10 +111,11 @@ class RulesController extends ChangeNotifier {
     return _persist(_ruleSet.copyWith(rules: rules));
   }
 
-  Future<Decision> evaluate(NotificationRecord sample, {RuleSpec? draft}) async {
-    final ruleSet = draft == null
-        ? _ruleSet
-        : _ruleSet.copyWith(rules: [draft]);
+  Future<Decision> evaluate(
+    NotificationRecord sample, {
+    RuleSpec? draft,
+  }) async {
+    final ruleSet = draft == null ? _ruleSet : candidateFor(draft);
     return _repository.evaluate(sample, ruleSet: ruleSet);
   }
 
@@ -91,6 +123,7 @@ class RulesController extends ChangeNotifier {
       _issues.where((issue) => issue.ruleId == ruleId).toList();
 
   Future<void> _persist(RuleSet next) async {
+    final previous = _ruleSet;
     _ruleSet = next;
     notifyListeners();
     try {
@@ -99,6 +132,7 @@ class RulesController extends ChangeNotifier {
       _issues = result.issues;
       _error = null;
     } catch (error) {
+      _ruleSet = previous;
       _error = error.toString();
       _issues = validateRuleSet(_ruleSet);
     }

@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import '../../../core/channel/interceptor_channel.dart';
-import '../../../core/util/json_cast.dart';
 import '../../../shared/domain/decision.dart';
 import '../domain/feed_item.dart';
+import '../domain/notification_event.dart';
 import '../domain/feed_repository.dart';
 import '../domain/notification_record.dart';
 
@@ -70,22 +70,24 @@ class FeedController extends ChangeNotifier {
   }
 
   /// 供规则试运行使用：取当前活动通知作为样例。
-  Future<List<NotificationRecord>> loadSamples() => _repository.activeNotifications();
+  Future<List<NotificationRecord>> loadSamples() =>
+      _repository.activeNotifications();
 
   void _onEvent(Map<String, dynamic> event) {
     switch (event['type']) {
       case BridgeEventType.posted:
-        final raw = event['record'];
-        if (raw is! Map) return;
-        final record = NotificationRecord.fromJson(asStringMap(raw));
-        final decisionData = event['decision'];
+        final parsed = NotificationEvent.fromJson(event);
+        final record = parsed.record;
+        if (record == null ||
+            record.key.isEmpty ||
+            record.packageName.isEmpty) {
+          return;
+        }
         _insert(
           FeedItem(
             record: record,
-            decision: decisionData is Map
-                ? Decision.fromJson(asStringMap(decisionData))
-                : const Decision(reason: 'unknown'),
-            existing: event['existing'] == true,
+            decision: parsed.decision ?? const Decision(reason: 'unknown'),
+            existing: parsed.existing,
           ),
         );
         _error = null;
@@ -101,7 +103,9 @@ class FeedController extends ChangeNotifier {
   }
 
   void _insert(FeedItem item) {
-    final index = _items.indexWhere((existing) => existing.record.key == item.record.key);
+    final index = _items.indexWhere(
+      (existing) => existing.record.key == item.record.key,
+    );
     // 存量快照不覆盖已经带判定结果的实时记录。
     if (index >= 0 && item.decision == null && _items[index].decision != null) {
       return;

@@ -30,9 +30,15 @@ class _FakeRulesRepository implements RulesRepository {
   }
 
   @override
-  Future<Decision> evaluate(NotificationRecord sample, {RuleSet? ruleSet}) async {
+  Future<Decision> evaluate(
+    NotificationRecord sample, {
+    RuleSet? ruleSet,
+  }) async {
     lastEvaluateRuleSet = ruleSet?.toJson();
-    return Decision(action: ruleSet?.defaultAction ?? RuleAction.allow, reason: 'rule');
+    return Decision(
+      action: ruleSet?.defaultAction ?? RuleAction.allow,
+      reason: 'rule',
+    );
   }
 
   @override
@@ -44,7 +50,11 @@ void main() {
     test('load 后暴露规则并做本地校验', () async {
       final controller = RulesController(
         repository: _FakeRulesRepository(
-          const RuleSet(rules: [RuleSpec(id: 'r1', name: '营销', packages: ['com.a'])]),
+          const RuleSet(
+            rules: [
+              RuleSpec(id: 'r1', name: '营销', packages: ['com.a']),
+            ],
+          ),
         ),
       );
       addTearDown(controller.dispose);
@@ -62,11 +72,15 @@ void main() {
       addTearDown(controller.dispose);
       await controller.load();
 
-      await controller.upsert(const RuleSpec(id: 'r1', name: 'a', packages: ['com.a']));
+      await controller.upsert(
+        const RuleSpec(id: 'r1', name: 'a', packages: ['com.a']),
+      );
       expect(controller.ruleSet.rules, hasLength(1));
       expect(controller.issues.single.message, '来自原生');
 
-      await controller.upsert(const RuleSpec(id: 'r1', name: 'b', packages: ['com.b']));
+      await controller.upsert(
+        const RuleSpec(id: 'r1', name: 'b', packages: ['com.b']),
+      );
       expect(controller.ruleSet.rules.single.name, 'b');
       expect(repository.saveCount, 2);
     });
@@ -74,7 +88,11 @@ void main() {
     test('setRuleEnabled 与 remove 更新规则集合', () async {
       final controller = RulesController(
         repository: _FakeRulesRepository(
-          const RuleSet(rules: [RuleSpec(id: 'r1', name: 'a', packages: ['com.a'])]),
+          const RuleSet(
+            rules: [
+              RuleSpec(id: 'r1', name: 'a', packages: ['com.a']),
+            ],
+          ),
         ),
       );
       addTearDown(controller.dispose);
@@ -87,15 +105,18 @@ void main() {
       expect(controller.ruleSet.rules, isEmpty);
     });
 
-    test('保存失败时保留内存修改并记录错误', () async {
-      final repository = _FakeRulesRepository(const RuleSet())..failOnSave = true;
+    test('保存失败时回滚内存修改并记录错误', () async {
+      final repository = _FakeRulesRepository(const RuleSet())
+        ..failOnSave = true;
       final controller = RulesController(repository: repository);
       addTearDown(controller.dispose);
       await controller.load();
 
-      await controller.upsert(const RuleSpec(id: 'r1', name: 'a', packages: ['com.a']));
+      await controller.upsert(
+        const RuleSpec(id: 'r1', name: 'a', packages: ['com.a']),
+      );
 
-      expect(controller.ruleSet.rules, hasLength(1));
+      expect(controller.ruleSet.rules, isEmpty);
       expect(controller.error, isNotNull);
     });
 
@@ -105,7 +126,12 @@ void main() {
       addTearDown(controller.dispose);
 
       await controller.evaluate(
-        const NotificationRecord(key: 'k', id: 1, packageName: 'com.a', postTime: 0),
+        const NotificationRecord(
+          key: 'k',
+          id: 1,
+          packageName: 'com.a',
+          postTime: 0,
+        ),
         draft: const RuleSpec(id: 'draft', name: 'd', packages: ['com.a']),
       );
 
@@ -113,8 +139,100 @@ void main() {
       expect(repository.lastEvaluateRuleSet!['rules'], hasLength(1));
     });
 
+    test('整套预览与保存同序，保留规则插入首个移出规则之前', () async {
+      final repository = _FakeRulesRepository(
+        const RuleSet(
+          rules: [
+            RuleSpec(
+              id: 'keep',
+              name: '原保留',
+              packages: ['app'],
+              action: RuleAction.allow,
+            ),
+            RuleSpec(id: 'drop', name: '原移出', packages: ['app']),
+          ],
+        ),
+      );
+      final controller = RulesController(repository: repository);
+      addTearDown(controller.dispose);
+      await controller.load();
+      final base = controller.ruleSet;
+      const rule = RuleSpec(
+        id: 'new',
+        name: '新保留',
+        keywordsAny: ['会议'],
+        action: RuleAction.allow,
+      );
+      await controller.evaluate(
+        const NotificationRecord(
+          key: 'k',
+          id: 1,
+          packageName: 'app',
+          postTime: 0,
+        ),
+        draft: rule,
+      );
+      expect(
+        (repository.lastEvaluateRuleSet!['rules'] as List).map((r) => r['id']),
+        ['keep', 'new', 'drop'],
+      );
+      await controller.saveDraft(rule, previewBase: base);
+      expect(controller.ruleSet.rules.map((r) => r.id), [
+        'keep',
+        'new',
+        'drop',
+      ]);
+      expect(controller.ruleSet.toJson(), repository.lastEvaluateRuleSet);
+    });
+
+    test('预览后规则变化时拒绝保存，保存失败时向向导报告失败', () async {
+      final repository = _FakeRulesRepository(const RuleSet());
+      final controller = RulesController(repository: repository);
+      addTearDown(controller.dispose);
+      await controller.load();
+      final base = controller.ruleSet;
+      const draft = RuleSpec(id: 'new', name: '新规则', keywordsAny: ['优惠']);
+      await controller.setGlobalEnabled(false);
+      await expectLater(
+        controller.saveDraft(draft, previewBase: base),
+        throwsStateError,
+      );
+      repository.failOnSave = true;
+      await expectLater(
+        controller.saveDraft(draft, previewBase: controller.ruleSet),
+        throwsStateError,
+      );
+      expect(controller.ruleSet.rules, isEmpty);
+      expect(controller.globalEnabled, false);
+    });
+
+    test('原生规则在后台被改变时拒绝覆盖并更新镜像', () async {
+      final repository = _FakeRulesRepository(const RuleSet());
+      final controller = RulesController(repository: repository);
+      addTearDown(controller.dispose);
+      await controller.load();
+      final base = controller.ruleSet;
+      await repository.save(
+        const RuleSet(
+          rules: [
+            RuleSpec(id: 'external', name: '外部规则', packages: ['app']),
+          ],
+        ),
+      );
+      await expectLater(
+        controller.saveDraft(
+          const RuleSpec(id: 'new', name: '新规则', keywordsAny: ['优惠']),
+          previewBase: base,
+        ),
+        throwsStateError,
+      );
+      expect(controller.ruleSet.rules.single.id, 'external');
+    });
+
     test('seenPackages 从仓储读取', () async {
-      final controller = RulesController(repository: _FakeRulesRepository(const RuleSet()));
+      final controller = RulesController(
+        repository: _FakeRulesRepository(const RuleSet()),
+      );
       addTearDown(controller.dispose);
 
       await controller.loadSeenPackages();

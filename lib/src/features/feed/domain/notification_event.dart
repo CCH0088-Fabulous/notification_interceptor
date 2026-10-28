@@ -27,10 +27,16 @@ class NotificationEvent {
   factory NotificationEvent.fromJson(Map<String, dynamic> json) {
     final recordJson = json['record'];
     final decisionJson = json['decision'];
+    final envelope = recordJson is Map ? asStringMap(recordJson) : null;
+    final snapshot = envelope?['snapshot'] ?? envelope;
     return NotificationEvent(
       type: asStringOrNull(json['type']) ?? '',
-      record: recordJson is Map ? NotificationRecord.fromJson(asStringMap(recordJson)) : null,
-      decision: decisionJson is Map ? Decision.fromJson(asStringMap(decisionJson)) : null,
+      record: snapshot is Map
+          ? NotificationRecord.fromJson(asStringMap(snapshot))
+          : null,
+      decision: decisionJson is Map
+          ? Decision.fromJson(asStringMap(decisionJson))
+          : null,
       connected: json['connected'] is bool ? json['connected'] as bool : null,
       granted: json['granted'] is bool ? json['granted'] as bool : null,
       existing: asBool(json['existing']),

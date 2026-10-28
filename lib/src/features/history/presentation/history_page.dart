@@ -40,6 +40,9 @@ class _HistoryPageState extends State<HistoryPage> {
       listenable: widget.controller,
       builder: (context, _) {
         final controller = widget.controller;
+        final entries = controller.entries
+            .where((entry) => !entry.record.isGroupSummary)
+            .toList(growable: false);
         return Column(
           children: [
             _FilterBar(
@@ -57,7 +60,7 @@ class _HistoryPageState extends State<HistoryPage> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: controller.load,
-                child: controller.entries.isEmpty
+                child: entries.isEmpty
                     ? ListView(
                         children: const [
                           SizedBox(height: 80),
@@ -70,9 +73,9 @@ class _HistoryPageState extends State<HistoryPage> {
                       )
                     : ListView.builder(
                         padding: const EdgeInsets.only(bottom: 24),
-                        itemCount: controller.entries.length,
+                        itemCount: entries.length,
                         itemBuilder: (context, index) =>
-                            _HistoryTile(entry: controller.entries[index]),
+                            _HistoryTile(entry: entries[index]),
                       ),
               ),
             ),
@@ -99,8 +102,14 @@ class _HistoryPageState extends State<HistoryPage> {
         title: const Text('清空历史'),
         content: const Text('将删除本地全部历史记录，不可恢复。'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('清空')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('清空'),
+          ),
         ],
       ),
     );
@@ -199,14 +208,22 @@ class _Summary extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 4, 8, 0),
       child: Row(
         children: [
-          Text('共 ${stats.total} 条', style: theme.textTheme.labelMedium),
+          Tooltip(
+            message: '原始历史统计，包含列表中隐藏的系统分组汇总通知',
+            child: Text(
+              '共 ${stats.total} 条',
+              style: theme.textTheme.labelMedium,
+            ),
+          ),
           const SizedBox(width: 12),
           ...RuleAction.values.map(
             (action) => Padding(
               padding: const EdgeInsets.only(right: 8),
               child: Text(
                 '${action.label} ${stats.byAction[action] ?? 0}',
-                style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.outline),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.outline,
+                ),
               ),
             ),
           ),
@@ -214,7 +231,11 @@ class _Summary extends StatelessWidget {
           if (loading)
             const Padding(
               padding: EdgeInsets.only(right: 8),
-              child: SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2)),
+              child: SizedBox(
+                width: 14,
+                height: 14,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
             ),
           IconButton(
             tooltip: '导出 JSON 到剪贴板',
@@ -258,11 +279,26 @@ class _HistoryTile extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: theme.textTheme.bodyMedium,
       ),
-      subtitle: Text(
-        subtitleParts.join(' · '),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.outline),
+      subtitle: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            record.displayBody,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            subtitleParts.join(' · '),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.outline,
+            ),
+          ),
+        ],
       ),
     );
   }

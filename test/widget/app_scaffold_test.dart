@@ -36,17 +36,26 @@ class _Access implements AccessRepository {
 class _Feed implements FeedRepository {
   @override
   Future<List<NotificationRecord>> activeNotifications() async => const [
-        NotificationRecord(
-          key: 'k1',
-          id: 1,
-          packageName: 'com.demo.shop',
-          appLabel: '演示商城',
-          postTime: 1760000000000,
-          title: '限时优惠',
-          text: '今日秒杀开始',
-          channelName: '营销',
-        ),
-      ];
+    NotificationRecord(
+      key: 'k1',
+      id: 1,
+      packageName: 'com.demo.shop',
+      appLabel: '演示商城',
+      postTime: 1760000000000,
+      title: '限时优惠',
+      text: '今日秒杀开始',
+      channelName: '营销',
+    ),
+    NotificationRecord(
+      key: 'summary',
+      id: 2,
+      packageName: 'com.demo.shop',
+      appLabel: '演示商城',
+      postTime: 1760000000000,
+      title: '系统分组汇总',
+      isGroupSummary: true,
+    ),
+  ];
 
   @override
   Future<bool> cancel(String key) async => true;
@@ -57,7 +66,9 @@ class _Feed implements FeedRepository {
 
 class _Rules implements RulesRepository {
   RuleSet ruleSet = const RuleSet(
-    rules: [RuleSpec(id: 'r1', name: '屏蔽营销', packages: ['com.demo.shop'])],
+    rules: [
+      RuleSpec(id: 'r1', name: '屏蔽营销', packages: ['com.demo.shop']),
+    ],
   );
 
   @override
@@ -70,8 +81,10 @@ class _Rules implements RulesRepository {
   }
 
   @override
-  Future<Decision> evaluate(NotificationRecord sample, {RuleSet? ruleSet}) async =>
-      const Decision();
+  Future<Decision> evaluate(
+    NotificationRecord sample, {
+    RuleSet? ruleSet,
+  }) async => const Decision();
 
   @override
   Future<List<String>> seenPackages() async => const ['com.demo.shop'];
@@ -86,20 +99,20 @@ class _History implements HistoryRepository {
 
   @override
   Future<List<HistoryEntry>> query(HistoryQuery query) async => [
-        HistoryEntry(
-          id: 'h1',
-          timestamp: 1760000000000,
-          record: const NotificationRecord(
-            key: 'k1',
-            id: 1,
-            packageName: 'com.demo.shop',
-            postTime: 1760000000000,
-            title: '限时优惠',
-          ),
-          action: RuleAction.intercept,
-          matchedRuleName: '屏蔽营销',
-        ),
-      ];
+    HistoryEntry(
+      id: 'h1',
+      timestamp: 1760000000000,
+      record: const NotificationRecord(
+        key: 'k1',
+        id: 1,
+        packageName: 'com.demo.shop',
+        postTime: 1760000000000,
+        title: '限时优惠',
+      ),
+      action: RuleAction.intercept,
+      matchedRuleName: '屏蔽营销',
+    ),
+  ];
 
   @override
   Future<HistoryStats> stats() async =>
@@ -115,7 +128,10 @@ void main() {
     final events = StreamController<Map<String, dynamic>>.broadcast();
     addTearDown(events.close);
 
-    final access = AccessController(repository: _Access(), events: events.stream);
+    final access = AccessController(
+      repository: _Access(),
+      events: events.stream,
+    );
     final feed = FeedController(repository: _Feed(), events: events.stream);
     final rules = RulesController(repository: _Rules());
     final history = HistoryController(repository: _History());
@@ -128,7 +144,12 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: AppScaffold(access: access, feed: feed, rules: rules, history: history),
+        home: AppScaffold(
+          access: access,
+          feed: feed,
+          rules: rules,
+          history: history,
+        ),
       ),
     );
     await access.refresh();
@@ -140,6 +161,9 @@ void main() {
     // 实时页：应显示监听状态与通知卡片
     expect(find.text('监听中'), findsOneWidget);
     expect(find.text('限时优惠'), findsOneWidget);
+    expect(find.text('系统分组汇总'), findsNothing);
+    expect(feed.items, hasLength(2)); // 实时源记录保留，页面只显示具体消息。
+    expect(find.text('本次会话：1 条 · 拦截 0 条'), findsOneWidget);
 
     await tester.tap(find.text('规则'));
     await tester.pumpAndSettle();
@@ -180,7 +204,12 @@ void main() {
 
     await tester.pumpWidget(
       MaterialApp(
-        home: AppScaffold(access: access, feed: feed, rules: rules, history: history),
+        home: AppScaffold(
+          access: access,
+          feed: feed,
+          rules: rules,
+          history: history,
+        ),
       ),
     );
     await access.refresh();
