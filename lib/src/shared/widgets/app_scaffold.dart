@@ -15,7 +15,7 @@ import '../../features/rules/presentation/rules_controller.dart';
 import '../../features/rules/presentation/rules_page.dart';
 import '../../features/settings/presentation/settings_page.dart';
 
-/// 顶层脚手架：底部导航 + 按 tab 变化的 FAB + 生命周期刷新。
+/// 顶层脚手架：底部导航、规则创建入口与生命周期刷新。
 class AppScaffold extends StatefulWidget {
   const AppScaffold({
     super.key,
@@ -67,9 +67,14 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
         title: Text(_titles[_index]),
         actions: [
           if (_index == 1)
-            TextButton(
-              onPressed: () => _openAdvancedEditor(),
-              child: const Text('高级创建'),
+            PopupMenuButton<String>(
+              tooltip: '更多操作',
+              onSelected: (value) {
+                if (value == 'advanced') _openAdvancedEditor();
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(value: 'advanced', child: Text('高级创建')),
+              ],
             ),
           if (_index == 0)
             IconButton(
@@ -87,6 +92,7 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
             controller: widget.rules,
             onCreate: () => _openEditor(),
             onEdit: _openEditor,
+            appName: _appName,
           ),
           HistoryPage(controller: widget.history),
           SettingsPage(
@@ -96,13 +102,6 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
           ),
         ],
       ),
-      floatingActionButton: _index == 1
-          ? FloatingActionButton.extended(
-              onPressed: () => _openEditor(),
-              icon: const Icon(Icons.add),
-              label: const Text('新建规则'),
-            )
-          : null,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (value) {
@@ -135,6 +134,19 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
         ],
       ),
     );
+  }
+
+  String _appName(String package) {
+    for (final record in [
+      ...widget.feed.items.map((item) => item.record),
+      ...widget.history.entries.map((entry) => entry.record),
+    ]) {
+      if (record.packageName == package &&
+          (record.appLabel?.trim().isNotEmpty ?? false)) {
+        return record.appLabel!.trim();
+      }
+    }
+    return package;
   }
 
   Future<List<NotificationRecord>> _ruleSamples() async {
