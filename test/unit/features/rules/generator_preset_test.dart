@@ -70,5 +70,19 @@ void main() {
       expect(roundTrip.rules.map((rule) => rule.action).toList(),
           [RuleAction.allow, RuleAction.allow, RuleAction.allow, RuleAction.intercept]);
     });
+
+    test('横幅保留渠道覆盖必要通知，推广等渠道仍走兜底拦截', () {
+      final allowChannels = loadPreset().rules
+          .where((rule) => rule.action == RuleAction.allow)
+          .expand((rule) => rule.channelIds)
+          .toSet();
+      expect(allowChannels, containsAll(keepChannels.map((id) => '${id}_banner')));
+      expect(allowChannels, contains('gen_banner_summary'),
+          reason: '取消真实汇总会连带移除已放行的横幅子通知');
+      const dropIds = ['promo', 'marketing', 'news', 'social', 'game', 'spam', 'junk'];
+      for (final id in dropIds) {
+        expect(allowChannels, isNot(contains('gen_${id}_banner')));
+      }
+    });
   });
 }

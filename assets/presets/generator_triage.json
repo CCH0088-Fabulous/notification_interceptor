@@ -14,7 +14,7 @@
         "keywordsAny": [],
         "titleRegex": null,
         "textRegex": null,
-        "channelIds": ["gen_code", "gen_bank", "gen_logistics", "gen_calendar"],
+        "channelIds": ["gen_code", "gen_bank", "gen_logistics", "gen_calendar", "gen_code_banner", "gen_bank_banner", "gen_logistics_banner", "gen_calendar_banner"],
         "isOngoing": null,
         "isClearable": null,
         "quietHours": null
@@ -48,7 +48,7 @@
         "keywordsAny": [],
         "titleRegex": null,
         "textRegex": null,
-        "channelIds": ["gen_chat", "gen_group"],
+        "channelIds": ["gen_chat", "gen_group", "gen_chat_banner", "gen_group_banner", "gen_banner_summary"],
         "isOngoing": null,
         "isClearable": null,
         "quietHours": null

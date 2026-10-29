@@ -1,6 +1,7 @@
 package dev.poc.notifgen
 
 import java.util.Random
+import java.util.Locale
 
 /** 通知的构造形态。聊天类走 MessagingStyle 才像真实 IM。 */
 enum class NoticeStyle { MESSAGING, BIG_TEXT, BASIC }
@@ -37,14 +38,16 @@ data class Draft(
  */
 class NoticeCorpus(private val random: Random) {
 
-    fun pickCategory(): Category {
-        val total = CATEGORIES.sumOf { it.weight }
+    fun pickCategory(categories: List<Category> = CATEGORIES): Category {
+        require(categories.isNotEmpty()) { "至少选择一个通知类别" }
+        require(categories.all { it.weight > 0 }) { "通知类别权重必须大于零" }
+        val total = categories.sumOf { it.weight }
         var ticket = random.nextInt(total)
-        for (category in CATEGORIES) {
+        for (category in categories) {
             ticket -= category.weight
             if (ticket < 0) return category
         }
-        return CATEGORIES.first()
+        return categories.first()
     }
 
     fun findCategory(id: String): Category? = CATEGORIES.firstOrNull { it.id == id }
@@ -63,7 +66,7 @@ class NoticeCorpus(private val random: Random) {
         "game" -> game(category)
         "spam" -> spam(category)
         "junk" -> junk(category)
-        else -> chat(category)
+        else -> throw IllegalArgumentException("未定义语料的通知类别：${category.id}")
     }
 
     private fun chat(category: Category): Draft {
@@ -76,6 +79,11 @@ class NoticeCorpus(private val random: Random) {
             "代码我看过了，那两个注释可以删",
             "这版设计稿我传到共享盘了",
             "下午有空对一下接口吗",
+            "我到楼下了，你下来吧",
+            "[图片] 这个颜色你觉得怎么样？",
+            "刚才信号不好，方便再打给我吗？",
+            "收到，今晚我来订餐厅",
+            "那份文件已经签好了，明早带给你",
         )
         return Draft(category, person, person, text, person)
     }
@@ -90,44 +98,48 @@ class NoticeCorpus(private val random: Random) {
             "发布窗口定在周四晚 8 点",
             "会议室临时换到 5 楼",
             "这周的周报记得周五前发我",
+            "@所有人 请大家确认一下明天的排班",
+            "[文件] 需求评审_v3.pdf",
+            "[图片] 今晚的菜单，大家看看想吃什么",
+            "我先出门了，球场见",
+            "新版本已经发布，有问题在群里反馈",
         )
         return Draft(category, groupName, groupName, "$sender：$text", sender)
     }
 
     private fun code(category: Category): Draft {
         val provider = pick(CODE_PROVIDERS)
-        val code = "%06d".format(random.nextInt(1_000_000))
+        val code = String.format(Locale.ROOT, "%06d", random.nextInt(1_000_000))
         val minutes = pick("3", "5", "10")
         return Draft(
             category = category,
             persona = provider,
-            title = provider,
-            text = "验证码 $code，$minutes 分钟内有效。请勿泄露给他人。",
+            title = "$provider 登录验证",
+            text = "您的验证码为 $code，用于本次登录，$minutes 分钟内有效。工作人员不会向您索要验证码。",
         )
     }
 
     private fun bank(category: Category): Draft {
         val bank = pick(BANKS)
-        val amount = String.format("%,.2f", random.nextInt(2_000_000) / 100.0)
+        val cents = 100 + random.nextInt(1_999_900)
+        val amount = money(cents)
+        val balance = money(cents + 100_000 + random.nextInt(8_000_000))
         val tail = (1000 + random.nextInt(9000)).toString()
         val text = if (random.nextBoolean()) {
-            "您尾号 $tail 的储蓄卡入账 ¥$amount，余额 ¥$amount。"
+            "您尾号 $tail 的储蓄卡收到转账，入账 ¥$amount，账户余额 ¥$balance。"
         } else {
-            "您尾号 $tail 的储蓄卡支出 ¥$amount，如非本人操作请及时联系客服。"
+            "您尾号 $tail 的储蓄卡完成消费，支出 ¥$amount，账户余额 ¥$balance。如非本人操作，请及时联系客服。"
         }
-        return Draft(category, bank, bank, text)
+        return Draft(category, bank, "$bank 账户动账提醒", text)
     }
 
     private fun logistics(category: Category): Draft {
         val courier = pick(COURIERS)
         val shelf = 1 + random.nextInt(9)
         val code = "$shelf-${1 + random.nextInt(6)}-${1000 + random.nextInt(9000)}"
-        val text = if (courier.contains("驿站")) {
-            "您的包裹已到 $courier（$shelf 号楼），取件码 $code，请 18:00 前领取。"
-        } else {
-            "您的快递正在派送，快递员 $code，预计今天 18:00 前送达。"
-        }
-        return Draft(category, courier, courier, text)
+        val tail = 1000 + random.nextInt(9000)
+        val text = "尾号 $tail 的包裹将送至 $courier（$shelf 号楼），取件码 $code。请以实际到件提醒为准。"
+        return Draft(category, courier, "$courier · 包裹动态", text)
     }
 
     private fun calendar(category: Category): Draft {
@@ -139,7 +151,7 @@ class NoticeCorpus(private val random: Random) {
             "接孩子放学",
             "体检 · 空腹",
         )
-        return Draft(category, "日程提醒", "$hour 提醒", "$hour $what")
+        return Draft(category, "日程提醒", "即将开始 · $what", "今天 $hour，$what。距离日程开始还有 15 分钟，请提前安排出行。")
     }
 
     private fun promo(category: Category): Draft {
@@ -149,6 +161,9 @@ class NoticeCorpus(private val random: Random) {
             "您关注的商品降价了，券后 ¥59 起",
             "今日 20:00 大促开场，前 1000 名半价",
             "购物车里有 3 件商品已降价，点击查看",
+            "你的收藏有新优惠：运动鞋直降 80 元，售完即止",
+            "周末好价已上线，生活用品第二件半价",
+            "今晚直播专享价，熟悉的好物补货了",
         )
         return Draft(category, shop, shop, text)
     }
@@ -159,6 +174,9 @@ class NoticeCorpus(private val random: Random) {
             "签到得积分，今日可领 30 积分",
             "会员日双倍积分，仅限今天",
             "您已 7 天未登录，回归礼包已备好",
+            "您的会员专属福利已到账，本周可享两次免运费",
+            "周末双倍成长值，专属好礼等你解锁",
+            "限时加赠：续费年度会员多送 30 天",
         )
         return Draft(category, "会员中心", "会员中心", text)
     }
@@ -169,6 +187,9 @@ class NoticeCorpus(private val random: Random) {
             "刚刚：某球队 3:0 大胜，球迷沸腾",
             "热搜第一：某明星官宣恋情",
             "这五个习惯正在悄悄伤害你的腰",
+            "城市快讯：地铁新线路本周末开通试运营",
+            "你关注的话题更新了，今天有 12 条新动态",
+            "赛后速递：最后一分钟完成逆转，精彩集锦已上线",
         )
         return Draft(category, "热点资讯", "热点资讯", text)
     }
@@ -179,6 +200,9 @@ class NoticeCorpus(private val random: Random) {
             "你有 2 条新评论",
             "你可能认识的人：${pick(PEOPLE)}",
             "你的好友发布了新照片",
+            "${pick(PEOPLE)} 回复了你的评论：这家店我也去过！",
+            "你关注的创作者刚刚更新了一篇笔记",
+            "昨天发布的作品又收到了 8 个赞",
         )
         return Draft(category, "社区互动", "社区互动", text)
     }
@@ -189,6 +213,9 @@ class NoticeCorpus(private val random: Random) {
             "限时活动最后 2 小时，登录领 10 连抽",
             "你的好友冲到了排行榜第 3 名",
             "每日任务已刷新，完成可领 200 金币",
+            "公会好友邀请你组队，今晚一起挑战新副本",
+            "新赛季已开启，专属外观限时返场",
+            "离线收益已达上限，上线即可领取",
         )
         return Draft(category, "游戏中心", "游戏中心", text)
     }
@@ -199,6 +226,8 @@ class NoticeCorpus(private val random: Random) {
             "您的账户存在异常，请点击链接完成验证",
             "低息贷款，秒批 20 万，无需抵押",
             "您有一笔退款待确认，逾期失效",
+            "有一份神秘礼物等您签收，回复即可领取",
+            "专属名额最后一天，快速办理无需等待",
         )
         return Draft(category, "未知来源", "未知来源", text)
     }
@@ -210,11 +239,16 @@ class NoticeCorpus(private val random: Random) {
             "后台有 12 个应用在耗电，点击优化",
             "内存占用 87%，一键加速释放 1.8GB",
             "今日已为您省电 12%，继续保持",
+            "存储空间不足，建议清理重复照片和缓存文件",
+            "检测到长时间未使用的应用，可释放 860MB 空间",
+            "本周设备使用报告已生成，点此查看详情",
         )
         return Draft(category, tool, tool, text)
     }
 
     private fun pick(items: List<String>): String = items[random.nextInt(items.size)]
+
+    private fun money(cents: Int): String = String.format(Locale.ROOT, "%,.2f", cents / 100.0)
 
     private fun pick(vararg items: String): String = items[random.nextInt(items.size)]
 

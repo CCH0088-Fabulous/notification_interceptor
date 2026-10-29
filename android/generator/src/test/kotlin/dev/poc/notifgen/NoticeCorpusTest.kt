@@ -79,6 +79,47 @@ class NoticeCorpusTest {
         assertEquals("gen_code", GeneratorChannels.channelIdFor(keep, loud = true))
     }
 
+    @Test
+    fun `多选抽样只生成所选类别且保留原权重边界`() {
+        val selected = NoticeCorpus.CATEGORIES.filter { it.id in setOf("chat", "group") }
+        val tickets = listOf(0, 11, 12, 19).iterator()
+        val corpus = NoticeCorpus(object : Random() {
+            override fun nextInt(bound: Int): Int {
+                assertEquals(20, bound)
+                return tickets.next()
+            }
+        })
+
+        assertEquals(listOf("chat", "chat", "group", "group"),
+            (1..4).map { corpus.pickCategory(selected).id })
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `空分类选择不能退回全部随机`() {
+        NoticeCorpus(Random(1)).pickCategory(emptyList())
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `新增类别遗漏语料时直接报错而非生成聊天文案`() {
+        val undefined = NoticeCorpus.CATEGORIES.first().copy(id = "undefined")
+        NoticeCorpus(Random(1)).next(undefined)
+    }
+
+    @Test
+    fun `扩充文案保持保留分类和关键词兜底契约`() {
+        val keepIds = setOf("chat", "group", "code", "bank", "logistics", "calendar")
+        assertEquals(keepIds, NoticeCorpus.CATEGORIES.filter { it.keep }.map { it.id }.toSet())
+        val corpus = NoticeCorpus(Random(42))
+        val allowKeywords = listOf("验证码", "入账", "取件码", "会议")
+        NoticeCorpus.CATEGORIES.filter { !it.keep }.forEach { category ->
+            repeat(100) {
+                val draft = corpus.next(category)
+                assertFalse("${category.id} 意外命中白名单：${draft.text}",
+                    allowKeywords.any { it in draft.title || it in draft.text })
+            }
+        }
+    }
+
     private fun sequence(seed: Long, count: Int): List<String> {
         val corpus = NoticeCorpus(Random(seed))
         return (1..count).map {
