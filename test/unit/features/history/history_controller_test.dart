@@ -198,6 +198,11 @@ void main() {
     final c = _controllerFor(repo);
     addTearDown(c.dispose);
     await c.load();
+    c.setSearch('old');
+    c.setPeriod(HistoryPeriod.all);
+    await c.setActionFilter(RuleAction.intercept);
+    await c.setPackageFilter('demo.app');
+    c.setRuleFilter(historyRuleKey(c.allEntries.first));
     repo.pending = Completer();
     final load = c.load();
     await c.clear();
@@ -208,6 +213,11 @@ void main() {
     expect(c.overview.removedRate, 0);
     expect(c.loading, false);
     expect(repo.clearCount, 1);
+    expect(c.search, isEmpty);
+    expect(c.query.action, isNull);
+    expect(c.query.packageName, isNull);
+    expect(c.ruleFilter, isNull);
+    expect(c.period, HistoryPeriod.today);
   });
 
   test('读取失败保留上次记录，成功重试清除错误，导出保持原始仓储结果', () async {

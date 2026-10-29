@@ -3,16 +3,25 @@ import 'package:flutter/material.dart';
 import '../../../core/util/time_format.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../shared/domain/rule_action.dart';
+import '../../rules/presentation/rules_controller.dart';
 import '../domain/history_entry.dart';
 import '../domain/history_overview.dart';
 import 'history_controller.dart';
 import 'history_display.dart';
 import 'history_sheets.dart';
-export 'history_sheets.dart' show showHistoryActions;
+import 'history_rules_banner.dart';
+export 'history_sheets.dart' show showHistoryActions, confirmClearHistory;
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key, required this.controller});
+  const HistoryPage({
+    super.key,
+    required this.controller,
+    this.rules,
+    this.appName,
+  });
   final HistoryController controller;
+  final RulesController? rules;
+  final String Function(String)? appName;
   @override
   State<HistoryPage> createState() => _HistoryPageState();
 }
@@ -23,11 +32,33 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     super.initState();
     _search.text = widget.controller.search;
+    widget.controller.addListener(_syncSearch);
     widget.controller.load();
+  }
+
+  void _syncSearch() {
+    final search = widget.controller.search;
+    if (_search.text.trim() != search) {
+      _search.value = TextEditingValue(
+        text: search,
+        selection: TextSelection.collapsed(offset: search.length),
+      );
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant HistoryPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_syncSearch);
+      widget.controller.addListener(_syncSearch);
+      _syncSearch();
+    }
   }
 
   @override
   void dispose() {
+    widget.controller.removeListener(_syncSearch);
     _search.dispose();
     super.dispose();
   }
@@ -41,7 +72,12 @@ class _HistoryPageState extends State<HistoryPage> {
       final entries = controller.entries;
       final overview = controller.overview;
       return RefreshIndicator(
-        onRefresh: controller.load,
+        onRefresh: () async {
+          await Future.wait([
+            controller.load(),
+            if (widget.rules != null) widget.rules!.load(),
+          ]);
+        },
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
@@ -51,6 +87,13 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    if (widget.rules != null) ...[
+                      HistoryRulesBanner(
+                        controller: widget.rules!,
+                        appName: widget.appName,
+                      ),
+                      const SizedBox(height: 14),
+                    ],
                     _OverviewCard(
                       controller: controller,
                       overview: overview,
@@ -256,7 +299,10 @@ class _OverviewCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       color: scheme.surfaceContainerHigh,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: scheme.outlineVariant),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -324,7 +370,7 @@ class _OverviewCard extends StatelessWidget {
               child: LinearProgressIndicator(
                 value: overview.removedRate,
                 minHeight: 7,
-                color: scheme.primary.withValues(alpha: .8),
+                color: scheme.primary,
                 backgroundColor: scheme.primaryContainer,
               ),
             ),

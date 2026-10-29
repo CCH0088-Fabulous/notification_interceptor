@@ -62,6 +62,11 @@ flutter:
     - assets/presets/
     - assets/licenses/
 
+  fonts:
+    - family: SourceHanSerifSC
+      fonts:
+        - asset: android/generator/src/main/res/font/source_han_serif_sc_regular.otf
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

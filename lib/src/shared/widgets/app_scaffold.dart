@@ -5,6 +5,7 @@ import '../../features/feed/presentation/feed_controller.dart';
 import '../../features/feed/presentation/feed_page.dart';
 import '../../features/history/presentation/history_controller.dart';
 import '../../features/history/presentation/history_page.dart';
+import '../../features/history/presentation/history_theme.dart';
 import '../../features/rules/domain/rule_spec.dart';
 import '../../features/rules/domain/simple_rule_draft.dart';
 import '../../features/feed/domain/notification_record.dart';
@@ -62,10 +63,30 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    // Keep the same widget structure while switching tabs so their state and scroll positions survive.
+    // The active history tab includes its app bar, navigation and captured route themes.
+    return Theme(
+      data: _index == 2 ? HistoryTheme.build() : Theme.of(context),
+      child: Builder(builder: _buildScaffold),
+    );
+  }
+
+  Widget _buildScaffold(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_index]),
         actions: [
+          if (_index == 2)
+            ListenableBuilder(
+              listenable: widget.history,
+              builder: (context, _) => TextButton.icon(
+                onPressed: widget.history.loading
+                    ? null
+                    : () => confirmClearHistory(context, widget.history),
+                icon: const Icon(Icons.delete_outline, size: 18),
+                label: const Text('清空'),
+              ),
+            ),
           if (_index == 1)
             PopupMenuButton<String>(
               tooltip: '更多操作',
@@ -100,7 +121,11 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
             onEdit: _openEditor,
             appName: _appName,
           ),
-          HistoryPage(controller: widget.history),
+          HistoryPage(
+            controller: widget.history,
+            rules: widget.rules,
+            appName: _appName,
+          ),
           SettingsPage(
             access: widget.access,
             history: widget.history,
@@ -112,7 +137,10 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
         selectedIndex: _index,
         onDestinationSelected: (value) {
           setState(() => _index = value);
-          if (value == 2) widget.history.load();
+          if (value == 2) {
+            widget.history.load();
+            widget.rules.load();
+          }
           if (value == 1) widget.rules.load();
           if (value == 3) widget.access.refresh();
         },

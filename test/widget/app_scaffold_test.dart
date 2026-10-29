@@ -173,6 +173,24 @@ void main() {
     await tester.tap(find.text('历史'));
     await tester.pumpAndSettle();
     expect(find.text('处理概览'), findsOneWidget);
+    expect(find.text('本次的拦截规则是'), findsOneWidget);
+    expect(find.text('1. 自动移出【屏蔽营销】'), findsOneWidget);
+    expect(find.text('清空'), findsOneWidget);
+
+    await rules.setGlobalEnabled(false);
+    await tester.pumpAndSettle();
+    expect(find.text('【规则引擎已关闭，所有通知均保留】'), findsOneWidget);
+    expect(find.text('1. 自动移出【屏蔽营销】'), findsNothing);
+    await rules.setGlobalEnabled(true);
+    await tester.pumpAndSettle();
+    expect(find.text('1. 自动移出【屏蔽营销】'), findsOneWidget);
+
+    await tester.tap(find.text('清空'));
+    await tester.pumpAndSettle();
+    expect(find.text('清空历史'), findsOneWidget);
+    await tester.tap(find.text('取消'));
+    await tester.pumpAndSettle();
+    expect(history.allEntries, hasLength(1));
 
     await tester.tap(find.text('设置'));
     await tester.pumpAndSettle();

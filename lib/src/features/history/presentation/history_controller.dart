@@ -153,6 +153,10 @@ class HistoryController extends ChangeNotifier {
       if (revision != _revision) return;
       _allEntries = const [];
       _stats = const HistoryStats();
+      _query = const HistoryQuery();
+      _search = '';
+      _ruleFilter = null;
+      _period = HistoryPeriod.today;
       _error = null;
     } catch (error) {
       if (revision == _revision) _error = error.toString();

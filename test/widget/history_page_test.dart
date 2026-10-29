@@ -6,6 +6,7 @@ import 'package:notifinterceptor/src/features/history/domain/history_query.dart'
 import 'package:notifinterceptor/src/features/history/domain/history_repository.dart';
 import 'package:notifinterceptor/src/features/history/presentation/history_controller.dart';
 import 'package:notifinterceptor/src/features/history/presentation/history_page.dart';
+import 'package:notifinterceptor/src/features/history/presentation/history_theme.dart';
 import 'package:notifinterceptor/src/shared/domain/rule_action.dart';
 
 class _History implements HistoryRepository {
@@ -105,6 +106,7 @@ Future<HistoryController> _host(
   addTearDown(c.dispose);
   await tester.pumpWidget(
     MaterialApp(
+      theme: HistoryTheme.build(),
       home: MediaQuery(
         data: MediaQueryData(textScaler: TextScaler.linear(scale)),
         child: Scaffold(
@@ -196,6 +198,8 @@ void main() {
   testWidgets('清空需要确认，取消不删数据，确认后才清空', (tester) async {
     final repo = _History();
     final c = await _host(tester, repo);
+    await tester.enterText(find.byType(TextField), '会议');
+    await tester.pumpAndSettle();
     Future<void> openClear() async {
       await tester.tap(find.byTooltip('更多操作'));
       await tester.pumpAndSettle();
@@ -208,11 +212,17 @@ void main() {
     await tester.pumpAndSettle();
     expect(repo.clears, 0);
     expect(c.allEntries, hasLength(4));
+    expect(c.search, '会议');
     await openClear();
     await tester.tap(find.text('清空'));
     await tester.pumpAndSettle();
     expect(repo.clears, 1);
     expect(c.allEntries, isEmpty);
+    expect(c.search, isEmpty);
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).controller!.text,
+      isEmpty,
+    );
     expect(find.text('0%'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

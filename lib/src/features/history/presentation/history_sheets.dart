@@ -435,30 +435,42 @@ Future<void> showHistoryActions(
       }
     }
   } else if (action == 'clear') {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('清空历史'),
-        content: const Text('将删除本地全部历史记录，不可恢复。'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+    await confirmClearHistory(context, controller);
+  }
+}
+
+/// Both visible and overflow actions use the same confirmed, whole-history reset.
+Future<void> confirmClearHistory(
+  BuildContext context,
+  HistoryController controller,
+) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('清空历史'),
+      content: const Text('将删除本地全部历史记录并重置统计，规则配置保留。此操作不可恢复。'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: const Text('取消'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: const Text('清空'),
+        ),
+      ],
+    ),
+  );
+  if (confirmed == true) {
+    await controller.clear();
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            controller.error == null ? '历史已清空，可开始下一轮演示' : '清空失败，请重试',
           ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('清空'),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true) {
-      await controller.clear();
-      if (context.mounted && controller.error != null) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('清空失败，请重试')));
-      }
+        ),
+      );
     }
   }
 }
