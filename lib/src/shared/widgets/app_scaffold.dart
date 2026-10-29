@@ -76,6 +76,12 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
                 PopupMenuItem(value: 'advanced', child: Text('高级创建')),
               ],
             ),
+          if (_index == 2)
+            IconButton(
+              tooltip: '更多操作',
+              icon: const Icon(Icons.more_vert),
+              onPressed: () => showHistoryActions(context, widget.history),
+            ),
           if (_index == 0)
             IconButton(
               tooltip: '刷新',
@@ -139,7 +145,7 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
   String _appName(String package) {
     for (final record in [
       ...widget.feed.items.map((item) => item.record),
-      ...widget.history.entries.map((entry) => entry.record),
+      ...widget.history.allEntries.map((entry) => entry.record),
     ]) {
       if (record.packageName == package &&
           (record.appLabel?.trim().isNotEmpty ?? false)) {
@@ -155,7 +161,7 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
     if (widget.history.error != null) throw StateError('历史读取失败');
     final records = <String, NotificationRecord>{};
     for (final record in [
-      ...widget.history.entries.map((entry) => entry.record),
+      ...widget.history.allEntries.map((entry) => entry.record),
       ...widget.feed.items.map((item) => item.record),
       ...active,
     ]) {

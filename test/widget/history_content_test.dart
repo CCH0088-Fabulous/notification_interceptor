@@ -80,7 +80,12 @@ class _History implements HistoryRepository {
 
 void main() {
   testWidgets('历史同时显示正文与处理动作，隐藏内容明确标注', (tester) async {
-    final controller = HistoryController(repository: _History());
+    await tester.binding.setSurfaceSize(const Size(420, 1300));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    final controller = HistoryController(
+      repository: _History(),
+      now: () => DateTime.fromMillisecondsSinceEpoch(1760000000000),
+    );
     addTearDown(controller.dispose);
     await tester.pumpWidget(
       MaterialApp(
@@ -90,14 +95,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('系统自动汇总'), findsNothing);
     expect(find.text('普通空正文通知'), findsOneWidget);
-    expect(controller.entries, hasLength(4)); // 只隐藏展示，不删原始记录。
+    expect(controller.allEntries, hasLength(4)); // 只隐藏展示，不删原始记录。
     expect(find.text('项目讨论'), findsOneWidget);
     expect(find.text('明天下午三点开会'), findsOneWidget);
     expect(find.text('通知内容已隐藏'), findsOneWidget);
     expect(find.text('系统已隐藏通知内容，无法读取原文'), findsOneWidget);
     expect(find.text('Sensitive notification content hidden'), findsNothing);
-    expect(find.text('通知生成器'), findsNothing);
-    expect(find.text('放行'), findsWidgets);
+    expect(find.text('通知生成器'), findsWidgets);
+    expect(find.text('保留'), findsWidgets);
     expect(find.text('拦截'), findsWidgets);
     expect(tester.takeException(), isNull);
   });

@@ -172,7 +172,7 @@ void main() {
 
     await tester.tap(find.text('历史'));
     await tester.pumpAndSettle();
-    expect(find.text('共 1 条'), findsOneWidget);
+    expect(find.text('处理概览'), findsOneWidget);
 
     await tester.tap(find.text('设置'));
     await tester.pumpAndSettle();
