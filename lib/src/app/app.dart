@@ -7,6 +7,10 @@ import '../features/feed/data/native_feed_repository.dart';
 import '../features/feed/presentation/feed_controller.dart';
 import '../features/history/data/native_history_repository.dart';
 import '../features/history/presentation/history_controller.dart';
+import '../features/comparison/data/native_comparison_repository.dart';
+import '../features/comparison/presentation/batch_comparison_controller.dart';
+import '../features/presets/data/native_presets_repository.dart';
+import '../features/presets/presentation/presets_controller.dart';
 import '../features/rules/data/native_rules_repository.dart';
 import '../features/rules/presentation/rules_controller.dart';
 import '../shared/widgets/app_scaffold.dart';
@@ -27,6 +31,8 @@ class _NotifInterceptorAppState extends State<NotifInterceptorApp> {
   late final FeedController _feed;
   late final RulesController _rules;
   late final HistoryController _history;
+  late final PresetsController _presets;
+  late final BatchComparisonController _comparison;
 
   @override
   void initState() {
@@ -42,17 +48,30 @@ class _NotifInterceptorAppState extends State<NotifInterceptorApp> {
     );
     _rules = RulesController(repository: NativeRulesRepository(channel));
     _history = HistoryController(repository: NativeHistoryRepository(channel));
+    _presets = PresetsController(
+      repository: NativePresetsRepository(channel),
+      rules: _rules,
+    );
+    _comparison = BatchComparisonController(
+      repository: NativeComparisonRepository(channel),
+      rules: _rules,
+      history: _history,
+      presets: _presets,
+    );
 
     _access.refresh();
     _feed.refreshActive();
     _rules.load();
     _history.load();
+    _presets.load();
   }
 
   @override
   void dispose() {
     _access.dispose();
     _feed.dispose();
+    _comparison.dispose();
+    _presets.dispose();
     _rules.dispose();
     _history.dispose();
     super.dispose();
@@ -64,12 +83,14 @@ class _NotifInterceptorAppState extends State<NotifInterceptorApp> {
       title: '通知拦截器',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(Brightness.light),
-      darkTheme: buildAppTheme(Brightness.dark),
+      themeMode: ThemeMode.light,
       home: AppScaffold(
         access: _access,
         feed: _feed,
         rules: _rules,
         history: _history,
+        presets: _presets,
+        comparison: _comparison,
       ),
     );
   }

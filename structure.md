@@ -16,6 +16,12 @@
 
 ## 1. 设计原则
 
+2026-11-04：新增 `features/presets/{domain,data,presentation}`，分别负责可复用词库定义/规则编译、本地原生仓储桥接、预设管理与编辑页面。预设库由 Kotlin `data/PresetRepository.kt` 保存为独立 `presets.json`（schemaVersion 1），应用时编译为既有规则契约，不改变通知判定引擎。所有 Flutter 页面与局部主题统一引用 `app/theme.dart`，复用生成器内置的思源宋体资源，删除在线字体依赖。用法见 `docs/usage/presets.md`。
+
+同日扩展：内部预设库升级 schemaVersion 2（兼容 v1），加入最多 20 条定义版本；独立的分享协议仍为 schemaVersion 1。domain 的 `preset_transfer.dart` 负责严格导入预览与合并，`preset_version.dart` 负责版本模型。`PresetDocumentPicker.kt` 通过系统文件选择器完成有界 UTF-8 导入导出，Activity 将结果转发到集中桥接；不新增文件权限。应用内场景切换对现有原生规则执行一次整组替换，规则 ID 带来源类型；旧规则标识在必要时兼容迁移，判定引擎及手动规则契约不变。
+
+同日新增批量效果对比：`features/comparison/{domain,data,presentation}` 保存回放协议、原生桥接与只读比较页面。`rules/domain/managed_rule_set.dart` 被实际预设应用和候选规则构造共用，避免预览与保存逻辑分叉。原生 `domain/RuleSetComparison.kt` 在独立工作线程调用同一 `RuleEngine`，按每条历史处理时间及设备当前时区独立求值，不经过通知取消或历史写入流水线。`tool/render_batch_comparison.py` 使用 space1 环境的 FigCompose，输出单文件离线 HTML；说明与数据位于 `docs/visualizations/`，用法见 `docs/usage/batch-comparison.md`。
+
 | 编号 | 原则 | 落地方式 |
 |---|---|---|
 | P1 | **单一事实源** | 通知、规则、历史的权威数据都在 Kotlin 侧；Dart 只持有镜像副本，不反向写业务状态 |

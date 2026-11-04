@@ -36,6 +36,18 @@ Flutter 只负责界面与配置，**监听、判定、取消、持久化全部�
 | 历史 | 按动作筛选、按包名搜索、统计、导出 JSON 到剪贴板、清空 |
 | 设置 | 权限与服务诊断、数据统计、能力边界、存储位置说明 |
 
+所有应用内页面、表单与弹窗统一采用白底黑字及内置思源宋体，离线可用，系统深色模式也保持白色主题。
+
+### 高级功能：预设与场景
+
+核心过滤免费，预设管理作为高级功能在当前原型中开放体验，尚未接入支付。
+从规则页的预设入口或「设置 → 高级功能」可保存和编辑关键词、优先保留词与应用范围；场景预设还支持星期和跨夜时段。
+提供营销、工作、睡眠三个可编辑模板。保存后需确认应用才会生效；关键词预设可叠加，场景在应用内互斥切换，并可一键回到日常模式。已有手动规则与全局开关保持不变。
+支持修改/删除前自动归档、命名版本与回退，最近 20 个版本保留在本机；支持 JSON 文件和复制粘贴导入导出，导入可预览并处理同标识冲突，恢复与导入都不会直接更改运行规则。
+详见[预设使用说明](docs/usage/presets.md)。
+
+预设页还提供[批量效果对比](docs/usage/batch-comparison.md)：使用同一批历史记录回放当前配置和应用预设后的配置，查看动作迁移、应用分布与逐条原因，并导出 JSON。独立的[可视化报告](docs/visualizations/batch-comparison.html)由 space1 环境中的 FigCompose 生成，可离线打开；报告注明数据来源，预测结果与历史实际取消分开显示。
+
 ### 规则能力
 
 - 条件组：应用包名、关键词、标题正则、正文正则、通知渠道 id、ongoing、clearable、静默时段
@@ -273,7 +285,7 @@ no-clear、静默渠道、分组、MessagingStyle、进度条、批量、移除�
 ```
 lib/src/app/            装配、主题
 lib/src/core/           通道、错误、工具、通用组件
-lib/src/features/       access / feed / rules / history / settings
+lib/src/features/       access / feed / rules / history / settings / presets / comparison
 lib/src/shared/         跨 feature 复用的领域类型与组件
 android/.../domain/     纯 Kotlin 规则引擎与处理流水线（无 android.* 依赖，可 JVM 单测）
 android/.../listener/   系统回调与快照提取（只做 Android 耦合）

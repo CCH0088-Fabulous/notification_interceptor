@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "globalEnabled": true,
+  "defaultAction": "allow",
+  "rules": [
+    {
+      "id": "preset:scene:fixture_sleep:allow",
+      "name": "预设「周五睡眠」· 优先保留",
+      "enabled": true,
+      "action": "allow",
+      "match": {
+        "mode": "all",
+        "packages": ["com.demo.shop"],
+        "keywordsAny": ["紧急"],
+        "titleRegex": null,
+        "textRegex": null,
+        "channelIds": [],
+        "isOngoing": null,
+        "isClearable": null,
+        "quietHours": {"from": "22:00", "to": "08:00", "days": [5]}
+      }
+    },
+    {
+      "id": "preset:scene:fixture_sleep:intercept",
+      "name": "预设「周五睡眠」· 拦截",
+      "enabled": true,
+      "action": "intercept",
+      "match": {
+        "mode": "all",
+        "packages": ["com.demo.shop"],
+        "keywordsAny": ["促销", "直播"],
+        "titleRegex": null,
+        "textRegex": null,
+        "channelIds": [],
+        "isOngoing": null,
+        "isClearable": null,
+        "quietHours": {"from": "22:00", "to": "08:00", "days": [5]}
+      }
+    }
+  ]
+}

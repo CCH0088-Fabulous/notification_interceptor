@@ -1,0 +1,4270 @@
+{
+  "schemaVersion": 1,
+  "kind": "notification_batch_comparison",
+  "generatedAt": 1793757600000,
+  "zoneId": "Asia/Shanghai",
+  "target": {
+    "id": "demo_work",
+    "name": "工作专注（示例）",
+    "kind": "scene"
+  },
+  "scope": {
+    "period": "all",
+    "limit": 300,
+    "replayTime": "historical",
+    "sourceCount": 146
+  },
+  "sampleCount": 144,
+  "skippedSummaries": 2,
+  "hiddenContentCount": 0,
+  "currentRules": {
+    "schemaVersion": 1,
+    "globalEnabled": true,
+    "defaultAction": "allow",
+    "rules": [
+      {
+        "id": "urgent",
+        "name": "重要事务优先保留",
+        "enabled": true,
+        "action": "allow",
+        "match": {
+          "mode": "all",
+          "packages": [],
+          "keywordsAny": [
+            "验证码",
+            "会议",
+            "到账",
+            "取件"
+          ],
+          "quietHours": null,
+          "channelIds": [],
+          "titleRegex": null,
+          "textRegex": null,
+          "isOngoing": null,
+          "isClearable": null
+        }
+      },
+      {
+        "id": "shop-promo",
+        "name": "商城优惠券过滤",
+        "enabled": true,
+        "action": "intercept",
+        "match": {
+          "mode": "all",
+          "packages": [
+            "com.demo.shop"
+          ],
+          "keywordsAny": [
+            "优惠券",
+            "秒杀"
+          ],
+          "quietHours": null,
+          "channelIds": [],
+          "titleRegex": null,
+          "textRegex": null,
+          "isOngoing": null,
+          "isClearable": null
+        }
+      },
+      {
+        "id": "news-trace",
+        "name": "资讯仅记录",
+        "enabled": true,
+        "action": "log_only",
+        "match": {
+          "mode": "all",
+          "packages": [
+            "com.demo.news"
+          ],
+          "keywordsAny": [],
+          "quietHours": null,
+          "channelIds": [],
+          "titleRegex": null,
+          "textRegex": null,
+          "isOngoing": null,
+          "isClearable": null
+        }
+      }
+    ]
+  },
+  "candidateRules": {
+    "schemaVersion": 1,
+    "globalEnabled": true,
+    "defaultAction": "allow",
+    "rules": [
+      {
+        "id": "urgent",
+        "name": "重要事务优先保留",
+        "enabled": true,
+        "action": "allow",
+        "match": {
+          "mode": "all",
+          "packages": [],
+          "keywordsAny": [
+            "验证码",
+            "会议",
+            "到账",
+            "取件"
+          ],
+          "quietHours": null,
+          "channelIds": [],
+          "titleRegex": null,
+          "textRegex": null,
+          "isOngoing": null,
+          "isClearable": null
+        }
+      },
+      {
+        "id": "work-chat",
+        "name": "工作场景 · 会话保留",
+        "enabled": true,
+        "action": "allow",
+        "match": {
+          "mode": "all",
+          "packages": [
+            "com.demo.social"
+          ],
+          "keywordsAny": [
+            "好友",
+            "群聊"
+          ],
+          "quietHours": null,
+          "channelIds": [],
+          "titleRegex": null,
+          "textRegex": null,
+          "isOngoing": null,
+          "isClearable": null
+        }
+      },
+      {
+        "id": "preset:scene:demo_work:intercept",
+        "name": "工作场景 · 减少打扰",
+        "enabled": true,
+        "action": "intercept",
+        "match": {
+          "mode": "all",
+          "packages": [
+            "com.demo.social",
+            "com.demo.game",
+            "com.demo.news"
+          ],
+          "keywordsAny": [
+            "直播",
+            "热搜",
+            "开服",
+            "福利"
+          ],
+          "quietHours": {
+            "from": "09:00",
+            "to": "18:00",
+            "days": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          },
+          "channelIds": [],
+          "titleRegex": null,
+          "textRegex": null,
+          "isOngoing": null,
+          "isClearable": null
+        }
+      },
+      {
+        "id": "shop-promo",
+        "name": "商城优惠券过滤",
+        "enabled": true,
+        "action": "intercept",
+        "match": {
+          "mode": "all",
+          "packages": [
+            "com.demo.shop"
+          ],
+          "keywordsAny": [
+            "优惠券",
+            "秒杀"
+          ],
+          "quietHours": null,
+          "channelIds": [],
+          "titleRegex": null,
+          "textRegex": null,
+          "isOngoing": null,
+          "isClearable": null
+        }
+      },
+      {
+        "id": "news-trace",
+        "name": "资讯仅记录",
+        "enabled": true,
+        "action": "log_only",
+        "match": {
+          "mode": "all",
+          "packages": [
+            "com.demo.news"
+          ],
+          "keywordsAny": [],
+          "quietHours": null,
+          "channelIds": [],
+          "titleRegex": null,
+          "textRegex": null,
+          "isOngoing": null,
+          "isClearable": null
+        }
+      }
+    ]
+  },
+  "summary": {
+    "before": {
+      "allow": 100,
+      "log_only": 29,
+      "intercept": 15
+    },
+    "after": {
+      "allow": 88,
+      "log_only": 23,
+      "intercept": 33
+    },
+    "actionChanged": 18,
+    "ruleChanged": 33,
+    "totalChanged": 33,
+    "moreIntercepted": 18,
+    "lessIntercepted": 0,
+    "historicalConfirmedRemoved": 14
+  },
+  "rows": [
+    {
+      "entryId": "demo-0",
+      "timestamp": 1793577600000,
+      "record": {
+        "key": "demo:0",
+        "id": 0,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793577600000,
+        "title": "领取优惠券",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-1",
+      "timestamp": 1793578500000,
+      "record": {
+        "key": "demo:1",
+        "id": 1,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793578500000,
+        "title": "好友直播开播",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-2",
+      "timestamp": 1793579400000,
+      "record": {
+        "key": "demo:2",
+        "id": 2,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793579400000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-3",
+      "timestamp": 1793580300000,
+      "record": {
+        "key": "demo:3",
+        "id": 3,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793580300000,
+        "title": "今日热搜",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-4",
+      "timestamp": 1793581200000,
+      "record": {
+        "key": "demo:4",
+        "id": 4,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793581200000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-5",
+      "timestamp": 1793582100000,
+      "record": {
+        "key": "demo:5",
+        "id": 5,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793582100000,
+        "title": "秒杀活动开始",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-6",
+      "timestamp": 1793583000000,
+      "record": {
+        "key": "demo:6",
+        "id": 6,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793583000000,
+        "title": "群聊新消息",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-7",
+      "timestamp": 1793583900000,
+      "record": {
+        "key": "demo:7",
+        "id": 7,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793583900000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-8",
+      "timestamp": 1793584800000,
+      "record": {
+        "key": "demo:8",
+        "id": 8,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793584800000,
+        "title": "国际资讯速览",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-9",
+      "timestamp": 1793585700000,
+      "record": {
+        "key": "demo:9",
+        "id": 9,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793585700000,
+        "title": "配送进度",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-10",
+      "timestamp": 1793586600000,
+      "record": {
+        "key": "demo:10",
+        "id": 10,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793586600000,
+        "title": "账单更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-11",
+      "timestamp": 1793587500000,
+      "record": {
+        "key": "demo:11",
+        "id": 11,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793587500000,
+        "title": "王敏：会议安排",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-12",
+      "timestamp": 1793588400000,
+      "record": {
+        "key": "demo:12",
+        "id": 12,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793588400000,
+        "title": "账号安全提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-13",
+      "timestamp": 1793589300000,
+      "record": {
+        "key": "demo:13",
+        "id": 13,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793589300000,
+        "title": "订阅更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-14",
+      "timestamp": 1793590200000,
+      "record": {
+        "key": "demo:14",
+        "id": 14,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793590200000,
+        "title": "促销活动",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-15",
+      "timestamp": 1793591100000,
+      "record": {
+        "key": "demo:15",
+        "id": 15,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793591100000,
+        "title": "限时大促",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-16",
+      "timestamp": 1793592000000,
+      "record": {
+        "key": "demo:16",
+        "id": 16,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793592000000,
+        "title": "热搜话题更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-17",
+      "timestamp": 1793592900000,
+      "record": {
+        "key": "demo:17",
+        "id": 17,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793592900000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-18",
+      "timestamp": 1793593800000,
+      "record": {
+        "key": "demo:18",
+        "id": 18,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793593800000,
+        "title": "直播回顾",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-19",
+      "timestamp": 1793594700000,
+      "record": {
+        "key": "demo:19",
+        "id": 19,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793594700000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-20",
+      "timestamp": 1793595600000,
+      "record": {
+        "key": "demo:20",
+        "id": 20,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793595600000,
+        "title": "领取优惠券",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-21",
+      "timestamp": 1793596500000,
+      "record": {
+        "key": "demo:21",
+        "id": 21,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793596500000,
+        "title": "好友直播开播",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-22",
+      "timestamp": 1793597400000,
+      "record": {
+        "key": "demo:22",
+        "id": 22,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793597400000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-23",
+      "timestamp": 1793598300000,
+      "record": {
+        "key": "demo:23",
+        "id": 23,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793598300000,
+        "title": "今日热搜",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-24",
+      "timestamp": 1793599200000,
+      "record": {
+        "key": "demo:24",
+        "id": 24,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793599200000,
+        "title": "配送进度",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-25",
+      "timestamp": 1793600100000,
+      "record": {
+        "key": "demo:25",
+        "id": 25,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793600100000,
+        "title": "秒杀活动开始",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-26",
+      "timestamp": 1793601000000,
+      "record": {
+        "key": "demo:26",
+        "id": 26,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793601000000,
+        "title": "群聊新消息",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-27",
+      "timestamp": 1793601900000,
+      "record": {
+        "key": "demo:27",
+        "id": 27,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793601900000,
+        "title": "账号安全提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-28",
+      "timestamp": 1793602800000,
+      "record": {
+        "key": "demo:28",
+        "id": 28,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793602800000,
+        "title": "国际资讯速览",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-29",
+      "timestamp": 1793603700000,
+      "record": {
+        "key": "demo:29",
+        "id": 29,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793603700000,
+        "title": "促销活动",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-30",
+      "timestamp": 1793604600000,
+      "record": {
+        "key": "demo:30",
+        "id": 30,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793604600000,
+        "title": "账单更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-31",
+      "timestamp": 1793605500000,
+      "record": {
+        "key": "demo:31",
+        "id": 31,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793605500000,
+        "title": "王敏：会议安排",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-32",
+      "timestamp": 1793606400000,
+      "record": {
+        "key": "demo:32",
+        "id": 32,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793606400000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-33",
+      "timestamp": 1793607300000,
+      "record": {
+        "key": "demo:33",
+        "id": 33,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793607300000,
+        "title": "订阅更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-34",
+      "timestamp": 1793608200000,
+      "record": {
+        "key": "demo:34",
+        "id": 34,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793608200000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-35",
+      "timestamp": 1793609100000,
+      "record": {
+        "key": "demo:35",
+        "id": 35,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793609100000,
+        "title": "限时大促",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-36",
+      "timestamp": 1793610000000,
+      "record": {
+        "key": "demo:36",
+        "id": 36,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793610000000,
+        "title": "热搜话题更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-37",
+      "timestamp": 1793610900000,
+      "record": {
+        "key": "demo:37",
+        "id": 37,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793610900000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-38",
+      "timestamp": 1793611800000,
+      "record": {
+        "key": "demo:38",
+        "id": 38,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793611800000,
+        "title": "直播回顾",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-39",
+      "timestamp": 1793612700000,
+      "record": {
+        "key": "demo:39",
+        "id": 39,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793612700000,
+        "title": "配送进度",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-40",
+      "timestamp": 1793613600000,
+      "record": {
+        "key": "demo:40",
+        "id": 40,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793613600000,
+        "title": "领取优惠券",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-41",
+      "timestamp": 1793614500000,
+      "record": {
+        "key": "demo:41",
+        "id": 41,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793614500000,
+        "title": "好友直播开播",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-42",
+      "timestamp": 1793615400000,
+      "record": {
+        "key": "demo:42",
+        "id": 42,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793615400000,
+        "title": "账号安全提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-43",
+      "timestamp": 1793616300000,
+      "record": {
+        "key": "demo:43",
+        "id": 43,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793616300000,
+        "title": "今日热搜",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-44",
+      "timestamp": 1793617200000,
+      "record": {
+        "key": "demo:44",
+        "id": 44,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793617200000,
+        "title": "促销活动",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-45",
+      "timestamp": 1793618100000,
+      "record": {
+        "key": "demo:45",
+        "id": 45,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793618100000,
+        "title": "秒杀活动开始",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-46",
+      "timestamp": 1793619000000,
+      "record": {
+        "key": "demo:46",
+        "id": 46,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793619000000,
+        "title": "群聊新消息",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-47",
+      "timestamp": 1793619900000,
+      "record": {
+        "key": "demo:47",
+        "id": 47,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793619900000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-48",
+      "timestamp": 1793620800000,
+      "record": {
+        "key": "demo:48",
+        "id": 48,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793620800000,
+        "title": "国际资讯速览",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-49",
+      "timestamp": 1793621700000,
+      "record": {
+        "key": "demo:49",
+        "id": 49,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793621700000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-50",
+      "timestamp": 1793622600000,
+      "record": {
+        "key": "demo:50",
+        "id": 50,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793622600000,
+        "title": "账单更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-51",
+      "timestamp": 1793623500000,
+      "record": {
+        "key": "demo:51",
+        "id": 51,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793623500000,
+        "title": "王敏：会议安排",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-52",
+      "timestamp": 1793624400000,
+      "record": {
+        "key": "demo:52",
+        "id": 52,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793624400000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-53",
+      "timestamp": 1793625300000,
+      "record": {
+        "key": "demo:53",
+        "id": 53,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793625300000,
+        "title": "订阅更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-54",
+      "timestamp": 1793626200000,
+      "record": {
+        "key": "demo:54",
+        "id": 54,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793626200000,
+        "title": "配送进度",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-55",
+      "timestamp": 1793627100000,
+      "record": {
+        "key": "demo:55",
+        "id": 55,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793627100000,
+        "title": "限时大促",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-56",
+      "timestamp": 1793628000000,
+      "record": {
+        "key": "demo:56",
+        "id": 56,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793628000000,
+        "title": "热搜话题更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-57",
+      "timestamp": 1793628900000,
+      "record": {
+        "key": "demo:57",
+        "id": 57,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793628900000,
+        "title": "账号安全提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-58",
+      "timestamp": 1793629800000,
+      "record": {
+        "key": "demo:58",
+        "id": 58,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793629800000,
+        "title": "直播回顾",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-59",
+      "timestamp": 1793630700000,
+      "record": {
+        "key": "demo:59",
+        "id": 59,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793630700000,
+        "title": "促销活动",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-60",
+      "timestamp": 1793631600000,
+      "record": {
+        "key": "demo:60",
+        "id": 60,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793631600000,
+        "title": "领取优惠券",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-61",
+      "timestamp": 1793632500000,
+      "record": {
+        "key": "demo:61",
+        "id": 61,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793632500000,
+        "title": "好友直播开播",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-62",
+      "timestamp": 1793633400000,
+      "record": {
+        "key": "demo:62",
+        "id": 62,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793633400000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-63",
+      "timestamp": 1793634300000,
+      "record": {
+        "key": "demo:63",
+        "id": 63,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793634300000,
+        "title": "今日热搜",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-64",
+      "timestamp": 1793635200000,
+      "record": {
+        "key": "demo:64",
+        "id": 64,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793635200000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-65",
+      "timestamp": 1793636100000,
+      "record": {
+        "key": "demo:65",
+        "id": 65,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793636100000,
+        "title": "秒杀活动开始",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-66",
+      "timestamp": 1793637000000,
+      "record": {
+        "key": "demo:66",
+        "id": 66,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793637000000,
+        "title": "群聊新消息",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-67",
+      "timestamp": 1793637900000,
+      "record": {
+        "key": "demo:67",
+        "id": 67,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793637900000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-68",
+      "timestamp": 1793638800000,
+      "record": {
+        "key": "demo:68",
+        "id": 68,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793638800000,
+        "title": "国际资讯速览",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-69",
+      "timestamp": 1793639700000,
+      "record": {
+        "key": "demo:69",
+        "id": 69,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793639700000,
+        "title": "配送进度",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-70",
+      "timestamp": 1793640600000,
+      "record": {
+        "key": "demo:70",
+        "id": 70,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793640600000,
+        "title": "账单更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-71",
+      "timestamp": 1793641500000,
+      "record": {
+        "key": "demo:71",
+        "id": 71,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793641500000,
+        "title": "王敏：会议安排",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-72",
+      "timestamp": 1793642400000,
+      "record": {
+        "key": "demo:72",
+        "id": 72,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793642400000,
+        "title": "账号安全提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-73",
+      "timestamp": 1793643300000,
+      "record": {
+        "key": "demo:73",
+        "id": 73,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793643300000,
+        "title": "订阅更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-74",
+      "timestamp": 1793644200000,
+      "record": {
+        "key": "demo:74",
+        "id": 74,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793644200000,
+        "title": "促销活动",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-75",
+      "timestamp": 1793645100000,
+      "record": {
+        "key": "demo:75",
+        "id": 75,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793645100000,
+        "title": "限时大促",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-76",
+      "timestamp": 1793646000000,
+      "record": {
+        "key": "demo:76",
+        "id": 76,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793646000000,
+        "title": "热搜话题更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-77",
+      "timestamp": 1793646900000,
+      "record": {
+        "key": "demo:77",
+        "id": 77,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793646900000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-78",
+      "timestamp": 1793647800000,
+      "record": {
+        "key": "demo:78",
+        "id": 78,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793647800000,
+        "title": "直播回顾",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-79",
+      "timestamp": 1793648700000,
+      "record": {
+        "key": "demo:79",
+        "id": 79,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793648700000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-80",
+      "timestamp": 1793649600000,
+      "record": {
+        "key": "demo:80",
+        "id": 80,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793649600000,
+        "title": "领取优惠券",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-81",
+      "timestamp": 1793650500000,
+      "record": {
+        "key": "demo:81",
+        "id": 81,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793650500000,
+        "title": "好友直播开播",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-82",
+      "timestamp": 1793651400000,
+      "record": {
+        "key": "demo:82",
+        "id": 82,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793651400000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-83",
+      "timestamp": 1793652300000,
+      "record": {
+        "key": "demo:83",
+        "id": 83,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793652300000,
+        "title": "今日热搜",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-84",
+      "timestamp": 1793653200000,
+      "record": {
+        "key": "demo:84",
+        "id": 84,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793653200000,
+        "title": "配送进度",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-85",
+      "timestamp": 1793654100000,
+      "record": {
+        "key": "demo:85",
+        "id": 85,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793654100000,
+        "title": "秒杀活动开始",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-86",
+      "timestamp": 1793655000000,
+      "record": {
+        "key": "demo:86",
+        "id": 86,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793655000000,
+        "title": "群聊新消息",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-87",
+      "timestamp": 1793655900000,
+      "record": {
+        "key": "demo:87",
+        "id": 87,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793655900000,
+        "title": "账号安全提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-88",
+      "timestamp": 1793656800000,
+      "record": {
+        "key": "demo:88",
+        "id": 88,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793656800000,
+        "title": "国际资讯速览",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-89",
+      "timestamp": 1793657700000,
+      "record": {
+        "key": "demo:89",
+        "id": 89,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793657700000,
+        "title": "促销活动",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-90",
+      "timestamp": 1793658600000,
+      "record": {
+        "key": "demo:90",
+        "id": 90,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793658600000,
+        "title": "账单更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-91",
+      "timestamp": 1793659500000,
+      "record": {
+        "key": "demo:91",
+        "id": 91,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793659500000,
+        "title": "王敏：会议安排",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-92",
+      "timestamp": 1793660400000,
+      "record": {
+        "key": "demo:92",
+        "id": 92,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793660400000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-93",
+      "timestamp": 1793661300000,
+      "record": {
+        "key": "demo:93",
+        "id": 93,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793661300000,
+        "title": "订阅更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-94",
+      "timestamp": 1793662200000,
+      "record": {
+        "key": "demo:94",
+        "id": 94,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793662200000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-95",
+      "timestamp": 1793663100000,
+      "record": {
+        "key": "demo:95",
+        "id": 95,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793663100000,
+        "title": "限时大促",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-96",
+      "timestamp": 1793664000000,
+      "record": {
+        "key": "demo:96",
+        "id": 96,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793664000000,
+        "title": "热搜话题更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-97",
+      "timestamp": 1793664900000,
+      "record": {
+        "key": "demo:97",
+        "id": 97,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793664900000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-98",
+      "timestamp": 1793665800000,
+      "record": {
+        "key": "demo:98",
+        "id": 98,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793665800000,
+        "title": "直播回顾",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-99",
+      "timestamp": 1793666700000,
+      "record": {
+        "key": "demo:99",
+        "id": 99,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793666700000,
+        "title": "配送进度",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-100",
+      "timestamp": 1793667600000,
+      "record": {
+        "key": "demo:100",
+        "id": 100,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793667600000,
+        "title": "领取优惠券",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-101",
+      "timestamp": 1793668500000,
+      "record": {
+        "key": "demo:101",
+        "id": 101,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793668500000,
+        "title": "好友直播开播",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-102",
+      "timestamp": 1793669400000,
+      "record": {
+        "key": "demo:102",
+        "id": 102,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793669400000,
+        "title": "账号安全提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-103",
+      "timestamp": 1793670300000,
+      "record": {
+        "key": "demo:103",
+        "id": 103,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793670300000,
+        "title": "今日热搜",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-104",
+      "timestamp": 1793671200000,
+      "record": {
+        "key": "demo:104",
+        "id": 104,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793671200000,
+        "title": "促销活动",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-105",
+      "timestamp": 1793672100000,
+      "record": {
+        "key": "demo:105",
+        "id": 105,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793672100000,
+        "title": "秒杀活动开始",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-106",
+      "timestamp": 1793673000000,
+      "record": {
+        "key": "demo:106",
+        "id": 106,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793673000000,
+        "title": "群聊新消息",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-107",
+      "timestamp": 1793673900000,
+      "record": {
+        "key": "demo:107",
+        "id": 107,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793673900000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-108",
+      "timestamp": 1793674800000,
+      "record": {
+        "key": "demo:108",
+        "id": 108,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793674800000,
+        "title": "国际资讯速览",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-109",
+      "timestamp": 1793675700000,
+      "record": {
+        "key": "demo:109",
+        "id": 109,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793675700000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-110",
+      "timestamp": 1793676600000,
+      "record": {
+        "key": "demo:110",
+        "id": 110,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793676600000,
+        "title": "账单更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-111",
+      "timestamp": 1793677500000,
+      "record": {
+        "key": "demo:111",
+        "id": 111,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793677500000,
+        "title": "王敏：会议安排",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-112",
+      "timestamp": 1793678400000,
+      "record": {
+        "key": "demo:112",
+        "id": 112,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793678400000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-113",
+      "timestamp": 1793679300000,
+      "record": {
+        "key": "demo:113",
+        "id": 113,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793679300000,
+        "title": "订阅更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-114",
+      "timestamp": 1793680200000,
+      "record": {
+        "key": "demo:114",
+        "id": 114,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793680200000,
+        "title": "配送进度",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-115",
+      "timestamp": 1793681100000,
+      "record": {
+        "key": "demo:115",
+        "id": 115,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793681100000,
+        "title": "限时大促",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-116",
+      "timestamp": 1793682000000,
+      "record": {
+        "key": "demo:116",
+        "id": 116,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793682000000,
+        "title": "热搜话题更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-117",
+      "timestamp": 1793682900000,
+      "record": {
+        "key": "demo:117",
+        "id": 117,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793682900000,
+        "title": "账号安全提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-118",
+      "timestamp": 1793683800000,
+      "record": {
+        "key": "demo:118",
+        "id": 118,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793683800000,
+        "title": "直播回顾",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-119",
+      "timestamp": 1793684700000,
+      "record": {
+        "key": "demo:119",
+        "id": 119,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793684700000,
+        "title": "促销活动",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-120",
+      "timestamp": 1793685600000,
+      "record": {
+        "key": "demo:120",
+        "id": 120,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793685600000,
+        "title": "领取优惠券",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-121",
+      "timestamp": 1793686500000,
+      "record": {
+        "key": "demo:121",
+        "id": 121,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793686500000,
+        "title": "好友直播开播",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-122",
+      "timestamp": 1793687400000,
+      "record": {
+        "key": "demo:122",
+        "id": 122,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793687400000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-123",
+      "timestamp": 1793688300000,
+      "record": {
+        "key": "demo:123",
+        "id": 123,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793688300000,
+        "title": "今日热搜",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-124",
+      "timestamp": 1793689200000,
+      "record": {
+        "key": "demo:124",
+        "id": 124,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793689200000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-125",
+      "timestamp": 1793690100000,
+      "record": {
+        "key": "demo:125",
+        "id": 125,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793690100000,
+        "title": "秒杀活动开始",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-126",
+      "timestamp": 1793691000000,
+      "record": {
+        "key": "demo:126",
+        "id": 126,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793691000000,
+        "title": "群聊新消息",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-127",
+      "timestamp": 1793691900000,
+      "record": {
+        "key": "demo:127",
+        "id": 127,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793691900000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "preset:scene:demo_work:intercept",
+        "ruleName": "工作场景 · 减少打扰",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-128",
+      "timestamp": 1793692800000,
+      "record": {
+        "key": "demo:128",
+        "id": 128,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793692800000,
+        "title": "国际资讯速览",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-129",
+      "timestamp": 1793693700000,
+      "record": {
+        "key": "demo:129",
+        "id": 129,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793693700000,
+        "title": "配送进度",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-130",
+      "timestamp": 1793694600000,
+      "record": {
+        "key": "demo:130",
+        "id": 130,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793694600000,
+        "title": "账单更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-131",
+      "timestamp": 1793695500000,
+      "record": {
+        "key": "demo:131",
+        "id": 131,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793695500000,
+        "title": "王敏：会议安排",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-132",
+      "timestamp": 1793696400000,
+      "record": {
+        "key": "demo:132",
+        "id": 132,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793696400000,
+        "title": "账号安全提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-133",
+      "timestamp": 1793697300000,
+      "record": {
+        "key": "demo:133",
+        "id": 133,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793697300000,
+        "title": "订阅更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-134",
+      "timestamp": 1793698200000,
+      "record": {
+        "key": "demo:134",
+        "id": 134,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793698200000,
+        "title": "促销活动",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-135",
+      "timestamp": 1793699100000,
+      "record": {
+        "key": "demo:135",
+        "id": 135,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793699100000,
+        "title": "限时大促",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-136",
+      "timestamp": 1793700000000,
+      "record": {
+        "key": "demo:136",
+        "id": 136,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793700000000,
+        "title": "热搜话题更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-137",
+      "timestamp": 1793700900000,
+      "record": {
+        "key": "demo:137",
+        "id": 137,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793700900000,
+        "title": "新赛季开服",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-138",
+      "timestamp": 1793701800000,
+      "record": {
+        "key": "demo:138",
+        "id": 138,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793701800000,
+        "title": "直播回顾",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-139",
+      "timestamp": 1793702700000,
+      "record": {
+        "key": "demo:139",
+        "id": 139,
+        "packageName": "com.demo.logistics",
+        "appLabel": "演示物流",
+        "postTime": 1793702700000,
+        "title": "取件提醒",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "urgent",
+        "ruleName": "重要事务优先保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-140",
+      "timestamp": 1793703600000,
+      "record": {
+        "key": "demo:140",
+        "id": 140,
+        "packageName": "com.demo.shop",
+        "appLabel": "演示商城",
+        "postTime": 1793703600000,
+        "title": "领取优惠券",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "intercept",
+        "ruleId": "shop-promo",
+        "ruleName": "商城优惠券过滤",
+        "reason": "rule"
+      },
+      "historicalAction": "intercept",
+      "cancelStatus": "success"
+    },
+    {
+      "entryId": "demo-141",
+      "timestamp": 1793704500000,
+      "record": {
+        "key": "demo:141",
+        "id": 141,
+        "packageName": "com.demo.social",
+        "appLabel": "演示聊天",
+        "postTime": 1793704500000,
+        "title": "好友直播开播",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": "work-chat",
+        "ruleName": "工作场景 · 会话保留",
+        "reason": "rule"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-142",
+      "timestamp": 1793705400000,
+      "record": {
+        "key": "demo:142",
+        "id": 142,
+        "packageName": "com.demo.game",
+        "appLabel": "演示游戏",
+        "postTime": 1793705400000,
+        "title": "福利礼包更新",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "after": {
+        "action": "allow",
+        "ruleId": null,
+        "ruleName": null,
+        "reason": "default"
+      },
+      "historicalAction": "allow",
+      "cancelStatus": "not_attempted"
+    },
+    {
+      "entryId": "demo-143",
+      "timestamp": 1793706300000,
+      "record": {
+        "key": "demo:143",
+        "id": 143,
+        "packageName": "com.demo.news",
+        "appLabel": "演示资讯",
+        "postTime": 1793706300000,
+        "title": "今日热搜",
+        "text": "示例通知内容，仅用于图表演示",
+        "isGroupSummary": false
+      },
+      "before": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "after": {
+        "action": "log_only",
+        "ruleId": "news-trace",
+        "ruleName": "资讯仅记录",
+        "reason": "rule"
+      },
+      "historicalAction": "log_only",
+      "cancelStatus": "not_attempted"
+    }
+  ]
+}

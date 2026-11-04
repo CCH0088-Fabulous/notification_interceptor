@@ -3,6 +3,7 @@ package dev.poc.notifinterceptor.support
 import android.content.Context
 import dev.poc.notifinterceptor.data.AppInfoResolver
 import dev.poc.notifinterceptor.data.HistoryRepository
+import dev.poc.notifinterceptor.data.PresetRepository
 import dev.poc.notifinterceptor.data.RuleRepository
 import dev.poc.notifinterceptor.domain.RuleEngine
 import dev.poc.notifinterceptor.listener.NotificationInterceptorService
@@ -55,6 +56,9 @@ object AppGraph {
     lateinit var rules: RuleRepository
         private set
 
+    lateinit var presets: PresetRepository
+        private set
+
     lateinit var appInfo: AppInfoResolver
         private set
 
@@ -75,6 +79,7 @@ object AppGraph {
             }
             ruleEngine = RuleEngine(app.packageName)
             rules = RuleRepository(app.filesDir, ruleEngine)
+            presets = PresetRepository(app.filesDir)
             history = HistoryRepository(app.filesDir)
             ioExecutor = Executors.newSingleThreadExecutor { runnable ->
                 Thread(runnable, "notif-history-io").apply { isDaemon = true }

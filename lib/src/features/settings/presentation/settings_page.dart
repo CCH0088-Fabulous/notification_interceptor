@@ -16,13 +16,16 @@ class SettingsPage extends StatelessWidget {
     required this.access,
     required this.history,
     required this.rules,
+    this.onOpenPresets,
   });
 
   final AccessController access;
   final HistoryController history;
   final RulesController rules;
+  final VoidCallback? onOpenPresets;
 
-  static const String generatorPresetAsset = 'assets/presets/generator_triage.json';
+  static const String generatorPresetAsset =
+      'assets/presets/generator_triage.json';
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,19 @@ class SettingsPage extends StatelessWidget {
         return ListView(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 32),
           children: [
+            if (onOpenPresets != null)
+              SectionCard(
+                title: '高级功能',
+                subtitle: '核心过滤免费，高级功能付费；当前版本开放体验。',
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.bookmarks_outlined),
+                  title: const Text('预设管理'),
+                  subtitle: const Text('保存常用过滤词，配置工作、睡眠等场景'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: onOpenPresets,
+                ),
+              ),
             SectionCard(
               title: '通知使用权',
               subtitle: status.isReady ? '监听服务已连接' : '尚未生效',
@@ -88,7 +104,9 @@ class SettingsPage extends StatelessWidget {
                           final json = await history.exportJson();
                           await Clipboard.setData(ClipboardData(text: json));
                           messenger.showSnackBar(
-                            SnackBar(content: Text('已复制 ${json.length} 字符 JSON')),
+                            SnackBar(
+                              content: Text('已复制 ${json.length} 字符 JSON'),
+                            ),
                           );
                         },
                         icon: const Icon(Icons.copy_all_outlined, size: 18),

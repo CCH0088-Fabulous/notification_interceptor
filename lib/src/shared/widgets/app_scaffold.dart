@@ -5,12 +5,15 @@ import '../../features/feed/presentation/feed_controller.dart';
 import '../../features/feed/presentation/feed_page.dart';
 import '../../features/history/presentation/history_controller.dart';
 import '../../features/history/presentation/history_page.dart';
-import '../../features/history/presentation/history_theme.dart';
+import '../../features/presets/presentation/presets_controller.dart';
+import '../../features/presets/presentation/presets_page.dart';
+import '../../features/comparison/presentation/batch_comparison_controller.dart';
+import '../../features/comparison/presentation/batch_comparison_page.dart';
+import '../../features/presets/domain/filter_preset.dart';
 import '../../features/rules/domain/rule_spec.dart';
 import '../../features/rules/domain/simple_rule_draft.dart';
 import '../../features/feed/domain/notification_record.dart';
 import '../../features/rules/presentation/rule_wizard_page.dart';
-import '../../features/rules/presentation/rule_creation_theme.dart';
 import '../../features/rules/presentation/rule_editor_page.dart';
 import '../../features/rules/presentation/rules_controller.dart';
 import '../../features/rules/presentation/rules_page.dart';
@@ -24,12 +27,16 @@ class AppScaffold extends StatefulWidget {
     required this.feed,
     required this.rules,
     required this.history,
+    this.presets,
+    this.comparison,
   });
 
   final AccessController access;
   final FeedController feed;
   final RulesController rules;
   final HistoryController history;
+  final PresetsController? presets;
+  final BatchComparisonController? comparison;
 
   @override
   State<AppScaffold> createState() => _AppScaffoldState();
@@ -62,20 +69,19 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Keep the same widget structure while switching tabs so their state and scroll positions survive.
-    // The active history tab includes its app bar, navigation and captured route themes.
-    return Theme(
-      data: _index == 2 ? HistoryTheme.build() : Theme.of(context),
-      child: Builder(builder: _buildScaffold),
-    );
-  }
+  Widget build(BuildContext context) => _buildScaffold(context);
 
   Widget _buildScaffold(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_index]),
         actions: [
+          if (_index == 1 && widget.presets != null)
+            IconButton(
+              tooltip: '预设 · 高级功能',
+              icon: const Icon(Icons.bookmarks_outlined),
+              onPressed: _openPresets,
+            ),
           if (_index == 2)
             ListenableBuilder(
               listenable: widget.history,
@@ -130,6 +136,7 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
             access: widget.access,
             history: widget.history,
             rules: widget.rules,
+            onOpenPresets: widget.presets == null ? null : _openPresets,
           ),
         ],
       ),
@@ -183,6 +190,39 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
     return package;
   }
 
+  Future<void> _openPresets() async {
+    final controller = widget.presets;
+    if (controller == null) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => PresetsPage(
+          controller: controller,
+          refreshRules: widget.rules.load,
+          loadPackages: () async {
+            await widget.rules.loadSeenPackages();
+            if (widget.rules.error != null) throw StateError('应用列表读取失败');
+            return widget.rules.seenPackages;
+          },
+          appName: _appName,
+          onCompare: widget.comparison == null ? null : _openComparison,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openComparison(FilterPreset? preset) async {
+    final controller = widget.comparison;
+    if (controller == null) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => BatchComparisonPage(
+          controller: controller,
+          initialPresetId: preset?.id,
+        ),
+      ),
+    );
+  }
+
   Future<List<NotificationRecord>> _ruleSamples() async {
     final active = await widget.feed.loadSamples();
     await widget.history.load();
@@ -218,18 +258,15 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
     }
     final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (context) => Theme(
-          data: RuleCreationTheme.build(),
-          child: RuleWizardPage(
-            controller: widget.rules,
-            initial: initial,
-            loadPackages: () async {
-              await widget.rules.loadSeenPackages();
-              if (widget.rules.error != null) throw StateError('应用列表读取失败');
-              return widget.rules.seenPackages;
-            },
-            loadSamples: _ruleSamples,
-          ),
+        builder: (context) => RuleWizardPage(
+          controller: widget.rules,
+          initial: initial,
+          loadPackages: () async {
+            await widget.rules.loadSeenPackages();
+            if (widget.rules.error != null) throw StateError('应用列表读取失败');
+            return widget.rules.seenPackages;
+          },
+          loadSamples: _ruleSamples,
         ),
       ),
     );
@@ -243,19 +280,16 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
   Future<void> _openAdvancedEditor([RuleSpec? initial]) async {
     final result = await Navigator.of(context).push<RuleSpec>(
       MaterialPageRoute(
-        builder: (context) => Theme(
-          data: RuleCreationTheme.build(),
-          child: RuleEditorPage(
-            initial: initial,
-            loadPackages: () async {
-              await widget.rules.loadSeenPackages();
-              if (widget.rules.error != null) throw StateError('应用列表读取失败');
-              return widget.rules.seenPackages;
-            },
-            loadSamples: _ruleSamples,
-            evaluate: (sample, draft) =>
-                widget.rules.evaluate(sample, draft: draft),
-          ),
+        builder: (context) => RuleEditorPage(
+          initial: initial,
+          loadPackages: () async {
+            await widget.rules.loadSeenPackages();
+            if (widget.rules.error != null) throw StateError('应用列表读取失败');
+            return widget.rules.seenPackages;
+          },
+          loadSamples: _ruleSamples,
+          evaluate: (sample, draft) =>
+              widget.rules.evaluate(sample, draft: draft),
         ),
       ),
     );

@@ -16,6 +16,13 @@ abstract final class BridgeMethod {
   static const String requestRebind = 'requestRebind';
   static const String getRules = 'getRules';
   static const String saveRules = 'saveRules';
+  static const String getPresets = 'getPresets';
+  static const String savePresets = 'savePresets';
+  static const String savePresetVersion = 'savePresetVersion';
+  static const String importPresetFile = 'importPresetFile';
+  static const String exportPresetFile = 'exportPresetFile';
+  static const String compareRuleSets = 'compareRuleSets';
+  static const String exportComparisonFile = 'exportComparisonFile';
   static const String evaluateSample = 'evaluateSample';
   static const String getHistory = 'getHistory';
   static const String clearHistory = 'clearHistory';

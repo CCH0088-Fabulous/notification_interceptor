@@ -1,5 +1,6 @@
 package dev.poc.notifinterceptor
 
+import android.content.Intent
 import android.os.Bundle
 import dev.poc.notifinterceptor.bridge.InterceptorBridge
 import dev.poc.notifinterceptor.support.NotificationAccess
@@ -21,6 +22,7 @@ class MainActivity : FlutterActivity() {
         bridge = InterceptorBridge(
             context = applicationContext,
             messenger = flutterEngine.dartExecutor.binaryMessenger,
+            activity = this,
         ).also { it.register() }
     }
 
@@ -28,5 +30,11 @@ class MainActivity : FlutterActivity() {
         bridge?.dispose()
         bridge = null
         super.cleanUpFlutterEngine(flutterEngine)
+    }
+
+    @Deprecated("Used for Android document selection on the API 26 baseline")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (bridge?.onActivityResult(requestCode, resultCode, data) == true) return
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

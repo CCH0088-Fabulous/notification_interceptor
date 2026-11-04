@@ -651,6 +651,7 @@ class GeneratorActivity : Activity() {
                     textSize = 14f
                     setTextColor(INK)
                     setPadding(dp(10), dp(8), dp(10), dp(8))
+                    setBackgroundColor(BACKGROUND)
                     minHeight = dp(48)
                 }
             }
@@ -658,6 +659,7 @@ class GeneratorActivity : Activity() {
 
     private fun spinner(labels: List<String>): Spinner = Spinner(this).apply {
         adapter = this@GeneratorActivity.adapter(labels)
+        setPopupBackgroundDrawable(shape(BACKGROUND, BORDER, 9))
         minimumHeight = dp(48)
         setPadding(dp(8), 0, dp(6), 0)
         background = shape(SURFACE, BORDER, 9)
