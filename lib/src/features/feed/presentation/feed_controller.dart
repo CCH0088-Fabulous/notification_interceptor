@@ -30,8 +30,15 @@ class FeedController extends ChangeNotifier {
   List<FeedItem> get items => List.unmodifiable(_items);
   bool get loading => _loading;
   String? get error => _error;
-  int get interceptCount =>
-      _items.where((item) => item.decision?.shouldIntercept ?? false).length;
+  int get notificationCount =>
+      _items.where((item) => item.record.countsTowardStatistics).length;
+  int get interceptCount => _items
+      .where(
+        (item) =>
+            item.record.countsTowardStatistics &&
+            (item.decision?.shouldIntercept ?? false),
+      )
+      .length;
 
   Future<void> refreshActive() async {
     _loading = true;

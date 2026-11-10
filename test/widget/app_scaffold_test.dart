@@ -163,7 +163,7 @@ void main() {
     expect(find.text('限时优惠'), findsOneWidget);
     expect(find.text('系统分组汇总'), findsNothing);
     expect(feed.items, hasLength(2)); // 实时源记录保留，页面只显示具体消息。
-    expect(find.text('当前列表：1 条 · 判定移除 0 条'), findsOneWidget);
+    expect(find.text('普通通知：1 条 · 判定移除 0 条'), findsOneWidget);
 
     await tester.tap(find.text('规则'));
     await tester.pumpAndSettle();

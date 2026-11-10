@@ -212,7 +212,7 @@ class ResearchManager(private val context: Context) {
 
     fun resolved(entry: HistoryEntry, status: CancelStatus) {
         val config = settings
-        if (!config.enabled || entry.timestamp < config.consentAt || entry.snapshot.isGroupSummary) return
+        if (!config.enabled || entry.timestamp < config.consentAt || !entry.snapshot.countsTowardStatistics) return
         val id = entry.id
         capture(config) {
             val observed = store.observation("notification:$id") ?: return@capture

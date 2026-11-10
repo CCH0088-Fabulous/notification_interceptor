@@ -32,6 +32,24 @@ class ResearchPolicyTest {
         assertEquals("pilot", ResearchPolicy.cohort("pilot", "com.example.personal"))
     }
 
+    @Test fun `常驻的所有动作与取消结果只记排除诊断 不进入通知处理量`() {
+        for (action in RuleAction.entries) {
+            for (status in CancelStatus.entries) {
+                val ongoing = entry(status, action).let { it.copy(snapshot = it.snapshot.copy(isOngoing = true)) }
+                assertFalse(ongoing.snapshot.countsTowardStatistics)
+                for (existing in listOf(false, true)) {
+                    val observed = ResearchPolicy.observed(ongoing, existing)
+                    assertEquals(mapOf("ongoing_excluded" to 1L), observed)
+                    assertEquals(observed, ResearchPolicy.validateMetrics(observed))
+                }
+            }
+        }
+        val ordinary = entry().snapshot.copy(isClearable = false)
+        assertTrue(ordinary.countsTowardStatistics)
+        val both = entry().let { it.copy(snapshot = it.snapshot.copy(isOngoing = true, isGroupSummary = true)) }
+        assertEquals(mapOf("summaries_excluded" to 1L), ResearchPolicy.observed(both, false))
+    }
+
     @Test fun `结构统计不包含私有词 名称 ID 包名 正则或精确日程`() {
         val rule = testRule("PRIVATE_RULE", packages = listOf("PRIVATE_APP"), keywords = listOf("PRIVATE_PERSON", "PRIVATE_PROJECT"), titleRegex = "PRIVATE_REGEX")
         val output = ResearchPolicy.ruleStructures(RuleSet(rules = listOf(rule, rule.copy(id = "PRIVATE_OTHER"))))

@@ -151,22 +151,27 @@ class _Comparison implements ComparisonRepository {
   }
 }
 
-HistoryEntry _entry(String id, DateTime at, {bool summary = false}) =>
-    HistoryEntry(
-      id: id,
-      timestamp: at.millisecondsSinceEpoch,
-      action: RuleAction.intercept,
-      cancelStatus: id == 'old' ? CancelStatus.success : CancelStatus.failed,
-      record: NotificationRecord(
-        key: 'same-notification',
-        id: 1,
-        packageName: 'demo.app',
-        postTime: 1,
-        title: '限时优惠',
-        isGroupSummary: summary,
-        extras: const {'private': 'not exported'},
-      ),
-    );
+HistoryEntry _entry(
+  String id,
+  DateTime at, {
+  bool summary = false,
+  bool ongoing = false,
+}) => HistoryEntry(
+  id: id,
+  timestamp: at.millisecondsSinceEpoch,
+  action: RuleAction.intercept,
+  cancelStatus: id == 'old' ? CancelStatus.success : CancelStatus.failed,
+  record: NotificationRecord(
+    key: 'same-notification',
+    id: 1,
+    packageName: 'demo.app',
+    postTime: 1,
+    title: '限时优惠',
+    isGroupSummary: summary,
+    isOngoing: ongoing,
+    extras: const {'private': 'not exported'},
+  ),
+);
 
 void main() {
   final now = DateTime(2026, 11, 4, 12);
@@ -237,6 +242,17 @@ void main() {
       ),
       true,
     );
+  });
+
+  test('常驻通知在应用样本上限之前排除，报告单列排除数，历史仍保留', () async {
+    historyRepo.items.add(_entry('ongoing', now, ongoing: true));
+    await controller.run(presetId: 'target', limit: 1);
+    expect(repository.samples.single.id, 'new');
+    expect(controller.result!.sourceCount, 4);
+    expect(controller.result!.skippedSummaries, 1);
+    expect(controller.result!.skippedOngoing, 1);
+    expect(controller.result!.toJson()['skippedOngoing'], 1);
+    expect(history.allEntries, hasLength(4));
   });
 
   test('日期范围、最新数量限制和空样本按所选范围处理', () async {

@@ -48,6 +48,9 @@ class NotificationRecord {
   final int progress;
   final Map<String, String> extras;
 
+  /// 常驻通知与系统汇总保留原始记录，但不计入通知效果统计。
+  bool get countsTowardStatistics => !isOngoing && !isGroupSummary;
+
   /// 仅标注系统实际返回的隐藏提示，不修改原始字段或匹配内容。
   bool get isContentHidden => [text, bigText, ...textLines].any(
     (value) =>

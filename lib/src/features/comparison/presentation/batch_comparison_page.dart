@@ -203,7 +203,7 @@ class _BatchComparisonPageState extends State<BatchComparisonPage> {
           children: [
             Text(
               '本地范围 ${result.sourceCount} 条；实际比较 ${result.sampleCount} 条记录，'
-              '排除 ${result.skippedSummaries} 条系统汇总。',
+              '排除 ${result.skippedSummaries} 条系统汇总、${result.skippedOngoing} 条常驻通知。',
               key: const Key('comparison-sample-count'),
             ),
             const SizedBox(height: 12),

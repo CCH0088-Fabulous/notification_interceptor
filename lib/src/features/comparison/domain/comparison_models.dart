@@ -96,6 +96,7 @@ class BatchComparisonResult {
     required this.limit,
     required this.sourceCount,
     required this.skippedSummaries,
+    this.skippedOngoing = 0,
     List<RuleIssue> baseIssues = const [],
     List<RuleIssue> candidateIssues = const [],
   }) : rows = List.unmodifiable(rows),
@@ -111,6 +112,7 @@ class BatchComparisonResult {
   final int limit;
   final int sourceCount;
   final int skippedSummaries;
+  final int skippedOngoing;
   final List<RuleIssue> baseIssues;
   final List<RuleIssue> candidateIssues;
   int get sampleCount => rows.length;
@@ -147,6 +149,7 @@ class BatchComparisonResult {
     },
     'sampleCount': sampleCount,
     'skippedSummaries': skippedSummaries,
+    'skippedOngoing': skippedOngoing,
     'hiddenContentCount': hiddenContentCount,
     'currentRules': beforeRules.toJson(),
     'candidateRules': afterRules.toJson(),

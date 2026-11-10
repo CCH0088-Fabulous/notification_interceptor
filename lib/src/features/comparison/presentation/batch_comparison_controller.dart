@@ -103,8 +103,11 @@ class BatchComparisonController extends ChangeNotifier {
               .toList()
             ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
       final skipped = source.where((e) => e.record.isGroupSummary).length;
+      final skippedOngoing = source
+          .where((e) => e.record.isOngoing && !e.record.isGroupSummary)
+          .length;
       final samples = source
-          .where((e) => !e.record.isGroupSummary)
+          .where((e) => e.record.countsTowardStatistics)
           .take(limit)
           .map(_snapshotEntry)
           .toList(growable: false);
@@ -142,6 +145,7 @@ class BatchComparisonController extends ChangeNotifier {
         limit: limit,
         sourceCount: source.length,
         skippedSummaries: skipped,
+        skippedOngoing: skippedOngoing,
         baseIssues: evaluation.baseIssues,
         candidateIssues: evaluation.candidateIssues,
       );

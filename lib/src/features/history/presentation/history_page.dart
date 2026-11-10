@@ -402,7 +402,7 @@ class _OverviewCard extends StatelessWidget {
               ],
             ),
             Text(
-              '仅统计本地保留记录，不含系统分组汇总',
+              '仅统计本地普通通知记录，不含常驻通知和系统分组汇总',
               style: theme.textTheme.labelSmall?.copyWith(
                 color: scheme.onSurfaceVariant,
               ),

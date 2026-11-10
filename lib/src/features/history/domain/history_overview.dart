@@ -44,8 +44,9 @@ class HistoryRuleEffect {
 class HistoryOverview {
   HistoryOverview(Iterable<HistoryEntry> source) {
     final groups = <HistoryRuleKey, HistoryRuleEffect>{};
-    final entries = source.where((e) => !e.record.isGroupSummary).toList()
-      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    final entries =
+        source.where((e) => e.record.countsTowardStatistics).toList()
+          ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
     for (final entry in entries) {
       total++;
       if (entry.action == RuleAction.intercept) {

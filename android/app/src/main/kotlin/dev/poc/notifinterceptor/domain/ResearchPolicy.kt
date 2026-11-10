@@ -27,7 +27,7 @@ object ResearchPolicy {
         "cancel_success", "cancel_failed", "cancel_rejected", "cancel_unconfirmed",
         "existing_processed", "existing_allow", "existing_log_only", "existing_intercept_matched",
         "existing_cancel_success", "existing_cancel_failed", "existing_cancel_rejected",
-        "existing_cancel_unconfirmed", "summaries_excluded", "rules_saved", "rules_added",
+        "existing_cancel_unconfirmed", "summaries_excluded", "ongoing_excluded", "rules_saved", "rules_added",
         "rules_removed", "rules_modified", "rules_toggled", "global_toggled", "presets_saved",
         "preset_version_saved", "history_cleared", "history_exported", "manual_cancel_requested",
         "retention_dropped_events", "retention_dropped_hours", "retention_dropped_batches",
@@ -61,6 +61,7 @@ object ResearchPolicy {
 
     fun observed(entry: HistoryEntry, existing: Boolean): Map<String, Long> {
         if (entry.snapshot.isGroupSummary) return mapOf("summaries_excluded" to 1L)
+        if (entry.snapshot.isOngoing) return mapOf("ongoing_excluded" to 1L)
         val prefix = if (existing) "existing_" else ""
         val values = mutableMapOf("${prefix}processed" to 1L)
         values[prefix + when (entry.action) {

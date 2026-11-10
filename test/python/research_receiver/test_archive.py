@@ -38,6 +38,19 @@ def zipped(value, name='research.json'):
 
 
 class ArchiveTests(unittest.TestCase):
+    def test_ongoing_diagnostic_import_does_not_inflate_notification_totals(self):
+        value=fixture()
+        value['hours'][0]['metrics']['ongoing_excluded']=80
+        value['events'][0]['metrics']={'ongoing_excluded':80}
+        accepted=read_archive(zipped(value))
+        self.assertEqual(accepted['hours'][0]['metrics']['ongoing_excluded'],80)
+        self.store.import_archive(accepted)
+        self.store.import_archive(accepted)
+        totals=self.store.report(0,4102444800000,'demo')['sums']
+        self.assertEqual(totals['processed'],2)
+        self.assertEqual(totals['intercept_matched'],1)
+        self.assertEqual(len(list(self.store.event_rows(self.pid))),1)
+
     def setUp(self):
         root=ROOT/'build/receiver-verification';root.mkdir(parents=True,exist_ok=True)
         self.temp=tempfile.TemporaryDirectory(dir=root)

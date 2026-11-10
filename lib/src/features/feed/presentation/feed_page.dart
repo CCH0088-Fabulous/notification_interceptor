@@ -42,10 +42,8 @@ class FeedPage extends StatelessWidget {
               )
             else
               _ListeningBar(
-                intercepted: items
-                    .where((item) => item.decision?.shouldIntercept ?? false)
-                    .length,
-                total: items.length,
+                intercepted: feed.interceptCount,
+                total: feed.notificationCount,
               ),
             _Toolbar(
               loading: feed.loading,
@@ -122,7 +120,7 @@ class _ListeningBar extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '当前列表：$total 条 · 判定移除 $intercepted 条',
+              '普通通知：$total 条 · 判定移除 $intercepted 条',
               textAlign: TextAlign.right,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: scheme.onPrimaryContainer,

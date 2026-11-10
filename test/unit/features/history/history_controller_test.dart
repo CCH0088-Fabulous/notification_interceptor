@@ -17,6 +17,7 @@ HistoryEntry entry(
   DateTime? at,
   CancelStatus cancel = CancelStatus.notAttempted,
   bool summary = false,
+  bool ongoing = false,
   String? rule,
   String? ruleName,
 }) => HistoryEntry(
@@ -35,6 +36,7 @@ HistoryEntry entry(
     title: title,
     bigText: '完整正文',
     isGroupSummary: summary,
+    isOngoing: ongoing,
   ),
 );
 
@@ -75,7 +77,7 @@ HistoryController _controllerFor(_FakeHistoryRepository repository) =>
     HistoryController(repository: repository, now: () => now);
 
 void main() {
-  test('完整加载窗口，设置页保留原始统计，效果统计排除汇总与失败', () async {
+  test('保留常驻记录，效果统计排除常驻和汇总，移除只计确认成功', () async {
     final repo = _FakeHistoryRepository([
       entry(
         'success',
@@ -95,20 +97,47 @@ void main() {
       entry('allow'),
       entry('log', action: RuleAction.logOnly),
       entry('summary', summary: true),
+      entry('ongoing-allow', ongoing: true),
+      entry('ongoing-log', ongoing: true, action: RuleAction.logOnly),
+      entry(
+        'ongoing-removed',
+        ongoing: true,
+        action: RuleAction.intercept,
+        cancel: CancelStatus.success,
+        rule: 'ongoing-only-rule',
+      ),
     ]);
     final c = _controllerFor(repo);
     addTearDown(c.dispose);
     await c.load();
     expect(repo.lastQuery?.limit, 1000);
-    expect(c.allEntries, hasLength(6));
-    expect(c.entries, hasLength(5));
-    expect(c.stats.total, 6);
+    expect(c.allEntries, hasLength(9));
+    expect(c.entries, hasLength(8));
+    expect(c.stats.total, 9);
     expect(c.overview.total, 5);
     expect(c.overview.removed, 1);
     expect(c.overview.removedRate, .2);
     expect(c.overview.kept, 1);
     expect(c.overview.logOnly, 1);
     expect(c.overview.unconfirmed, 2);
+    expect(
+      c.overview.rules.any((rule) => rule.key.id == 'ongoing-only-rule'),
+      false,
+    );
+  });
+
+  test('只有常驻通知时统计为零，但记录仍能搜索和导出', () async {
+    final c = _controllerFor(
+      _FakeHistoryRepository([entry('ongoing', ongoing: true, title: '后台服务')]),
+    );
+    addTearDown(c.dispose);
+    await c.load();
+    c.setSearch('后台服务');
+    expect(c.entries.single.id, 'ongoing');
+    expect(c.overview.total, 0);
+    expect(c.overview.removedRate, 0);
+    expect(c.overview.rules, isEmpty);
+    expect(await c.exportJson(), '[1]');
   });
 
   test('搜索100条之后的记录，动作和包名筛选均不改变统计', () async {

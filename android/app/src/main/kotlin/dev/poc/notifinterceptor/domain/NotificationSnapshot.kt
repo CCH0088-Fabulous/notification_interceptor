@@ -26,6 +26,9 @@ data class NotificationSnapshot(
     val progress: Int,
     val extras: Map<String, String>,
 ) {
+    /** Match Dart statistics eligibility; this does not change rule evaluation. */
+    val countsTowardStatistics: Boolean get() = !isOngoing && !isGroupSummary
+
     /** 关键词与正则匹配的搜索文本，顺序固定以便测试。 */
     fun searchableText(): String = buildString {
         append(title.orEmpty())

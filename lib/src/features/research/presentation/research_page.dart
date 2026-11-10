@@ -202,6 +202,7 @@ class _ResearchPageState extends State<ResearchPage> {
             '完整性提示：已裁剪事件 ${status.retentionDroppedEvents}、小时组 ${status.retentionDroppedHours}；本进程采集失败 ${status.captureFailures}。文件中会保留说明。',
           ),
         const Text('时长仅代表已观测区间，缺口不会当作持续使用；处理次数包含通知更新。'),
+        const Text('新版通知统计排除常驻通知和系统汇总；旧版已生成的小时汇总不回算。'),
         TextButton(
           onPressed: busy ? null : widget.controller.load,
           child: const Text('刷新统计'),

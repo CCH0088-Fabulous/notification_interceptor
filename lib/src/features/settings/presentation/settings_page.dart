@@ -106,7 +106,8 @@ class SettingsPage extends StatelessWidget {
               subtitle: '通知历史与规则保存在本机；自愿研究统计单独管理。',
               child: Column(
                 children: [
-                  _row('历史记录', '${history.stats.total} 条（上限 1000）'),
+                  _row('已保存历史', '${history.stats.total} 条（上限 1000）'),
+                  const Text('存储条数包含常驻通知与系统汇总，通知效果统计另行排除。'),
                   _row('规则数量', '${rules.ruleSet.rules.length} 条'),
                   const SizedBox(height: 12),
                   Wrap(

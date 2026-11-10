@@ -101,7 +101,7 @@ class NotificationCard extends StatelessWidget {
                     if (record.channelName != null)
                       _Tag(text: record.channelName!, color: theme.colorScheme.secondary),
                     if (record.isOngoing)
-                      _Tag(text: '常驻', color: theme.colorScheme.tertiary),
+                      _Tag(text: '常驻 · 不计统计', color: theme.colorScheme.tertiary),
                     if (!record.isClearable)
                       _Tag(text: '不可清除', color: theme.colorScheme.error),
                     if (decision != null)

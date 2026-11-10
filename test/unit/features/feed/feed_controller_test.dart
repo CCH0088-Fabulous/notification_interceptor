@@ -27,15 +27,23 @@ class _FakeFeedRepository implements FeedRepository {
   Stream<NotificationEvent> watch() => const Stream<NotificationEvent>.empty();
 }
 
-NotificationRecord record(String key, {String packageName = 'com.demo'}) =>
-    NotificationRecord(
-      key: key,
-      id: 1,
-      packageName: packageName,
-      appLabel: 'Demo',
-      postTime: 1760000000000,
-      title: '标题 $key',
-    );
+NotificationRecord record(
+  String key, {
+  String packageName = 'com.demo',
+  bool ongoing = false,
+  bool summary = false,
+  bool clearable = true,
+}) => NotificationRecord(
+  key: key,
+  id: 1,
+  packageName: packageName,
+  appLabel: 'Demo',
+  postTime: 1760000000000,
+  title: '标题 $key',
+  isOngoing: ongoing,
+  isGroupSummary: summary,
+  isClearable: clearable,
+);
 
 Map<String, dynamic> postedEvent(
   NotificationRecord record, {
@@ -107,6 +115,27 @@ void main() {
       expect(controller.items.single.record.id, 42);
       await controller.cancel(controller.items.single.record);
       expect(repository.cancelledKeys, ['native-key']);
+    });
+
+    test('常驻和汇总保留在实时记录但不计数，普通不可清除通知仍计入', () async {
+      events.add(
+        postedEvent(record('ongoing', ongoing: true), action: 'intercept'),
+      );
+      events.add(
+        postedEvent(record('summary', summary: true), action: 'intercept'),
+      );
+      events.add(
+        postedEvent(record('ordinary', clearable: false), action: 'intercept'),
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(controller.items, hasLength(3));
+      expect(controller.notificationCount, 1);
+      expect(controller.interceptCount, 1);
+      events.add(postedEvent(record('ongoing'), action: 'allow'));
+      await Future<void>.delayed(Duration.zero);
+      expect(controller.items, hasLength(3));
+      expect(controller.notificationCount, 2);
+      expect(controller.interceptCount, 1);
     });
 
     test('兼容平铺快照，忽略缺少通知身份的错误事件', () async {
