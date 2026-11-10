@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import '../../../shared/domain/usage_recorder.dart';
 
 import '../../history/domain/history_entry.dart';
 import '../../history/presentation/history_controller.dart';
@@ -19,11 +20,13 @@ class BatchComparisonController extends ChangeNotifier {
     required HistoryController history,
     required PresetsController presets,
     DateTime Function()? now,
+    UsageRecorder? usage,
   }) : _repository = repository,
        _rules = rules,
        _history = history,
        _presets = presets,
-       _now = now ?? DateTime.now {
+       _now = now ?? DateTime.now,
+       _usage = usage {
     _rules.addListener(_changed);
     _presets.addListener(_changed);
   }
@@ -33,6 +36,7 @@ class BatchComparisonController extends ChangeNotifier {
   final HistoryController _history;
   final PresetsController _presets;
   final DateTime Function() _now;
+  final UsageRecorder? _usage;
   bool _loading = false;
   bool _disposed = false;
   bool _runFailed = false;
@@ -143,6 +147,11 @@ class BatchComparisonController extends ChangeNotifier {
       );
       _sourceFingerprint = fingerprint;
       _runFailed = false;
+      try {
+        _usage?.record(UsageAction.comparisonCompleted);
+      } catch (_) {
+        /* optional observer */
+      }
     } catch (error) {
       _error = error.toString();
     } finally {

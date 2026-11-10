@@ -38,11 +38,14 @@ class InterceptorBridge(
     private val methodChannel = MethodChannel(messenger, CHANNEL_NAME)
     private val eventChannel = EventChannel(messenger, EVENT_CHANNEL_NAME)
     private val documents = activity?.let(::PresetDocumentPicker)
+    private val archives = activity?.let(::ResearchArchivePicker)
     private val comparison = RuleSetComparison(graph.ruleEngine)
     private val comparisonExecutor = Executors.newSingleThreadExecutor { work ->
         Thread(work, "notif-rule-comparison").apply { isDaemon = true }
     }
     private val main = Handler(Looper.getMainLooper())
+    private val researchExecutor = Executors.newFixedThreadPool(2)
+    private val researchRequests = mutableSetOf<MethodChannel.Result>()
     private var comparisonResult: MethodChannel.Result? = null
     private var disposed = false
 
@@ -56,13 +59,21 @@ class InterceptorBridge(
         comparisonResult?.error(ERROR_COMPARISON, "页面已关闭，批量对比已取消", null)
         comparisonResult = null
         comparisonExecutor.shutdownNow()
+        researchRequests.forEach { it.error(ERROR_RESEARCH, "页面已关闭", null) }
+        researchRequests.clear()
+        researchExecutor.shutdownNow()
         documents?.dispose()
+        archives?.dispose()
         methodChannel.setMethodCallHandler(null)
         eventChannel.setStreamHandler(null)
         EventDispatcher.attach(null)
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+        if (call.method in RESEARCH_METHODS) {
+            researchCall(call, result)
+            return
+        }
         if (call.method == METHOD_COMPARE_RULE_SETS) {
             compareRuleSets(call, result)
             return
@@ -113,7 +124,9 @@ class InterceptorBridge(
         METHOD_GET_ACTIVE_NOTIFICATIONS -> activeNotifications()
         METHOD_CANCEL -> cancel(call)
         METHOD_GET_SEEN_PACKAGES -> graph.history.seenPackages()
-        METHOD_EXPORT_HISTORY -> graph.history.exportJson()
+        METHOD_EXPORT_HISTORY -> graph.history.exportJson().also {
+            runCatching { graph.research.count(mapOf("history_exported" to 1L)) }
+        }
         else -> throw IllegalArgumentException("未知方法: ${call.method}")
     }
 
@@ -152,7 +165,9 @@ class InterceptorBridge(
         val raw = call.argument<Any?>("ruleSet") as? Map<*, *>
             ?: throw IllegalArgumentException("缺少 ruleSet")
         val ruleSet = RuleSet.fromMap(raw)
+        val previous = graph.rules.load()
         val saved = graph.rules.save(ruleSet)
+        runCatching { graph.research.rulesChanged(previous, saved) }
         return mapOf(
             "ruleSet" to saved.toMap(),
             "issues" to graph.rules.validate(saved).map { it.toMap() },
@@ -162,17 +177,22 @@ class InterceptorBridge(
     private fun savePresets(call: MethodCall): Map<String, Any?> {
         val library = call.argument<Any?>("library") as? Map<*, *>
             ?: throw IllegalArgumentException("缺少 library")
-        return graph.presets.save(library)
+        return graph.presets.save(library).also {
+            runCatching { graph.research.count(mapOf("presets_saved" to 1L)) }
+        }
     }
 
     private fun savePresetVersion(call: MethodCall): Map<String, Any?> {
         val id = call.argument<String>("presetId")
             ?: throw IllegalArgumentException("缺少 presetId")
-        return graph.presets.saveVersion(id, call.argument<String>("label"))
+        return graph.presets.saveVersion(id, call.argument<String>("label")).also {
+            runCatching { graph.research.count(mapOf("preset_version_saved" to 1L)) }
+        }
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean =
-        documents?.onActivityResult(requestCode, resultCode, data) ?: false
+        (archives?.onActivityResult(requestCode, resultCode, data) == true) ||
+            (documents?.onActivityResult(requestCode, resultCode, data) == true)
 
     private fun evaluateSample(call: MethodCall): Map<String, Any?> {
         val sample = call.argument<Any?>("sample") as? Map<*, *>
@@ -228,6 +248,7 @@ class InterceptorBridge(
 
     private fun clearHistory(): Boolean {
         graph.history.clear()
+        runCatching { graph.research.count(mapOf("history_cleared" to 1L)) }
         return true
     }
 
@@ -246,7 +267,52 @@ class InterceptorBridge(
             ?: throw IllegalArgumentException("缺少 key")
         val service = graph.listener
             ?: return mapOf("cancelled" to false, "errorCode" to ERROR_SERVICE_NOT_CONNECTED)
-        return mapOf("cancelled" to service.cancelByKey(key))
+        val cancelled = service.cancelByKey(key)
+        if (cancelled) runCatching { graph.research.count(mapOf("manual_cancel_requested" to 1L)) }
+        return mapOf("cancelled" to cancelled)
+    }
+
+    private fun researchCall(call: MethodCall, result: MethodChannel.Result) {
+        if (disposed) { result.error(ERROR_RESEARCH, "页面已关闭", null); return }
+        if (call.method == METHOD_RECORD_RESEARCH_ACTION) {
+            runCatching { graph.research.action(call.argument<String>("action").orEmpty()) }
+                .onSuccess { result.success(null) }
+                .onFailure { result.error(ERROR_RESEARCH, "研究操作无效", null) }
+            return
+        }
+        researchRequests.add(result)
+        researchExecutor.execute {
+            val response = runCatching {
+                when (call.method) {
+                    METHOD_GET_RESEARCH_STATUS -> graph.research.status()
+                    METHOD_ENROLL_RESEARCH -> graph.research.enroll(
+                        call.argument<Number>("expectedRevision")?.toLong() ?: -1)
+                    METHOD_END_RESEARCH -> graph.research.end(call.argument<Number>("expectedRevision")?.toLong() ?: -1)
+                    METHOD_SHARE_RESEARCH_FILE, METHOD_EXPORT_RESEARCH_FILE -> graph.research.prepareArchive()
+                    METHOD_CONFIGURE_RESEARCH -> graph.research.configure(
+                        call.arguments as? Map<*, *> ?: throw IllegalArgumentException("研究配置无效"), graph.rules.load())
+                    METHOD_PREVIEW_RESEARCH_UPLOAD -> graph.research.preview()?.let {
+                        dev.poc.notifinterceptor.data.Json.stringify(it)
+                    }
+                    METHOD_SYNC_RESEARCH_NOW -> graph.research.sync(manual = true,
+                        disclosureAccepted = call.argument<Int>("disclosureAccepted") ?: 0)
+                    METHOD_CLEAR_RESEARCH_DATA -> graph.research.clear()
+                    else -> error("未知研究操作")
+                }
+            }
+            main.post {
+                if (disposed || !researchRequests.remove(result)) return@post
+                response.onSuccess { value ->
+                    if (call.method == METHOD_EXPORT_RESEARCH_FILE || call.method == METHOD_SHARE_RESEARCH_FILE) {
+                        runCatching {
+                            val picker = archives ?: error("当前页面不能分享或保存文件")
+                            val file = value as? java.io.File ?: error("文件未生成")
+                            if (call.method == METHOD_SHARE_RESEARCH_FILE) picker.share(file, result) else picker.save(file, result)
+                        }.onFailure { result.error(ERROR_RESEARCH, it.message ?: "导出失败", null) }
+                    } else result.success(value)
+                }.onFailure { result.error(ERROR_RESEARCH, it.message ?: "研究操作失败", null) }
+            }
+        }
     }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
@@ -300,6 +366,20 @@ class InterceptorBridge(
         const val METHOD_CANCEL = "cancel"
         const val METHOD_GET_SEEN_PACKAGES = "getSeenPackages"
         const val METHOD_EXPORT_HISTORY = "exportHistory"
+        const val METHOD_GET_RESEARCH_STATUS = "getResearchStatus"
+        const val METHOD_ENROLL_RESEARCH = "enrollResearch"
+        const val METHOD_CONFIGURE_RESEARCH = "configureResearch"
+        const val METHOD_RECORD_RESEARCH_ACTION = "recordResearchAction"
+        const val METHOD_PREVIEW_RESEARCH_UPLOAD = "previewResearchUpload"
+        const val METHOD_SYNC_RESEARCH_NOW = "syncResearchNow"
+        const val METHOD_CLEAR_RESEARCH_DATA = "clearResearchData"
+        const val METHOD_EXPORT_RESEARCH_FILE = "exportResearchFile"
+        const val METHOD_SHARE_RESEARCH_FILE = "shareResearchFile"
+        const val METHOD_END_RESEARCH = "endResearch"
+        private val RESEARCH_METHODS = setOf(METHOD_GET_RESEARCH_STATUS, METHOD_ENROLL_RESEARCH, METHOD_CONFIGURE_RESEARCH,
+            METHOD_RECORD_RESEARCH_ACTION, METHOD_PREVIEW_RESEARCH_UPLOAD, METHOD_SYNC_RESEARCH_NOW,
+            METHOD_CLEAR_RESEARCH_DATA, METHOD_EXPORT_RESEARCH_FILE, METHOD_SHARE_RESEARCH_FILE, METHOD_END_RESEARCH)
+        private const val ERROR_RESEARCH = "RESEARCH"
 
         const val ERROR_INTERNAL = "INTERNAL"
         const val ERROR_SERVICE_NOT_CONNECTED = "SERVICE_NOT_CONNECTED"

@@ -2,14 +2,38 @@ package dev.poc.notifinterceptor
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import dev.poc.notifinterceptor.bridge.InterceptorBridge
 import dev.poc.notifinterceptor.support.NotificationAccess
+import dev.poc.notifinterceptor.support.AppGraph
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 
 class MainActivity : FlutterActivity() {
 
     private var bridge: InterceptorBridge? = null
+    private val researchHandler = Handler(Looper.getMainLooper())
+    private val researchTick = object : Runnable {
+        override fun run() {
+            AppGraph.ensure(applicationContext).research.checkpoint()
+            researchHandler.postDelayed(this, 30_000)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        AppGraph.ensure(applicationContext).research.setForeground(true)
+        AppGraph.ensure(applicationContext).research.ensureBackgroundScheduled()
+        researchHandler.removeCallbacks(researchTick)
+        researchHandler.postDelayed(researchTick, 30_000)
+    }
+
+    override fun onPause() {
+        AppGraph.ensure(applicationContext).research.setForeground(false)
+        researchHandler.removeCallbacks(researchTick)
+        super.onPause()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

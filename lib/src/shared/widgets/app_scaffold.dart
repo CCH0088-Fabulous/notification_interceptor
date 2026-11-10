@@ -9,6 +9,9 @@ import '../../features/presets/presentation/presets_controller.dart';
 import '../../features/presets/presentation/presets_page.dart';
 import '../../features/comparison/presentation/batch_comparison_controller.dart';
 import '../../features/comparison/presentation/batch_comparison_page.dart';
+import '../../features/research/presentation/research_controller.dart';
+import '../../features/research/presentation/research_page.dart';
+import '../domain/usage_recorder.dart';
 import '../../features/presets/domain/filter_preset.dart';
 import '../../features/rules/domain/rule_spec.dart';
 import '../../features/rules/domain/simple_rule_draft.dart';
@@ -29,6 +32,7 @@ class AppScaffold extends StatefulWidget {
     required this.history,
     this.presets,
     this.comparison,
+    this.research,
   });
 
   final AccessController access;
@@ -37,6 +41,7 @@ class AppScaffold extends StatefulWidget {
   final HistoryController history;
   final PresetsController? presets;
   final BatchComparisonController? comparison;
+  final ResearchController? research;
 
   @override
   State<AppScaffold> createState() => _AppScaffoldState();
@@ -137,12 +142,23 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
             history: widget.history,
             rules: widget.rules,
             onOpenPresets: widget.presets == null ? null : _openPresets,
+            onOpenResearch: widget.research == null ? null : _openResearch,
           ),
         ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (value) {
+          if (value != _index) {
+            widget.research?.record(
+              [
+                UsageAction.pageFeed,
+                UsageAction.pageRules,
+                UsageAction.pageHistory,
+                UsageAction.pageSettings,
+              ][value],
+            );
+          }
           setState(() => _index = value);
           if (value == 2) {
             widget.history.load();
@@ -193,6 +209,7 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
   Future<void> _openPresets() async {
     final controller = widget.presets;
     if (controller == null) return;
+    widget.research?.record(UsageAction.openPresets);
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
         builder: (_) => PresetsPage(
@@ -213,6 +230,7 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
   Future<void> _openComparison(FilterPreset? preset) async {
     final controller = widget.comparison;
     if (controller == null) return;
+    widget.research?.record(UsageAction.openComparison);
     await Navigator.of(context).push<void>(
       MaterialPageRoute(
         builder: (_) => BatchComparisonPage(
@@ -220,6 +238,14 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
           initialPresetId: preset?.id,
         ),
       ),
+    );
+  }
+
+  Future<void> _openResearch() async {
+    final controller = widget.research;
+    if (controller == null) return;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(builder: (_) => ResearchPage(controller: controller)),
     );
   }
 

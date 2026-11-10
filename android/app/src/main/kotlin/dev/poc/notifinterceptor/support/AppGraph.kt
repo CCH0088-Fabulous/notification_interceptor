@@ -59,6 +59,9 @@ object AppGraph {
     lateinit var presets: PresetRepository
         private set
 
+    lateinit var research: ResearchManager
+        private set
+
     lateinit var appInfo: AppInfoResolver
         private set
 
@@ -80,6 +83,8 @@ object AppGraph {
             ruleEngine = RuleEngine(app.packageName)
             rules = RuleRepository(app.filesDir, ruleEngine)
             presets = PresetRepository(app.filesDir)
+            research = ResearchManager(app)
+            runCatching { research.setGlobalEnabled(rules.load().globalEnabled) }
             history = HistoryRepository(app.filesDir)
             ioExecutor = Executors.newSingleThreadExecutor { runnable ->
                 Thread(runnable, "notif-history-io").apply { isDaemon = true }
@@ -98,6 +103,7 @@ object AppGraph {
                 scheduler = { delay, task ->
                     scheduler.schedule(task, delay, TimeUnit.MILLISECONDS)
                 },
+                onResolved = { entry, status -> research.resolved(entry, status) },
             )
             initialized = true
         }

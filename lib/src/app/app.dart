@@ -13,6 +13,8 @@ import '../features/presets/data/native_presets_repository.dart';
 import '../features/presets/presentation/presets_controller.dart';
 import '../features/rules/data/native_rules_repository.dart';
 import '../features/rules/presentation/rules_controller.dart';
+import '../features/research/data/native_research_repository.dart';
+import '../features/research/presentation/research_controller.dart';
 import '../shared/widgets/app_scaffold.dart';
 import 'theme.dart';
 
@@ -33,11 +35,15 @@ class _NotifInterceptorAppState extends State<NotifInterceptorApp> {
   late final HistoryController _history;
   late final PresetsController _presets;
   late final BatchComparisonController _comparison;
+  late final ResearchController _research;
 
   @override
   void initState() {
     super.initState();
     final channel = widget.channel;
+    _research = ResearchController(
+      repository: NativeResearchRepository(channel),
+    );
     _access = AccessController(
       repository: NativeAccessRepository(channel),
       events: channel.events,
@@ -51,12 +57,14 @@ class _NotifInterceptorAppState extends State<NotifInterceptorApp> {
     _presets = PresetsController(
       repository: NativePresetsRepository(channel),
       rules: _rules,
+      usage: _research,
     );
     _comparison = BatchComparisonController(
       repository: NativeComparisonRepository(channel),
       rules: _rules,
       history: _history,
       presets: _presets,
+      usage: _research,
     );
 
     _access.refresh();
@@ -64,6 +72,7 @@ class _NotifInterceptorAppState extends State<NotifInterceptorApp> {
     _rules.load();
     _history.load();
     _presets.load();
+    _research.load();
   }
 
   @override
@@ -72,6 +81,7 @@ class _NotifInterceptorAppState extends State<NotifInterceptorApp> {
     _feed.dispose();
     _comparison.dispose();
     _presets.dispose();
+    _research.dispose();
     _rules.dispose();
     _history.dispose();
     super.dispose();
@@ -91,6 +101,7 @@ class _NotifInterceptorAppState extends State<NotifInterceptorApp> {
         history: _history,
         presets: _presets,
         comparison: _comparison,
+        research: _research,
       ),
     );
   }

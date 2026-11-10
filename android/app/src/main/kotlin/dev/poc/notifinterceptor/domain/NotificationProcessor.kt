@@ -59,10 +59,11 @@ class NotificationProcessor(
     private val tracker: CancelTracker,
     private val time: TimeSource,
     private val ids: IdFactory,
+    private val onObserved: (HistoryEntry, Boolean) -> Unit = { _, _ -> },
 ) {
 
     /** @return null 表示该通知被跳过（自身包名），不写历史。 */
-    fun process(snapshot: NotificationSnapshot): ProcessResult? {
+    fun process(snapshot: NotificationSnapshot, existing: Boolean = false): ProcessResult? {
         if (snapshot.packageName == ownPackage) return null
 
         val ruleSet = ruleSetProvider()
@@ -70,6 +71,7 @@ class NotificationProcessor(
 
         if (!decision.shouldIntercept) {
             val entry = buildEntry(snapshot, decision, CancelStatus.NOT_ATTEMPTED)
+            runCatching { onObserved(entry, existing) }
             history.append(entry)
             return ProcessResult(entry, decision)
         }
@@ -77,12 +79,16 @@ class NotificationProcessor(
         val requested = runCatching { canceller.cancel(snapshot.key) }.getOrDefault(false)
         if (!requested) {
             val entry = buildEntry(snapshot, decision, CancelStatus.FAILED)
+            runCatching { onObserved(entry, existing) }
             history.append(entry)
             return ProcessResult(entry, decision)
         }
 
         // 取消已发出，但尚未确认。先给调用方一个即时结果，历史等确认后再补写。
         val pending = buildEntry(snapshot, decision, CancelStatus.PENDING)
+        // Queue the observation before final confirmation can arrive. Optional
+        // research observers may fail without changing notification handling.
+        runCatching { onObserved(pending, existing) }
         val tracked = runCatching { tracker.track(snapshot.key, pending) }.isSuccess
         if (!tracked) {
             // 无法登记时退化为乐观记录，避免这条通知既没取消记录也查不到去向。

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import '../../../shared/domain/usage_recorder.dart';
 
 import '../../rules/presentation/rules_controller.dart';
 import '../../rules/domain/rule_spec.dart';
@@ -17,13 +18,16 @@ class PresetsController extends ChangeNotifier {
   PresetsController({
     required PresetsRepository repository,
     required RulesController rules,
+    UsageRecorder? usage,
   }) : _repository = repository,
-       _rules = rules {
+       _rules = rules,
+       _usage = usage {
     _rules.addListener(_changed);
   }
 
   final PresetsRepository _repository;
   final RulesController _rules;
+  final UsageRecorder? _usage;
   List<FilterPreset> _presets = const [];
   List<PresetVersion> _versions = const [];
   bool _loading = false;
@@ -136,7 +140,7 @@ class PresetsController extends ChangeNotifier {
             ownsRule: preset.ownsRule,
             replacements: preset.toRules(),
           );
-        });
+        }, usageAction: UsageAction.presetApply);
 
   Future<void> switchScene(FilterPreset preset) => _run(() async {
     _requireCurrent(preset);
@@ -148,10 +152,12 @@ class PresetsController extends ChangeNotifier {
       ownsRule: (rule) => _isInstalledSceneRule(rule) || preset.ownsRule(rule),
       replacements: preset.toRules(),
     );
-  });
+  }, usageAction: UsageAction.sceneSwitch);
 
-  Future<void> deactivateScenes() =>
-      _run(() => _rules.replaceManagedRules(ownsRule: _isInstalledSceneRule));
+  Future<void> deactivateScenes() => _run(
+    () => _rules.replaceManagedRules(ownsRule: _isInstalledSceneRule),
+    usageAction: UsageAction.sceneEnd,
+  );
 
   Future<void> saveVersion(FilterPreset preset, {String? label}) =>
       _run(() async {
@@ -184,7 +190,7 @@ class PresetsController extends ChangeNotifier {
     // Rolling back a definition uses the same save/archive path as editing.
     // Running rules remain visible as "needs reapply" until confirmation.
     await _saveLibrary(next);
-  });
+  }, usageAction: UsageAction.presetRestore);
 
   PresetImportPlan previewImport(String raw) {
     if (!canWrite) throw StateError('请先完成预设库读取或当前操作');
@@ -197,7 +203,7 @@ class PresetsController extends ChangeNotifier {
   }) => _run(() async {
     final next = plan.merge(_presets, replaceExisting: replaceExisting);
     await _saveLibrary(next);
-  });
+  }, usageAction: UsageAction.presetImport);
 
   String exportJson({Set<String>? ids}) {
     if (!_loaded) throw StateError('请先读取预设库');
@@ -222,7 +228,7 @@ class PresetsController extends ChangeNotifier {
       content,
       fileName: 'notification-presets-$date.json',
     );
-  });
+  }, usageAction: UsageAction.presetExport);
 
   Future<void> deactivate(FilterPreset preset) => _run(() async {
     _requireCurrent(preset);
@@ -298,14 +304,25 @@ class PresetsController extends ChangeNotifier {
     }
   }
 
-  Future<T> _run<T>(Future<T> Function() operation) async {
+  Future<T> _run<T>(
+    Future<T> Function() operation, {
+    UsageAction? usageAction,
+  }) async {
     if (_busy || _loading) throw StateError('请等待当前操作完成');
     if (!_loaded) throw StateError('请先成功读取预设库，再进行修改');
     _busy = true;
     _error = null;
     _changed();
     try {
-      return await operation();
+      final result = await operation();
+      if (usageAction != null && result != false) {
+        try {
+          _usage?.record(usageAction);
+        } catch (_) {
+          /* optional observer */
+        }
+      }
+      return result;
     } catch (error) {
       _error = error.toString();
       rethrow;

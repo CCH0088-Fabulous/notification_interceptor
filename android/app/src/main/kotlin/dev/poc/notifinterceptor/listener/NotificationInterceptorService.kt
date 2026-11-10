@@ -30,6 +30,12 @@ class NotificationInterceptorService : NotificationListenerService() {
     private lateinit var snapshotFactory: NotificationSnapshotFactory
     private lateinit var processor: NotificationProcessor
     private val deduplicator = NotificationDeduplicator()
+    private val researchTick = object : Runnable {
+        override fun run() {
+            graph.research.checkpoint()
+            mainHandler.postDelayed(this, 60_000)
+        }
+    }
 
     private val rebindRunnable = Runnable {
         runCatching {
@@ -52,6 +58,7 @@ class NotificationInterceptorService : NotificationListenerService() {
             tracker = graph.cancelTracker,
             time = SystemTimeSource,
             ids = { UUID.randomUUID().toString() },
+            onObserved = { entry, existing -> graph.research.observed(entry, existing) },
         )
         graph.listener = this
     }
@@ -61,6 +68,8 @@ class NotificationInterceptorService : NotificationListenerService() {
             graph.listener = null
         }
         graph.serviceConnected = false
+        graph.research.setConnected(false)
+        mainHandler.removeCallbacks(researchTick)
         mainHandler.removeCallbacks(rebindRunnable)
         super.onDestroy()
     }
@@ -68,6 +77,9 @@ class NotificationInterceptorService : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         graph.serviceConnected = true
+        graph.research.setConnected(true)
+        mainHandler.removeCallbacks(researchTick)
+        mainHandler.postDelayed(researchTick, 60_000)
         dispatchStatus()
         // 补一次存量快照，避免"打开界面之前的通知"缺失。
         runCatching { activeNotifications }.getOrNull()?.forEach { handle(it, existing = true) }
@@ -75,6 +87,8 @@ class NotificationInterceptorService : NotificationListenerService() {
 
     override fun onListenerDisconnected() {
         graph.serviceConnected = false
+        graph.research.setConnected(false)
+        mainHandler.removeCallbacks(researchTick)
         dispatchStatus()
         mainHandler.removeCallbacks(rebindRunnable)
         mainHandler.postDelayed(rebindRunnable, REBIND_DELAY_MS)
@@ -118,7 +132,7 @@ class NotificationInterceptorService : NotificationListenerService() {
 
         graph.executor.execute {
             runCatching {
-                val result = processor.process(snapshot) ?: return@runCatching
+                val result = processor.process(snapshot, existing = existing) ?: return@runCatching
                 Log.i(
                     TAG,
                     "pkg=${snapshot.packageName} action=${result.decision.action.wire} " +

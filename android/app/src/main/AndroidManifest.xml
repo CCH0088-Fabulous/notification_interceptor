@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Google Fonts: static font download only; notification processing stays local. -->
+    <!-- Optional, explicitly enabled research uploads. Notification content stays local. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"
@@ -32,11 +34,23 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <provider
+            android:name=".bridge.ResearchFileProvider"
+            android:authorities="${applicationId}.research.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/research_share_paths" />
+        </provider>
 
         <!--
             通知监听服务。exported=false：只允许系统通过 BIND_NOTIFICATION_LISTENER_SERVICE 绑定。
             不声明 default_filter_types / disabled_filter_types，先接收全量通知，由规则引擎过滤。
         -->
+        <service
+            android:name=".support.ResearchUploadJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".listener.NotificationInterceptorService"
             android:exported="false"

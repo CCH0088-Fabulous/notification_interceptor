@@ -17,12 +17,14 @@ class SettingsPage extends StatelessWidget {
     required this.history,
     required this.rules,
     this.onOpenPresets,
+    this.onOpenResearch,
   });
 
   final AccessController access;
   final HistoryController history;
   final RulesController rules;
   final VoidCallback? onOpenPresets;
+  final VoidCallback? onOpenResearch;
 
   static const String generatorPresetAsset =
       'assets/presets/generator_triage.json';
@@ -36,6 +38,18 @@ class SettingsPage extends StatelessWidget {
         return ListView(
           padding: const EdgeInsets.fromLTRB(12, 12, 12, 32),
           children: [
+            if (onOpenResearch != null)
+              SectionCard(
+                title: '内测数据',
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.insights_outlined),
+                  title: const Text('内测数据'),
+                  subtitle: const Text('自愿参与，本地记录，结束后分享，无需登录'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: onOpenResearch,
+                ),
+              ),
             if (onOpenPresets != null)
               SectionCard(
                 title: '高级功能',
@@ -89,7 +103,7 @@ class SettingsPage extends StatelessWidget {
             ),
             SectionCard(
               title: '数据',
-              subtitle: '全部数据仅保存在本机 filesDir',
+              subtitle: '通知历史与规则保存在本机；自愿研究统计单独管理。',
               child: Column(
                 children: [
                   _row('历史记录', '${history.stats.total} 条（上限 1000）'),

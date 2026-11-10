@@ -1,0 +1,16 @@
+{
+  "configuration": {
+    "enabled": false, "ruleStructures": false, "autoUpload": false, "wifiOnly": true,
+    "cohort": "demo", "endpoint": "", "hasToken": false, "participantId": "",
+    "consentAt": 0, "revision": 0, "disclosureVersion": 2,
+    "acceptedDisclosureVersion": 0, "endedAt": 0,
+    "pilotPending": false, "pilotEnrolled": false
+  },
+  "statistics": {
+    "totals": {}, "cohorts": {}, "recentHours": [], "eventCount": 0, "hourCount": 0,
+    "pendingHours": 0, "pendingBatches": 0, "lastSuccessAt": 0, "lastMessage": "",
+    "retentionDroppedEvents": 0, "retentionDroppedHours": 0, "retentionDroppedBatches": 0
+  },
+  "captureFailures": 0, "settingsError": null, "debugLoopbackAllowed": true, "backgroundScheduled": false,
+  "pilotAvailable": false, "pilotEndpoint": "", "offlineMode": true
+}

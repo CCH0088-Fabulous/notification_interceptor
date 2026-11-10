@@ -31,6 +31,16 @@ abstract final class BridgeMethod {
   static const String cancel = 'cancel';
   static const String getSeenPackages = 'getSeenPackages';
   static const String exportHistory = 'exportHistory';
+  static const String getResearchStatus = 'getResearchStatus';
+  static const String enrollResearch = 'enrollResearch';
+  static const String configureResearch = 'configureResearch';
+  static const String recordResearchAction = 'recordResearchAction';
+  static const String previewResearchUpload = 'previewResearchUpload';
+  static const String syncResearchNow = 'syncResearchNow';
+  static const String clearResearchData = 'clearResearchData';
+  static const String exportResearchFile = 'exportResearchFile';
+  static const String shareResearchFile = 'shareResearchFile';
+  static const String endResearch = 'endResearch';
 }
 
 /// 事件类型（与 Kotlin `NotificationInterceptorService` 保持一致）。
@@ -42,11 +52,9 @@ abstract final class BridgeEventType {
 
 /// MethodChannel / EventChannel 的薄封装：只做调用与异常翻译。
 class InterceptorChannel {
-  InterceptorChannel({
-    MethodChannel? methodChannel,
-    EventChannel? eventChannel,
-  })  : _method = methodChannel ?? const MethodChannel(BridgeChannel.method),
-        _event = eventChannel ?? const EventChannel(BridgeChannel.events);
+  InterceptorChannel({MethodChannel? methodChannel, EventChannel? eventChannel})
+    : _method = methodChannel ?? const MethodChannel(BridgeChannel.method),
+      _event = eventChannel ?? const EventChannel(BridgeChannel.events);
 
   final MethodChannel _method;
   final EventChannel _event;
@@ -63,6 +71,7 @@ class InterceptorChannel {
 
   Stream<Map<String, dynamic>> get events => _events;
 
-  late final Stream<Map<String, dynamic>> _events =
-      _event.receiveBroadcastStream().map(asStringMap);
+  late final Stream<Map<String, dynamic>> _events = _event
+      .receiveBroadcastStream()
+      .map(asStringMap);
 }

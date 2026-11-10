@@ -33,6 +33,10 @@ migrate_working_dir/
 .pub/
 /build/
 
+# Local receiver database, credentials and isolated Python environment
+/.local/
+__pycache__/
+
 # Symbolication related
 app.*.symbols
 

@@ -9,6 +9,7 @@ object Json {
 
     fun stringify(value: Any?): String = when (value) {
         null -> "null"
+        is String -> JSONObject.quote(value)
         is Map<*, *> -> JSONObject(value).toString()
         is Collection<*> -> JSONArray(value).toString()
         else -> JSONObject.wrap(value)?.toString() ?: "null"

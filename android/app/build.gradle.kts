@@ -1,9 +1,18 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+val researchPilot = Properties().apply {
+    val config = file("../../.local/research-pilot.properties")
+    if (config.exists()) config.inputStream().use { load(it) }
+}
+val researchOnlineEnabled = researchPilot.getProperty("onlineEnabled", "false") == "true"
+fun buildString(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r") + "\""
 
 android {
     namespace = "dev.poc.notifinterceptor"
@@ -27,7 +36,12 @@ android {
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        buildConfigField("boolean", "RESEARCH_ONLINE_ENABLED", researchOnlineEnabled.toString())
+        buildConfigField("String", "RESEARCH_PILOT_ENDPOINT", buildString(if (researchOnlineEnabled) researchPilot.getProperty("endpoint", "") else ""))
+        buildConfigField("String", "RESEARCH_PILOT_KEY", buildString(if (researchOnlineEnabled) researchPilot.getProperty("enrollmentKey", "") else ""))
     }
+
+    buildFeatures { buildConfig = true }
 
     testOptions {
         unitTests.isReturnDefaultValues = false
