@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>通知研究 · 本地接收端</title><link rel="stylesheet" href="{{ url_for('static', filename='receiver.css') }}"></head>
+<body><header><a class="brand" href="{{ url_for('dashboard') }}">通知研究 / 本地接收端</a>
+{% if session.get('authenticated') %}<nav><a href="{{ url_for('dashboard') }}">统计总览</a><a href="{{ url_for('imports') }}">导入内测文件</a><a href="{{ url_for('pilot') }}">在线内测</a><a href="{{ url_for('tokens') }}">上传令牌</a><form action="{{ url_for('logout') }}" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="plain">退出</button></form></nav>{% endif %}</header>
+<main>{% block content %}{% endblock %}</main><footer>仅本机管理 · 日期范围以 UTC+08:00 计算 · <a href="{{ url_for('font_license') }}">思源宋体字体许可</a></footer></body></html>

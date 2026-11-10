@@ -22,6 +22,14 @@
 
 同日新增批量效果对比：`features/comparison/{domain,data,presentation}` 保存回放协议、原生桥接与只读比较页面。`rules/domain/managed_rule_set.dart` 被实际预设应用和候选规则构造共用，避免预览与保存逻辑分叉。原生 `domain/RuleSetComparison.kt` 在独立工作线程调用同一 `RuleEngine`，按每条历史处理时间及设备当前时区独立求值，不经过通知取消或历史写入流水线。`tool/render_batch_comparison.py` 使用 space1 环境的 FigCompose，输出单文件离线 HTML；说明与数据位于 `docs/visualizations/`，用法见 `docs/usage/batch-comparison.md`。
 
+2026-11-09：设备侧研究发送端放在 `features/research/{domain,data,presentation}`；共享的 `shared/domain/usage_recorder.dart` 只定义操作事件接口。原生 `domain/ResearchPolicy.kt` 与 `ResearchUploadProtocol.kt` 负责白名单、结构脱敏、计时切片和批次协议；`data/ResearchStore.kt` 使用独立 SQLite，`ResearchSettingsStore.kt` 在 noBackupFilesDir 保存设置并用 Android Keystore 保护上传令牌；`support/ResearchManager.kt` 负责异步编排，`ResearchUploadJobService.kt` 使用系统 JobScheduler 调度发送。默认关闭，与通知授权分离，通知正文及具体规则词不进入研究库。见 ADR 0009 和 `docs/usage/research.md`。
+
+本地电脑接收端：`tool/research_receiver/` 按校验、SQLite 存储、Web 管理与 CLI 拆分；`tool/run_research_receiver.py` 和 `tool/start_research_receiver.ps1` 为启动入口，使用 Flask + Waitress，默认只监听 127.0.0.1。Python 回归位于 `test/python/research_receiver/`，共享上传固件位于 `test/fixtures/research_upload_v1.json`。`.local/` 是明确忽略的本机运行目录，保存独立 Python 环境、数据库和凭据，不能随代码提交或上传；不使用可能被 flutter clean 删除的 build 目录保存正式接收数据。见 ADR 0010 和 `docs/usage/local-receiver.md`。
+
+免登录内测登记：`ResearchEnrollmentProtocol` 定义随机凭证、固定同源登记路径和匹配确认；`ResearchManager` 持久化加密的待登记状态并处理重试/退出。接收端 SQLite v2 增加最多 10 个安装名额和登记开关，`/pilot` 仅供本机管理。`tool/configure_research_pilot.py` 将接收方及受限登记凭证写入忽略的 `.local/research-pilot.properties` 供 Android BuildConfig 使用，不写入管理员密钥或设备上传凭证。见 ADR 0011。
+
+离线内测为当前默认（ADR 0012）：`ResearchArchive` 与 `ResearchStore.writeArchive` 在原生线程流式生成完整 ZIP，`ResearchArchivePicker` + 限定缓存目录的 `ResearchFileProvider` 提供系统分享和保存。事件 14 天/50000 条，小时 30 天/4096 组，SQLite 64 MiB。`ResearchManager.end` 保留记录，`clear` 单独清除。电脑 `archive.py` 检查 ZIP/字段，storage v3 保存离线编号、导入和事件，`/imports` 批量回收与去重，旧网络接口仅兼容。普通包不自动登记/发送、不内置网络凭证。
+
 | 编号 | 原则 | 落地方式 |
 |---|---|---|
 | P1 | **单一事实源** | 通知、规则、历史的权威数据都在 Kotlin 侧；Dart 只持有镜像副本，不反向写业务状态 |

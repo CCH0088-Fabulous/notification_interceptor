@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block content %}<section class="narrow"><p class="eyebrow">LOCAL RESEARCH</p><h1>在你的电脑上<br>查看试用数据</h1><p>管理密钥保存在本机 <code>.local/research-receiver/admin-key.txt</code>。上传令牌仅用于手机发送。</p>
+{% if error %}<p role="alert">{{ error }}</p>{% endif %}<form method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><label>本机管理密钥<input type="password" name="key" required autocomplete="current-password" maxlength="200"></label><button>进入管理页</button></form></section>{% endblock %}
