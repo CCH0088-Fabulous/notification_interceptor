@@ -173,7 +173,7 @@ void main() {
     await tester.tap(find.text('规则效果 ›'));
     await tester.pumpAndSettle();
     expect(find.text('规则效果'), findsOneWidget);
-    expect(find.text('已移出 1 条 · 1 条未确认成功'), findsOneWidget);
+    expect(find.text('已移除 1 条 · 1 条未确认成功'), findsOneWidget);
     await tester.tap(find.text('保留工作消息').last);
     await tester.pumpAndSettle();
     expect(c.entries.single.id, 'allow');

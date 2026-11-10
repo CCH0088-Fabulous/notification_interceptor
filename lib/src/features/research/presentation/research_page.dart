@@ -193,7 +193,7 @@ class _ResearchPageState extends State<ResearchPage> {
         Text('前台使用：${(status.totals['foreground_ms'] ?? 0) ~/ 60000} 分钟'),
         for (final group in ['pilot', 'demo'])
           Text(
-            '${group == 'pilot' ? '真实试用' : '演示／测试'}：${status.cohorts[group]?['processed'] ?? 0} 次处理，${status.cohorts[group]?['cancel_success'] ?? 0} 次确认移出',
+            '${group == 'pilot' ? '真实试用' : '演示／测试'}：${status.cohorts[group]?['processed'] ?? 0} 次处理，${status.cohorts[group]?['cancel_success'] ?? 0} 次确认移除',
           ),
         if (status.retentionDroppedEvents > 0 ||
             status.retentionDroppedHours > 0 ||

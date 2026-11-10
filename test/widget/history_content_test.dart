@@ -103,7 +103,7 @@ void main() {
     expect(find.text('Sensitive notification content hidden'), findsNothing);
     expect(find.text('通知生成器'), findsWidgets);
     expect(find.text('保留'), findsWidgets);
-    expect(find.text('拦截'), findsWidgets);
+    expect(find.text('移除'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 }

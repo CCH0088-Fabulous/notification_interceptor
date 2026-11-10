@@ -122,9 +122,9 @@ class _PresetVersionsPageState extends State<PresetVersionsPage> {
 
   List<Widget> _summary(FilterPreset preset) => [
     Text(preset.kind.label),
-    Text('过滤词：${preset.keywords.join('、')}'),
+    Text('移除词：${preset.keywords.join('、')}'),
     if (preset.allowKeywords.isNotEmpty)
-      Text('优先保留：${preset.allowKeywords.join('、')}'),
+      Text('保留词：${preset.allowKeywords.join('、')}'),
     Text(
       '应用范围：${preset.packages.isEmpty ? '所有应用' : preset.packages.join('、')}',
     ),

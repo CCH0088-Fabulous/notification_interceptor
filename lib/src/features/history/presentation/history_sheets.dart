@@ -77,7 +77,7 @@ Future<void> showHistoryMetricHelp(BuildContext context) => showDialog<void>(
     title: const Text('统计说明'),
     content: const SingleChildScrollView(
       child: Text(
-        '拦截数：系统确认已移出的记录数。\n\n拦截率：已移出记录数 ÷ 所选日期内的总记录数。未成功或待确认的移出不计入拦截数。\n\n保留数：决定照常保留的记录数；仅记录和移出失败另计。\n\n只统计本地仍保存的最近 1000 条记录，并排除系统分组汇总。它可能不是全天的完整数据。同一通知更新也可能产生多条记录。\n\n搜索、应用和处理结果筛选只影响下方列表，不改变顶部统计。',
+        '已移除数：系统确认已移除的记录数。\n\n移除占比：已移除记录数 ÷ 所选日期内的总记录数。未成功或待确认的移除不计入已移除数。\n\n保留数：决定照常保留的记录数；仅记录和移除失败另计。\n\n只统计本地仍保存的最近 1000 条记录，并排除系统分组汇总。它可能不是全天的完整数据。同一通知更新也可能产生多条记录。\n\n搜索、应用和处理结果筛选只影响下方列表，不改变顶部统计。',
       ),
     ),
     actions: [
@@ -257,7 +257,7 @@ Future<void> showHistoryRuleEffects(
                       Padding(
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
-                          '已移出 ${rule.removed} 条${rule.removed < rule.count ? ' · ${rule.count - rule.removed} 条未确认成功' : ''}',
+                          '已移除 ${rule.removed} 条${rule.removed < rule.count ? ' · ${rule.count - rule.removed} 条未确认成功' : ''}',
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
                       ),
@@ -292,7 +292,7 @@ Future<void> showHistoryRuleEffects(
               controller.resetFilters();
               controller.setActionFilter(RuleAction.intercept);
             },
-            child: const Text('查看拦截记录'),
+            child: const Text('查看移除规则记录'),
           ),
           _close(context),
         ],

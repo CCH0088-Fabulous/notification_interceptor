@@ -137,7 +137,7 @@ class PresetRepository(
         require(kind == "keywords" || kind == "scene") { "预设类型无效" }
         val keywords = stringList(preset["keywords"], "过滤词")
         require(keywords.isNotEmpty()) { "至少填写一个过滤词" }
-        val allowKeywords = stringList(preset["allowKeywords"], "优先保留词")
+        val allowKeywords = stringList(preset["allowKeywords"], "保留词")
         val packages = stringList(preset["packages"], "应用范围")
         require(packages.all { it.matches(Regex("[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*)+")) }) {
             "应用包名格式不正确"

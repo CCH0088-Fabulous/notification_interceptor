@@ -111,7 +111,7 @@ class _PresetsPageState extends State<PresetsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        '保存常用过滤词，或为工作、睡眠等场景设置应用范围和生效时间。保存后手动应用，可随时停用。',
+                        '保存常用移除词，或为工作、睡眠等场景设置应用范围和生效时间。保存后手动应用，可随时停用。',
                       ),
                       const SizedBox(height: 12),
                       Wrap(
@@ -288,9 +288,9 @@ class _PresetsPageState extends State<PresetsPage> {
   }
 
   List<Widget> _summary(FilterPreset preset) => [
-    Text('过滤词：${preset.keywords.join('、')}'),
+    Text('移除词：${preset.keywords.join('、')}'),
     if (preset.allowKeywords.isNotEmpty)
-      Text('优先保留：${preset.allowKeywords.join('、')}'),
+      Text('保留词：${preset.allowKeywords.join('、')}'),
     Text(
       '应用范围：${preset.packages.isEmpty ? '所有应用' : preset.packages.map((package) => widget.appName?.call(package) ?? package).join('、')}',
     ),
@@ -374,7 +374,7 @@ class _PresetsPageState extends State<PresetsPage> {
               Text(
                 scene
                     ? '将一次更新整组场景规则，停用其他场景。常用关键词预设、手动规则、全局开关和默认动作保留。所选场景仍按自己的星期和时段参与匹配。'
-                    : '只更新此预设对应的规则，保留其他已有规则与全局开关。关键词预设可以叠加，优先保留词可能覆盖其他过滤。规则仍按列表顺序首个命中生效，可在“规则”页检查。',
+                    : '更新本预设的规则，其他规则与全局开关保留。保留词先于本预设的移除词匹配；也可能保留其他预设要移除的通知。完整顺序见“规则”页。',
               ),
               if (scene && replaced.isNotEmpty) ...[
                 const SizedBox(height: 8),

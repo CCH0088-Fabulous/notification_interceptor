@@ -16,14 +16,14 @@
     <string name="category_selected">已选择</string>
     <string name="category_unselected">未选择</string>
     <string name="category_accessibility">%1$s，%2$s，发送概率 %3$s</string>
-    <string name="expected_keep">保留</string>
-    <string name="expected_drop">拦截</string>
+    <string name="expected_keep">示例规则预期：保留</string>
+    <string name="expected_drop">示例规则预期：移除</string>
     <string name="section_behavior">模拟方式</string>
     <string name="action_realistic_mode">仿真通知</string>
     <string name="hint_realistic">聊天连续消息合并到同一会话，物流通知逐步更新派送状态。关闭后，每次都发送独立通知。</string>
     <string name="action_loud_mode">响铃模式</string>
     <string name="action_heads_up_mode">横幅提醒</string>
-    <string name="hint_heads_up">开启后，所选类别使用顶部横幅提醒，并可响铃。优先于响铃模式；实际显示受系统设置、勿扰和连续提醒限制。</string>
+    <string name="hint_heads_up">请求顶部横幅并可响铃，开启时替代响铃模式。实际显示受系统设置、勿扰和连续提醒限制。</string>
     <string name="hint_loud">让推广等消息也使用可响铃的渠道。实际声音取决于系统设置。</string>
     <string name="section_send">发送配置</string>
     <string name="label_send_mode">发送方式</string>
@@ -40,7 +40,7 @@
     <string name="action_send">发送</string>
     <string name="action_stop_send">停止发送</string>
     <string name="action_clear">清空通知</string>
-    <string name="hint_observe">下拉系统通知栏查看效果；实际保留或取消由拦截器规则决定。</string>
+    <string name="hint_observe">发送记录标注的是示例规则预期，实际结果请在通知栏和拦截器历史中查看。</string>
     <string name="state_ready">等待发送</string>
     <string name="state_sending">发送中 · %1$d / %2$d 条</string>
     <string name="state_continuous">持续发送中 · 已发送 %1$d 条</string>

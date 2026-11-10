@@ -410,12 +410,12 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
       spacing: 10,
       children: [
         ChoiceChip(
-          label: const Text('自动移出'),
+          label: const Text('移除'),
           selected: _action == RuleAction.intercept,
           onSelected: (_) => setState(() => _action = RuleAction.intercept),
         ),
         ChoiceChip(
-          label: const Text('优先保留'),
+          label: const Text('保留'),
           selected: _action == RuleAction.allow,
           onSelected: (_) => setState(() => _action = RuleAction.allow),
         ),
@@ -423,9 +423,10 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
     ),
     _hint(
       _action == RuleAction.intercept
-          ? '匹配的通知会从通知栏移出，仍可在历史中查看。首次声音或横幅可能已经出现。'
-          : '匹配的通知优先保留，不交给后面的移出规则。已有规则仍按顺序处理。',
+          ? '匹配后请求从通知栏移除，不删除原应用消息。首次声音或横幅仍可能出现。'
+          : '匹配后保留通知，不再执行后面的规则。',
     ),
+    _hint('规则从上到下匹配，首条命中后停止。'),
     _section('匹配条件'),
     if (!_allApps) ...[
       _option(
@@ -509,7 +510,7 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
         border: Border(left: BorderSide(width: 3)),
       ),
       child: Text(
-        '$_scope${_allNotifications ? '的全部新通知' : '的新通知中，标题或内容出现${_keywords.map((w) => '“$w”').join('或')}时'}，${_action == RuleAction.intercept ? '自动移出' : '优先保留'}。',
+        '$_scope${_allNotifications ? '的全部新通知' : '的新通知中，标题或内容出现${_keywords.map((w) => '“$w”').join('或')}时'}，${_action == RuleAction.intercept ? '移除' : '保留'}。',
         key: const Key('rule-summary'),
         style: const TextStyle(fontSize: 17, height: 1.9),
       ),
@@ -524,8 +525,8 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
     if (!_rule.enabled) _hint('这条规则目前未启用；保存会保留停用状态。'),
     if (_results.any((e) => e.key.isContentHidden))
       _hint('部分通知正文已被系统隐藏，关键词或主题可能无法匹配。以下结果仍按系统实际提供的内容计算；按应用全部处理不依赖正文。'),
-    _section('真实通知试运行'),
-    _hint('使用最近收到的最多 12 条通知，按整套规则预览。只计算结果，不移出或重发这些消息。'),
+    _section('通知样本预览'),
+    _hint('用最近最多 12 条通知计算整套规则的预计结果，不实际移除或重发通知。'),
     if (_busy)
       const Center(
         child: Padding(
@@ -555,7 +556,7 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
             const SizedBox(height: 8),
             Text(
               '${entry.value.action == RuleAction.intercept
-                  ? '预计移出'
+                  ? '预计移除'
                   : entry.value.action == RuleAction.allow
                   ? '预计保留'
                   : '仅记录'} · ${entry.value.describe()}',

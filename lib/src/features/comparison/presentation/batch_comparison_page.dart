@@ -215,15 +215,15 @@ class _BatchComparisonPageState extends State<BatchComparisonPage> {
                   runSpacing: 12,
                   children: [
                     _metric('动作变化', result.actionChangedCount, width),
-                    _metric('新增预计移出', result.moreInterceptedCount, width),
-                    _metric('不再预计移出', result.lessInterceptedCount, width),
+                    _metric('新增预计移除', result.moreInterceptedCount, width),
+                    _metric('不再预计移除', result.lessInterceptedCount, width),
                     _metric('仅命中规则变化', result.onlyRuleChangedCount, width),
                   ],
                 );
               },
             ),
             const SizedBox(height: 12),
-            const Text('以上为规则回放预测；“预计移出”不代表 Android 已实际取消通知。'),
+            const Text('以上为规则回放预测；“预计移除”不代表 Android 已实际取消通知。'),
             if (result.hiddenContentCount > 0) ...[
               const SizedBox(height: 8),
               Text('其中 ${result.hiddenContentCount} 条正文被系统隐藏，只能依据可读取内容判断。'),
@@ -476,7 +476,7 @@ class _BatchComparisonPageState extends State<BatchComparisonPage> {
 
   String _action(RuleAction action) => switch (action) {
     RuleAction.allow => '保留',
-    RuleAction.intercept => '移出',
+    RuleAction.intercept => '移除',
     RuleAction.logOnly => '仅记录',
   };
 

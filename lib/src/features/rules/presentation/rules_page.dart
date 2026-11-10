@@ -38,7 +38,7 @@ class _RulesPageState extends State<RulesPage> {
   String _filterLabel(_RuleFilter filter) => switch (filter) {
     _RuleFilter.all => '全部',
     _RuleFilter.keep => '保留',
-    _RuleFilter.drop => '移出',
+    _RuleFilter.drop => '移除',
     _RuleFilter.disabled => '已停用',
   };
 
@@ -172,7 +172,7 @@ class _RulesPageState extends State<RulesPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('删除规则'),
-        content: Text('确定删除「${rule.name}」？该操作不可撤销。'),
+        content: Text('确定删除「${ruleDisplayName(rule)}」？该操作不可撤销。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -214,7 +214,7 @@ class _RulesPageState extends State<RulesPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  rule.name.isEmpty ? '未命名规则' : rule.name,
+                  ruleDisplayName(rule),
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
@@ -304,7 +304,7 @@ class _RulesPageState extends State<RulesPage> {
 
 String _defaultActionLabel(RuleAction action) => switch (action) {
   RuleAction.allow => '照常保留',
-  RuleAction.intercept => '自动移出',
+  RuleAction.intercept => '移除',
   RuleAction.logOnly => '仅记录',
 };
 
@@ -366,7 +366,7 @@ class _RuleCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            rule.name.isEmpty ? '未命名规则' : rule.name,
+                            ruleDisplayName(rule),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.titleSmall?.copyWith(

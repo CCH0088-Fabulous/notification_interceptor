@@ -4,19 +4,19 @@ import '../domain/history_entry.dart';
 String historyResultLabel(HistoryEntry entry) {
   if (entry.action == RuleAction.allow) return '保留';
   if (entry.action == RuleAction.logOnly) return '仅记录';
-  if (entry.cancelStatus == CancelStatus.success) return '拦截';
-  return entry.cancelStatus == CancelStatus.pending ? '待确认' : '未移出';
+  if (entry.cancelStatus == CancelStatus.success) return '已移除';
+  return entry.cancelStatus == CancelStatus.pending ? '待确认' : '未移除';
 }
 
 String historyResultDescription(HistoryEntry entry) {
   if (entry.action == RuleAction.allow) return '照常保留';
-  if (entry.action == RuleAction.logOnly) return '仅记录，未执行移出';
+  if (entry.action == RuleAction.logOnly) return '仅记录，未执行移除';
   return switch (entry.cancelStatus) {
-    CancelStatus.success => '已移出通知栏',
-    CancelStatus.pending => '等待系统确认移出',
-    CancelStatus.rejected => '系统未允许移出',
-    CancelStatus.failed => '移出失败',
-    CancelStatus.notAttempted => '未执行移出',
+    CancelStatus.success => '已移除通知栏',
+    CancelStatus.pending => '等待系统确认移除',
+    CancelStatus.rejected => '系统未允许移除',
+    CancelStatus.failed => '移除失败',
+    CancelStatus.notAttempted => '未执行移除',
   };
 }
 

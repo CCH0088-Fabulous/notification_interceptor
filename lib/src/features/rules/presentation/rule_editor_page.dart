@@ -85,7 +85,7 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
         title: Text(widget.initial == null ? '新建规则' : '编辑规则'),
         actions: [
           IconButton(
-            tooltip: '试运行',
+            tooltip: '预览本条规则',
             onPressed: () => _runTest(draft),
             icon: const Icon(Icons.play_circle_outline),
           ),
@@ -107,7 +107,7 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
             onChanged: (_) => _refresh(),
           ),
           const SizedBox(height: 16),
-          _Label('命中动作'),
+          _Label('匹配后处理'),
           SegmentedButton<RuleAction>(
             segments: RuleAction.values
                 .map((action) => ButtonSegment(value: action, label: Text(action.label)))
@@ -382,7 +382,7 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
     if (!mounted) return;
     if (samples.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('当前没有活动通知可用于试运行')),
+        const SnackBar(content: Text('当前没有通知可用于预览')),
       );
       return;
     }
@@ -394,22 +394,23 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
     await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('试运行结果'),
+        title: const Text('本条规则预览'),
         content: SizedBox(
           width: 420,
           child: ListView(
             shrinkWrap: true,
-            children: results
-                .map(
-                  (entry) => ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(entry.key.displayTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
-                    subtitle: Text('${entry.key.displayApp} · ${entry.value.describe()}'),
-                    trailing: Text(entry.value.action.label),
-                  ),
-                )
-                .toList(),
+            children: [
+              const Text('仅计算本条规则，不实际处理通知。保存后仍按完整规则列表顺序执行。'),
+              ...results.map(
+                (entry) => ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(entry.key.displayTitle, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  subtitle: Text('${entry.key.displayApp} · ${entry.value.describe()}'),
+                  trailing: Text(entry.value.action.label),
+                ),
+              ),
+            ],
           ),
         ),
         actions: [

@@ -76,7 +76,7 @@ void main() {
     );
 
     expect(find.text('屏蔽营销'), findsOneWidget);
-    expect(find.text('自动移出'), findsWidgets);
+    expect(find.text('移除'), findsWidgets);
     expect(find.textContaining('首条匹配生效'), findsOneWidget);
   });
 

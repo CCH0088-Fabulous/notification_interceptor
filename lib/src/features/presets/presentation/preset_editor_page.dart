@@ -104,8 +104,8 @@ class _PresetEditorPageState extends State<PresetEditorPage> {
               minLines: 3,
               maxLines: 6,
               decoration: const InputDecoration(
-                labelText: '过滤词',
-                helperText: '逗号或换行分隔；标题或正文包含任一词即匹配。',
+                labelText: '移除词',
+                helperText: '标题或正文含任一词时匹配；应用范围和时段同时生效。逗号或换行分隔。',
                 helperMaxLines: 3,
                 hintText: '促销\n限时优惠\n直播',
               ),
@@ -117,8 +117,8 @@ class _PresetEditorPageState extends State<PresetEditorPage> {
               minLines: 2,
               maxLines: 5,
               decoration: const InputDecoration(
-                labelText: '优先保留词（可选）',
-                helperText: '相同应用与时段内，包含这些词的通知优先保留。',
+                labelText: '保留词（可选）',
+                helperText: '同范围与时段内，保留词排在本预设的移除词前。完整顺序见规则页。',
                 helperMaxLines: 3,
                 hintText: '验证码，取件码，紧急',
               ),

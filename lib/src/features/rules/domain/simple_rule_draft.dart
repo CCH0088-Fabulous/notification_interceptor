@@ -50,7 +50,7 @@ class SimpleRuleDraft {
     return RuleSpec(
       id: id,
       name: name.trim().isEmpty
-          ? '$scopeLabel · $target${words.length > 2 ? '等' : ''} · ${action == RuleAction.allow ? '保留' : '移出'}'
+          ? '$scopeLabel · $target${words.length > 2 ? '等' : ''} · ${action == RuleAction.allow ? '保留' : '移除'}'
           : name.trim(),
       enabled: enabled,
       action: action,

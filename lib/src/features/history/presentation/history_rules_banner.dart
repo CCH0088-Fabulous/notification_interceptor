@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../shared/domain/rule_action.dart';
-import '../../rules/domain/rule_spec.dart';
 import '../../rules/presentation/rule_display.dart';
 import '../../rules/presentation/rules_controller.dart';
 
@@ -32,10 +31,15 @@ class HistoryRulesBanner extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              '本次的拦截规则是',
+              '当前过滤规则',
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '历史记录显示通知到达时的规则与结果。',
+              style: theme.textTheme.bodySmall,
             ),
             const SizedBox(height: 8),
             if (controller.loading)
@@ -60,7 +64,7 @@ class HistoryRulesBanner extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 5),
                   child: Text(
-                    '${i + 1}. ${ruleDisplayAction(rules[i].action)}【${_name(rules[i])}】',
+                    '${i + 1}. ${ruleDisplayAction(rules[i].action)}【${ruleDisplayName(rules[i])}】',
                     style: theme.textTheme.bodySmall?.copyWith(height: 1.6),
                   ),
                 ),
@@ -108,7 +112,7 @@ class HistoryRulesBanner extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('本次规则的具体条件', style: theme.textTheme.titleLarge),
+                Text('当前规则的具体条件', style: theme.textTheme.titleLarge),
                 const SizedBox(height: 8),
                 const Text('以下为当前配置；历史记录仍保留通知到达时的规则和处理结果。'),
                 if (!controller.globalEnabled)
@@ -119,7 +123,7 @@ class HistoryRulesBanner extends StatelessWidget {
                 for (var i = 0; i < rules.length; i++) ...[
                   const SizedBox(height: 18),
                   Text(
-                    '${i + 1}. ${_name(rules[i])}',
+                    '${i + 1}. ${ruleDisplayName(rules[i])}',
                     style: theme.textTheme.titleSmall,
                   ),
                   const SizedBox(height: 8),
@@ -153,10 +157,8 @@ class HistoryRulesBanner extends StatelessWidget {
   );
 }
 
-String _name(RuleSpec rule) => rule.name.trim().isEmpty ? '未命名规则' : rule.name;
-
 String _defaultAction(RuleAction action) => switch (action) {
   RuleAction.allow => '保留',
-  RuleAction.intercept => '自动移出',
+  RuleAction.intercept => '移除',
   RuleAction.logOnly => '仅记录',
 };

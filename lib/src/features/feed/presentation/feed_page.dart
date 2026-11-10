@@ -119,12 +119,15 @@ class _ListeningBar extends StatelessWidget {
               context,
             ).textTheme.labelLarge?.copyWith(color: scheme.onPrimaryContainer),
           ),
-          const Spacer(),
-          Text(
-            '本次会话：$total 条 · 拦截 $intercepted 条',
-            style: Theme.of(
-              context,
-            ).textTheme.labelSmall?.copyWith(color: scheme.onPrimaryContainer),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '当前列表：$total 条 · 判定移除 $intercepted 条',
+              textAlign: TextAlign.right,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: scheme.onPrimaryContainer,
+              ),
+            ),
           ),
         ],
       ),

@@ -201,6 +201,14 @@ class _HistoryPageState extends State<HistoryPage> {
                           ),
                       ],
                     ),
+                    if (controller.query.action == RuleAction.intercept)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6),
+                        child: Text(
+                          '按移除动作筛选，包含失败或待确认的记录。',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
                     if (controller.query.packageName != null ||
                         controller.ruleFilter != null)
                       Wrap(
@@ -343,7 +351,7 @@ class _OverviewCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _Metric(
-                    label: '拦截数',
+                    label: '已移除',
                     value: '${overview.removed}',
                     unit: '条',
                     emphasis: true,
@@ -351,7 +359,7 @@ class _OverviewCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: _Metric(
-                    label: '拦截率',
+                    label: '移除占比',
                     value: historyPercent(overview.removedRate),
                   ),
                 ),
@@ -405,7 +413,7 @@ class _OverviewCard extends StatelessWidget {
                 child: Text(
                   [
                     if (overview.unconfirmed > 0)
-                      '${overview.unconfirmed} 条未确认移出成功',
+                      '${overview.unconfirmed} 条未确认移除成功',
                     if (overview.logOnly > 0) '${overview.logOnly} 条仅记录',
                   ].join(' · '),
                   style: theme.textTheme.bodySmall?.copyWith(

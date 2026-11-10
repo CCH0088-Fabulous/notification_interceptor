@@ -58,7 +58,7 @@ class SettingsPage extends StatelessWidget {
                   contentPadding: EdgeInsets.zero,
                   leading: const Icon(Icons.bookmarks_outlined),
                   title: const Text('预设管理'),
-                  subtitle: const Text('保存常用过滤词，配置工作、睡眠等场景'),
+                  subtitle: const Text('保存移除词与保留词，配置工作、睡眠等场景'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: onOpenPresets,
                 ),
@@ -146,8 +146,8 @@ class SettingsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '导入 4 条规则：私聊/群聊、验证码/银行/物流/日程放行，该应用其余通知一律拦截。\n'
-                    '规则只作用于 dev.poc.notifgen，不影响其他应用；顺序是先白名单、后兜底拦截。',
+                    '导入 4 条规则：保留私聊、群聊、验证码、银行、物流与日程，其余通知请求移除。\n'
+                    '仅处理通知生成器的消息，先匹配保留规则，再匹配移除规则。',
                     style: TextStyle(fontSize: 12),
                   ),
                   const SizedBox(height: 12),
@@ -161,11 +161,11 @@ class SettingsPage extends StatelessWidget {
             const SectionCard(
               title: '能力边界（必读）',
               child: Text(
-                '1. “拦截”= 通知已发出后调用 cancelNotification 取消，无法阻止首次响铃/震动，可能出现短暂闪现。\n'
-                '2. 部分 ROM 或新版本系统会静默拒绝取消 ongoing / 系统级通知，历史里会标记“被系统拒绝”。\n'
+                '1. “移除”指通知发出后请求从通知栏取消，不删除原应用消息；首次声音、震动或横幅仍可能出现。\n'
+                '2. 部分常驻或系统通知无法移除，请在历史中查看实际结果。\n'
                 '3. 撤销通知使用权后规则立即失效，本应用无法自行恢复权限。\n'
                 '4. 工作资料（work profile）中的通知对监听器不可见。\n'
-                '5. 所有数据留在本机，不联网、不上传。',
+                '5. 通知内容与过滤规则保存在本机。内测记录需单独同意，由你选择是否分享。',
               ),
             ),
             SectionCard(

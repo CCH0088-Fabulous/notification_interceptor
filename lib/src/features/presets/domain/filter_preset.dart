@@ -71,7 +71,7 @@ class FilterPreset {
     if (name.trim().isEmpty || name != name.trim() || name.length > 60) {
       errors.add('名称需为 1–60 个字符');
     }
-    if (keywords.isEmpty) errors.add('请至少填写一个过滤词');
+    if (keywords.isEmpty) errors.add('请至少填写一个移除词');
     for (final words in [keywords, allowKeywords]) {
       if (words.length > 100 ||
           words.any(

@@ -3,11 +3,26 @@ import '../../../shared/util/notification_channel_label.dart';
 import '../domain/rule_spec.dart';
 
 /// 仅展示，不改写规则名、条件或跨平台契约。
-String ruleDisplayAction(RuleAction action) => switch (action) {
-  RuleAction.allow => '优先保留',
-  RuleAction.intercept => '自动移出',
-  RuleAction.logOnly => '仅记录',
-};
+String ruleDisplayAction(RuleAction action) => action.label;
+
+/// 旧预设名称参与已应用状态判断，只转换系统生成名称的展示。
+String ruleDisplayName(RuleSpec rule) {
+  final name = rule.name.trim().isEmpty ? '未命名规则' : rule.name;
+  final managed =
+      rule.id.startsWith('preset:') || rule.id.startsWith('preset_');
+  final legacySuffix = switch (rule.action) {
+    RuleAction.allow => '· 优先保留',
+    RuleAction.intercept => '· 拦截',
+    RuleAction.logOnly => null,
+  };
+  if (managed &&
+      name.startsWith('预设「') &&
+      legacySuffix != null &&
+      name.endsWith(legacySuffix)) {
+    return '${name.substring(0, name.length - legacySuffix.length)}· ${rule.action.label}';
+  }
+  return name;
+}
 
 String ruleApplicationScope(RuleSpec rule, String Function(String) appName) =>
     rule.packages.isEmpty ? '所有应用' : rule.packages.map(appName).join('、');

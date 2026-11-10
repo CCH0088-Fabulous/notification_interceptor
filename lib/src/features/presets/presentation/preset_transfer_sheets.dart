@@ -140,9 +140,9 @@ class _PresetImportDialogState extends State<_PresetImportDialog> {
                         ),
                         expandedAlignment: Alignment.centerLeft,
                         children: [
-                          Text('过滤词：${preset.keywords.join('、')}'),
+                          Text('移除词：${preset.keywords.join('、')}'),
                           if (preset.allowKeywords.isNotEmpty)
-                            Text('优先保留：${preset.allowKeywords.join('、')}'),
+                            Text('保留词：${preset.allowKeywords.join('、')}'),
                           Text(
                             '应用范围：${preset.packages.isEmpty ? '所有应用' : preset.packages.join('、')}',
                           ),
@@ -283,7 +283,7 @@ class _PresetExportDialogState extends State<_PresetExportDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('将导出 ${widget.count} 个预设，包含过滤词、优先保留词、应用范围与时段设置。'),
+                Text('将导出 ${widget.count} 个预设，包含移除词、保留词、应用范围与时段设置。'),
                 const SizedBox(height: 8),
                 const Text('文件只包含当前预设，不包含版本记录、通知历史或运行规则。'),
                 ExpansionTile(

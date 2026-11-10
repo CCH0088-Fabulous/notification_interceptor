@@ -163,7 +163,7 @@ void main() {
     expect(find.text('限时优惠'), findsOneWidget);
     expect(find.text('系统分组汇总'), findsNothing);
     expect(feed.items, hasLength(2)); // 实时源记录保留，页面只显示具体消息。
-    expect(find.text('本次会话：1 条 · 拦截 0 条'), findsOneWidget);
+    expect(find.text('当前列表：1 条 · 判定移除 0 条'), findsOneWidget);
 
     await tester.tap(find.text('规则'));
     await tester.pumpAndSettle();
@@ -173,17 +173,17 @@ void main() {
     await tester.tap(find.text('历史'));
     await tester.pumpAndSettle();
     expect(find.text('处理概览'), findsOneWidget);
-    expect(find.text('本次的拦截规则是'), findsOneWidget);
-    expect(find.text('1. 自动移出【屏蔽营销】'), findsOneWidget);
+    expect(find.text('当前过滤规则'), findsOneWidget);
+    expect(find.text('1. 移除【屏蔽营销】'), findsOneWidget);
     expect(find.text('清空'), findsOneWidget);
 
     await rules.setGlobalEnabled(false);
     await tester.pumpAndSettle();
     expect(find.text('【规则引擎已关闭，所有通知均保留】'), findsOneWidget);
-    expect(find.text('1. 自动移出【屏蔽营销】'), findsNothing);
+    expect(find.text('1. 移除【屏蔽营销】'), findsNothing);
     await rules.setGlobalEnabled(true);
     await tester.pumpAndSettle();
-    expect(find.text('1. 自动移出【屏蔽营销】'), findsOneWidget);
+    expect(find.text('1. 移除【屏蔽营销】'), findsOneWidget);
 
     await tester.tap(find.text('清空'));
     await tester.pumpAndSettle();
