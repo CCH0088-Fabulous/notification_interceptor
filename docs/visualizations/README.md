@@ -82,3 +82,19 @@ HTML 不支持直接替换为另一份 JSON：需要重新运行脚本，同时�
 图表使用仓库原版 `android/generator/src/main/res/font/source_han_serif_sc_regular.otf`（思源宋体 Source Han Serif SC Regular）绘制矢量字形。网页正文内嵌的是按本次文本生成的衍生 WOFF2 子集；为避开原字体的保留名称 `Source`，子集家族、PostScript 名称与 CFF 名称改为 `Notification Report Serif` / `NotificationReportSerif-Regular`。
 
 子集保留原字体版权、许可文字和许可链接对应的 `name` 元数据（包括 ID 0、13、14）。HTML 还在“内嵌字体来源与 OFL 许可”折叠区内携带原版字体版权元数据和[仓库随附的完整 SIL Open Font License 1.1](../../assets/licenses/SourceHanSerif-OFL.txt)，无须联网查看。原 OTF 元数据的版权年份为 2017–2024，仓库独立许可文本头为 2017–2022；两份原始声明均如实保留。此许可适用于字体软件，未将报告内容改为字体许可证。
+
+## 手机通知管理与专注状态调研
+
+[打开离线调研报告](notification-survey.html)，或直接使用 [PNG图片](notification-survey/survey-overview.png)、[SVG矢量图](notification-survey/survey-overview.svg) 与 [PDF图表](notification-survey/survey-overview.pdf)。报告内嵌图形、字体及下载文件，可以单独复制、离线打开；完整题目与原始选项可逐题展开。
+
+数据来自仓库根目录的 `手机通知管理与专注状态调研_392334267 (1).docx`。Q1–Q4各55份有效回答，Q5为53份，Q6–Q9各50份；Q1的55份回答均为本科生。原始文件只有各题边际频数，不能还原同一个人的多题回答，因此不使用要求逐人记录的 `participant_tracks` 环形多轨图。最终以8道题各自独立的100%堆叠条形图展示Q2–Q9，Q1作为样本说明，原始零人数选项保留在报告和数据中。
+
+图形通过已有FigCompose 0.1.1的自定义面板绘制、导出和检查，使用仓库内置思源宋体；无需安装或升级环境。复现命令：
+
+```powershell
+& 'D:\Anaconda\envs\space1\python.exe' tool/render_notification_survey.py
+```
+
+脚本 [render_notification_survey.py](../../tool/render_notification_survey.py) 直接解析Word XML统计表，校验选项人数之和、源文件比例、堆叠长度和FigCompose布局。提取的数据位于 [notification-survey.json](data/notification-survey.json)；[CSV](notification-survey/notification-survey.csv) 使用UTF-8 BOM；[生成清单](notification-survey/render-manifest.json) 保存源文件SHA-256、环境版本、各题人数和检查结果。脚本为本份问卷配置了中文缩写与摘要，源数据变化时会要求先复核展示标签和结论。
+
+每题按本题有效人数归一化，选项依原文顺序，颜色只在本题内区分选项。Q2、Q3显示比例合计100.01%，Q5为99.99%，属于四舍五入；图形长度使用人数计算的未舍入比例。文档未说明各题有效人数不同的原因，报告不推断题间关联、因果关系或总体代表性。PNG、SVG和PDF均为完整八题图；网页打印另含数据口径，导出的PDF图表只有单页图形。

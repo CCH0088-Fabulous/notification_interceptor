@@ -1,0 +1,274 @@
+{
+  "schemaVersion": 1,
+  "kind": "notification_focus_survey_aggregates",
+  "title": "手机通知管理与专注状态调研",
+  "source": {
+    "filename": "手机通知管理与专注状态调研_392334267 (1).docx",
+    "sha256": "c5b65b6c6df442fc11a3113ec3268e5d02b11a8b07ecfdccffb713b5a2c18f85"
+  },
+  "questions": [
+    {
+      "number": 1,
+      "question": "你目前的主要身份是？",
+      "type": "single_choice",
+      "effectiveN": 55,
+      "options": [
+        {
+          "label": "本科生",
+          "count": 55,
+          "reportedPercent": "100%",
+          "percent": 100.0
+        },
+        {
+          "label": "研究生/博士生",
+          "count": 0,
+          "reportedPercent": "0%",
+          "percent": 0.0
+        },
+        {
+          "label": "工程师/设计师",
+          "count": 0,
+          "reportedPercent": "0%",
+          "percent": 0.0
+        },
+        {
+          "label": "企业职员/办公人员",
+          "count": 0,
+          "reportedPercent": "0%",
+          "percent": 0.0
+        },
+        {
+          "label": "其他",
+          "count": 0,
+          "reportedPercent": "0%",
+          "percent": 0.0
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "question": "工作日你平均每天花多少小时在需要连续专注的任务上（如写材料、读文献等）？",
+      "type": "single_choice",
+      "effectiveN": 55,
+      "options": [
+        {
+          "label": "少于1小时",
+          "count": 7,
+          "reportedPercent": "12.73%",
+          "percent": 12.727272727272727
+        },
+        {
+          "label": "1-2小时",
+          "count": 24,
+          "reportedPercent": "43.64%",
+          "percent": 43.63636363636363
+        },
+        {
+          "label": "2-4小时",
+          "count": 19,
+          "reportedPercent": "34.55%",
+          "percent": 34.54545454545455
+        },
+        {
+          "label": "4小时以上",
+          "count": 5,
+          "reportedPercent": "9.09%",
+          "percent": 9.090909090909092
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "question": "你每天大概收到多少条消息通知？（微信/邮件/群聊/推送都算）",
+      "type": "single_choice",
+      "effectiveN": 55,
+      "options": [
+        {
+          "label": "少于20条",
+          "count": 7,
+          "reportedPercent": "12.73%",
+          "percent": 12.727272727272727
+        },
+        {
+          "label": "20-50条",
+          "count": 18,
+          "reportedPercent": "32.73%",
+          "percent": 32.72727272727273
+        },
+        {
+          "label": "50-100条",
+          "count": 7,
+          "reportedPercent": "12.73%",
+          "percent": 12.727272727272727
+        },
+        {
+          "label": "100条以上",
+          "count": 23,
+          "reportedPercent": "41.82%",
+          "percent": 41.81818181818182
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "question": "当你在进行需要连续专注的任务时，你通常怎么处理手机通知？",
+      "type": "single_choice",
+      "effectiveN": 55,
+      "options": [
+        {
+          "label": "保持正常响铃和弹窗，响了就看",
+          "count": 4,
+          "reportedPercent": "7.27%",
+          "percent": 7.2727272727272725
+        },
+        {
+          "label": "只开震动或静音，保留弹窗",
+          "count": 22,
+          "reportedPercent": "40%",
+          "percent": 40.0
+        },
+        {
+          "label": "开启免打扰，但偶尔会主动点亮屏幕看",
+          "count": 27,
+          "reportedPercent": "49.09%",
+          "percent": 49.09090909090909
+        },
+        {
+          "label": "关闭所有通知，任务结束前不会主动查看",
+          "count": 2,
+          "reportedPercent": "3.64%",
+          "percent": 3.6363636363636362
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "question": "在专注时收到手机通知，你觉得哪种情况对你的干扰更大？",
+      "type": "single_choice",
+      "effectiveN": 53,
+      "options": [
+        {
+          "label": "看到了一条不重要通知的弹窗",
+          "count": 11,
+          "reportedPercent": "20.75%",
+          "percent": 20.754716981132077
+        },
+        {
+          "label": "听到了一声来自不重要通知的提示音",
+          "count": 21,
+          "reportedPercent": "39.62%",
+          "percent": 39.62264150943396
+        },
+        {
+          "label": "两者的干扰同样大",
+          "count": 16,
+          "reportedPercent": "30.19%",
+          "percent": 30.18867924528302
+        },
+        {
+          "label": "两者的干扰都不大",
+          "count": 5,
+          "reportedPercent": "9.43%",
+          "percent": 9.433962264150944
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "question": "如果可以，你是否愿意提前花几分钟，设置一些规则来判断通知是否重要，帮助系统筛选非重要通知？",
+      "type": "single_choice",
+      "effectiveN": 50,
+      "options": [
+        {
+          "label": "愿意，为了减少通知打扰，值得花几分钟",
+          "count": 38,
+          "reportedPercent": "76%",
+          "percent": 76.0
+        },
+        {
+          "label": "不愿意，太麻烦，宁愿直接全部静音",
+          "count": 12,
+          "reportedPercent": "24%",
+          "percent": 24.0
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "question": "你是否希望根据一份详细的打扰统计（例如：今天你被微信打断45次，其中35次来自XX群），关闭那些无效打扰？",
+      "type": "single_choice",
+      "effectiveN": 50,
+      "options": [
+        {
+          "label": "很好，这种清晰的统计很有用，我会去用",
+          "count": 25,
+          "reportedPercent": "50%",
+          "percent": 50.0
+        },
+        {
+          "label": "偶尔会看一下，但懒得去关闭",
+          "count": 10,
+          "reportedPercent": "20%",
+          "percent": 20.0
+        },
+        {
+          "label": "不会看，这种统计对我帮助不大",
+          "count": 15,
+          "reportedPercent": "30%",
+          "percent": 30.0
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "question": "当系统帮你接管通知，筛选消息时，你更看重哪个？",
+      "type": "single_choice",
+      "effectiveN": 50,
+      "options": [
+        {
+          "label": "宁可专注时多接受一些干扰，也不能错过任何重要信息",
+          "count": 26,
+          "reportedPercent": "52%",
+          "percent": 52.0
+        },
+        {
+          "label": "为了在专注时少接受一些干扰，偶尔可以接受一些重要消息的延迟",
+          "count": 24,
+          "reportedPercent": "48%",
+          "percent": 48.0
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "question": "当系统接管你的通知时，需要你授权系统“读取其他应用的通知内容”，以便判断是否重要。你能接受的条件是？",
+      "type": "single_choice",
+      "effectiveN": 50,
+      "options": [
+        {
+          "label": "只要好用，我不介意授权",
+          "count": 21,
+          "reportedPercent": "42%",
+          "percent": 42.0
+        },
+        {
+          "label": "要保证所有数据在手机本地处理，不上传云端",
+          "count": 27,
+          "reportedPercent": "54%",
+          "percent": 54.0
+        },
+        {
+          "label": "只要涉及读取通知内容，就不会使用",
+          "count": 2,
+          "reportedPercent": "4%",
+          "percent": 4.0
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "按本题有效人数计算百分比；源文件未说明各题有效人数不同的原因。",
+    "仅含各题汇总，不能恢复逐人回答、交叉分组或题间相关性。",
+    "Q1 的55份有效回答均为本科生，不代表全部大学生或其他职业群体。"
+  ]
+}

@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="765.354331pt" height="1071.496063pt" viewBox="0 0 765.354331 1071.496063" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.2, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 1071.496063
+L 765.354331 1071.496063
+L 765.354331 0
+L 0 0
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 30.48063 215.769314
+L 120.130657 215.769314
+L 120.130657 196.183648
+L 30.48063 196.183648
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 30.48063 236.241878
+L 36.475465 236.241878
+L 36.475465 229.294509
+L 30.48063 229.294509
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 120.130657 215.769314
+L 427.502179 215.769314
+L 427.502179 196.183648
+L 120.130657 196.183648
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 390.170709 236.241878
+L 396.165543 236.241878
+L 396.165543 229.294509
+L 390.170709 229.294509
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 427.502179 215.769314
+L 670.837967 215.769314
+L 670.837967 196.183648
+L 427.502179 196.183648
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 30.48063 256.566625
+L 36.475465 256.566625
+L 36.475465 249.619257
+L 30.48063 249.619257
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 670.837967 215.769314
+L 734.873701 215.769314
+L 734.873701 196.183648
+L 670.837967 196.183648
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #bfc8d1; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 390.170709 256.566625
+L 396.165543 256.566625
+L 396.165543 249.619257
+L 390.170709 249.619257
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #bfc8d1"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 30.48063 311.849939
+L 120.130657 311.849939
+L 120.130657 292.264273
+L 30.48063 292.264273
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 30.48063 332.322503
+L 36.475465 332.322503
+L 36.475465 325.375135
+L 30.48063 325.375135
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 120.130657 311.849939
+L 350.659298 311.849939
+L 350.659298 292.264273
+L 120.130657 292.264273
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 390.170709 332.322503
+L 396.165543 332.322503
+L 396.165543 325.375135
+L 390.170709 325.375135
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 350.659298 311.849939
+L 440.309326 311.849939
+L 440.309326 292.264273
+L 350.659298 292.264273
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 30.48063 352.647251
+L 36.475465 352.647251
+L 36.475465 345.699882
+L 30.48063 345.699882
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 440.309326 311.849939
+L 734.873701 311.849939
+L 734.873701 292.264273
+L 440.309326 292.264273
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #bfc8d1; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 390.170709 352.647251
+L 396.165543 352.647251
+L 396.165543 345.699882
+L 390.170709 345.699882
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #bfc8d1"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 30.48063 407.930564
+L 81.709217 407.930564
+L 81.709217 388.344899
+L 30.48063 388.344899
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 30.48063 428.403129
+L 36.475465 428.403129
+L 36.475465 421.45576
+L 30.48063 421.45576
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 81.709217 407.930564
+L 363.466445 407.930564
+L 363.466445 388.344899
+L 81.709217 388.344899
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 390.170709 428.403129
+L 396.165543 428.403129
+L 396.165543 421.45576
+L 390.170709 421.45576
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 363.466445 407.930564
+L 709.259407 407.930564
+L 709.259407 388.344899
+L 363.466445 388.344899
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 30.48063 448.727876
+L 36.475465 448.727876
+L 36.475465 441.780508
+L 30.48063 441.780508
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e"/>
+   </g>
+   <g id="patch_24">
+    <path d="M 709.259407 407.930564
+L 734.873701 407.930564
+L 734.873701 388.344899
+L 709.259407 388.344899
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #bfc8d1; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_25">
+    <path d="M 390.170709 448.727876
+L 396.165543 448.727876
+L 396.165543 441.780508
+L 390.170709 441.780508
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #bfc8d1"/>
+   </g>
+   <g id="patch_26">
+    <path d="M 30.48063 504.01119
+L 176.675418 504.01119
+L 176.675418 484.425524
+L 30.48063 484.425524
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_27">
+    <path d="M 30.48063 524.483754
+L 36.475465 524.483754
+L 36.475465 517.536386
+L 30.48063 517.536386
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78"/>
+   </g>
+   <g id="patch_28">
+    <path d="M 176.675418 504.01119
+L 455.77456 504.01119
+L 455.77456 484.425524
+L 176.675418 484.425524
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_29">
+    <path d="M 390.170709 524.483754
+L 396.165543 524.483754
+L 396.165543 517.536386
+L 390.170709 517.536386
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2"/>
+   </g>
+   <g id="patch_30">
+    <path d="M 455.77456 504.01119
+L 668.421524 504.01119
+L 668.421524 484.425524
+L 455.77456 484.425524
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_31">
+    <path d="M 30.48063 544.808502
+L 36.475465 544.808502
+L 36.475465 537.861133
+L 30.48063 537.861133
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e"/>
+   </g>
+   <g id="patch_32">
+    <path d="M 668.421524 504.01119
+L 734.873701 504.01119
+L 734.873701 484.425524
+L 668.421524 484.425524
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #bfc8d1; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_33">
+    <path d="M 390.170709 544.808502
+L 396.165543 544.808502
+L 396.165543 537.861133
+L 390.170709 537.861133
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #bfc8d1"/>
+   </g>
+   <g id="patch_34">
+    <path d="M 30.48063 600.091815
+L 565.819364 600.091815
+L 565.819364 580.506149
+L 30.48063 580.506149
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_35">
+    <path d="M 30.48063 620.56438
+L 36.475465 620.56438
+L 36.475465 613.617011
+L 30.48063 613.617011
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78"/>
+   </g>
+   <g id="patch_36">
+    <path d="M 565.819364 600.091815
+L 734.873701 600.091815
+L 734.873701 580.506149
+L 565.819364 580.506149
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_37">
+    <path d="M 390.170709 620.56438
+L 396.165543 620.56438
+L 396.165543 613.617011
+L 390.170709 613.617011
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2"/>
+   </g>
+   <g id="patch_38">
+    <path d="M 30.48063 696.172441
+L 382.677165 696.172441
+L 382.677165 676.586775
+L 30.48063 676.586775
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_39">
+    <path d="M 30.48063 716.645005
+L 36.475465 716.645005
+L 36.475465 709.697637
+L 30.48063 709.697637
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78"/>
+   </g>
+   <g id="patch_40">
+    <path d="M 382.677165 696.172441
+L 523.55578 696.172441
+L 523.55578 676.586775
+L 382.677165 676.586775
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_41">
+    <path d="M 390.170709 716.645005
+L 396.165543 716.645005
+L 396.165543 709.697637
+L 390.170709 709.697637
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2"/>
+   </g>
+   <g id="patch_42">
+    <path d="M 523.55578 696.172441
+L 734.873701 696.172441
+L 734.873701 676.586775
+L 523.55578 676.586775
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_43">
+    <path d="M 30.48063 736.969753
+L 36.475465 736.969753
+L 36.475465 730.022384
+L 30.48063 730.022384
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e"/>
+   </g>
+   <g id="patch_44">
+    <path d="M 30.48063 792.253066
+L 396.765027 792.253066
+L 396.765027 772.6674
+L 30.48063 772.6674
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_45">
+    <path d="M 30.48063 812.72563
+L 36.475465 812.72563
+L 36.475465 805.778262
+L 30.48063 805.778262
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78"/>
+   </g>
+   <g id="patch_46">
+    <path d="M 396.765027 792.253066
+L 734.873701 792.253066
+L 734.873701 772.6674
+L 396.765027 772.6674
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_47">
+    <path d="M 390.170709 812.72563
+L 396.165543 812.72563
+L 396.165543 805.778262
+L 390.170709 805.778262
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2"/>
+   </g>
+   <g id="patch_48">
+    <path d="M 30.48063 888.333692
+L 326.32572 888.333692
+L 326.32572 868.748026
+L 30.48063 868.748026
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_49">
+    <path d="M 30.48063 908.806256
+L 36.475465 908.806256
+L 36.475465 901.858888
+L 30.48063 901.858888
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #255d78"/>
+   </g>
+   <g id="patch_50">
+    <path d="M 326.32572 888.333692
+L 706.697978 888.333692
+L 706.697978 868.748026
+L 326.32572 868.748026
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_51">
+    <path d="M 390.170709 908.806256
+L 396.165543 908.806256
+L 396.165543 901.858888
+L 390.170709 901.858888
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #77abb2"/>
+   </g>
+   <g id="patch_52">
+    <path d="M 706.697978 888.333692
+L 734.873701 888.333692
+L 734.873701 868.748026
+L 706.697978 868.748026
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e; stroke: #ffffff; stroke-width: 0.6; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_53">
+    <path d="M 30.48063 929.131004
+L 36.475465 929.131004
+L 36.475465 922.183635
+L 30.48063 922.183635
+z
+" clip-path="url(#pbfb57299e3)" style="fill: #dcc18e"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 30.48063 117.471443
+L 734.873701 117.471443
+" clip-path="url(#pbfb57299e3)" style="fill: none; stroke: #d9e0e3; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 30.48063 267.135494
+L 734.873701 267.135494
+" clip-path="url(#pbfb57299e3)" style="fill: none; stroke: #e9edef; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 30.48063 363.21612
+L 734.873701 363.21612
+" clip-path="url(#pbfb57299e3)" style="fill: none; stroke: #e9edef; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 30.48063 459.296745
+L 734.873701 459.296745
+" clip-path="url(#pbfb57299e3)" style="fill: none; stroke: #e9edef; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 30.48063 555.377371
+L 734.873701 555.377371
+" clip-path="url(#pbfb57299e3)" style="fill: none; stroke: #e9edef; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 30.48063 651.457996
+L 734.873701 651.457996
+" clip-path="url(#pbfb57299e3)" style="fill: none; stroke: #e9edef; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_7">
+    <path d="M 30.48063 747.538621
+L 734.873701 747.538621
+" clip-path="url(#pbfb57299e3)" style="fill: none; stroke: #e9edef; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_8">
+    <path d="M 30.48063 843.619247
+L 734.873701 843.619247
+" clip-path="url(#pbfb57299e3)" style="fill: none; stroke: #e9edef; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_9">
+    <path d="M 30.48063 960.02462
+L 734.873701 960.02462
+" clip-path="url(#pbfb57299e3)" style="fill: none; stroke: #d9e0e3; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="fill: #172d39; font: 22px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="56.949087" transform="rotate(-0 30.48063 56.949087)">手机通知管理与专注状态调研</text>
+   </g>
+   <g id="text_2">
+    <text style="fill: #62717a; font: 10px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="94.328582" transform="rotate(-0 30.48063 94.328582)">样本说明：Q1有效回答55人，均为本科生；各题有效回答数见右侧。</text>
+   </g>
+   <g id="text_3">
+    <text style="fill: #62717a; font: 9px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="142.096395" transform="rotate(-0 30.48063 142.096395)">各题独立归一化至100% · 选项依原问卷顺序排列</text>
+   </g>
+   <g id="text_4">
+    <text style="fill: #172d39; font: 12px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="187.258799" transform="rotate(-0 30.48063 187.258799)">Q2   工作日平均每天的专注时长</text>
+   </g>
+   <g id="text_5">
+    <text style="fill: #62717a; font: 10px 'Source Han Serif SC'; text-anchor: end" x="734.873701" y="186.713799" transform="rotate(-0 734.873701 186.713799)">n = 55</text>
+   </g>
+   <g id="text_6">
+    <text style="fill: #ffffff; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="75.305644" y="208.428981" transform="rotate(-0 75.305644 208.428981)">12.73%</text>
+   </g>
+   <g id="text_7">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="235.138943" transform="rotate(-0 41.720945 235.138943)">少于1小时</text>
+   </g>
+   <g id="text_8">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="235.138943" transform="rotate(-0 371.43685 235.138943)">7人 / 12.73%</text>
+   </g>
+   <g id="text_9">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="273.816418" y="208.428981" transform="rotate(-0 273.816418 208.428981)">43.64%</text>
+   </g>
+   <g id="text_10">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="235.138943" transform="rotate(-0 401.411024 235.138943)">1–2小时</text>
+   </g>
+   <g id="text_11">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="235.138943" transform="rotate(-0 731.126929 235.138943)">24人 / 43.64%</text>
+   </g>
+   <g id="text_12">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="549.170073" y="208.428981" transform="rotate(-0 549.170073 208.428981)">34.55%</text>
+   </g>
+   <g id="text_13">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="255.463691" transform="rotate(-0 41.720945 255.463691)">2–4小时</text>
+   </g>
+   <g id="text_14">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="255.463691" transform="rotate(-0 371.43685 255.463691)">19人 / 34.55%</text>
+   </g>
+   <g id="text_15">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="702.855834" y="208.428981" transform="rotate(-0 702.855834 208.428981)">9.09%</text>
+   </g>
+   <g id="text_16">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="255.463691" transform="rotate(-0 401.411024 255.463691)">4小时以上</text>
+   </g>
+   <g id="text_17">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="255.463691" transform="rotate(-0 731.126929 255.463691)">5人 / 9.09%</text>
+   </g>
+   <g id="text_18">
+    <text style="fill: #172d39; font: 12px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="283.350674" transform="rotate(-0 30.48063 283.350674)">Q3   每天收到的消息通知量</text>
+   </g>
+   <g id="text_19">
+    <text style="fill: #62717a; font: 10px 'Source Han Serif SC'; text-anchor: end" x="734.873701" y="282.794424" transform="rotate(-0 734.873701 282.794424)">n = 55</text>
+   </g>
+   <g id="text_20">
+    <text style="fill: #ffffff; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="75.305644" y="304.509606" transform="rotate(-0 75.305644 304.509606)">12.73%</text>
+   </g>
+   <g id="text_21">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="331.219569" transform="rotate(-0 41.720945 331.219569)">少于20条</text>
+   </g>
+   <g id="text_22">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="331.219569" transform="rotate(-0 371.43685 331.219569)">7人 / 12.73%</text>
+   </g>
+   <g id="text_23">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="235.394978" y="304.509606" transform="rotate(-0 235.394978 304.509606)">32.73%</text>
+   </g>
+   <g id="text_24">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="331.219569" transform="rotate(-0 401.411024 331.219569)">20–50条</text>
+   </g>
+   <g id="text_25">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="331.219569" transform="rotate(-0 731.126929 331.219569)">18人 / 32.73%</text>
+   </g>
+   <g id="text_26">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="395.484312" y="304.509606" transform="rotate(-0 395.484312 304.509606)">12.73%</text>
+   </g>
+   <g id="text_27">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="351.544317" transform="rotate(-0 41.720945 351.544317)">50–100条</text>
+   </g>
+   <g id="text_28">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="351.544317" transform="rotate(-0 371.43685 351.544317)">7人 / 12.73%</text>
+   </g>
+   <g id="text_29">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="587.591513" y="304.509606" transform="rotate(-0 587.591513 304.509606)">41.82%</text>
+   </g>
+   <g id="text_30">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="351.544317" transform="rotate(-0 401.411024 351.544317)">100条以上</text>
+   </g>
+   <g id="text_31">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="351.544317" transform="rotate(-0 731.126929 351.544317)">23人 / 41.82%</text>
+   </g>
+   <g id="text_32">
+    <text style="fill: #172d39; font: 12px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="379.42005" transform="rotate(-0 30.48063 379.42005)">Q4   专注时如何处理手机通知</text>
+   </g>
+   <g id="text_33">
+    <text style="fill: #62717a; font: 10px 'Source Han Serif SC'; text-anchor: end" x="734.873701" y="378.87505" transform="rotate(-0 734.873701 378.87505)">n = 55</text>
+   </g>
+   <g id="text_34">
+    <text style="fill: #ffffff; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="56.094923" y="400.590232" transform="rotate(-0 56.094923 400.590232)">7.27%</text>
+   </g>
+   <g id="text_35">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="427.300194" transform="rotate(-0 41.720945 427.300194)">正常响铃和弹窗，响了就看</text>
+   </g>
+   <g id="text_36">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="427.300194" transform="rotate(-0 371.43685 427.300194)">4人 / 7.27%</text>
+   </g>
+   <g id="text_37">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="222.587831" y="400.590232" transform="rotate(-0 222.587831 400.590232)">40%</text>
+   </g>
+   <g id="text_38">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="427.300194" transform="rotate(-0 401.411024 427.300194)">震动或静音，保留弹窗</text>
+   </g>
+   <g id="text_39">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="427.300194" transform="rotate(-0 731.126929 427.300194)">22人 / 40%</text>
+   </g>
+   <g id="text_40">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="536.362926" y="400.590232" transform="rotate(-0 536.362926 400.590232)">49.09%</text>
+   </g>
+   <g id="text_41">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="447.624942" transform="rotate(-0 41.720945 447.624942)">免打扰，但偶尔主动看屏幕</text>
+   </g>
+   <g id="text_42">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="447.624942" transform="rotate(-0 371.43685 447.624942)">27人 / 49.09%</text>
+   </g>
+   <g id="text_43">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="447.624942" transform="rotate(-0 401.411024 447.624942)">关闭通知，任务结束前不查看</text>
+   </g>
+   <g id="text_44">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="447.624942" transform="rotate(-0 731.126929 447.624942)">2人 / 3.64%</text>
+   </g>
+   <g id="text_45">
+    <text style="fill: #172d39; font: 12px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="475.500675" transform="rotate(-0 30.48063 475.500675)">Q5   哪种不重要通知更干扰专注</text>
+   </g>
+   <g id="text_46">
+    <text style="fill: #62717a; font: 10px 'Source Han Serif SC'; text-anchor: end" x="734.873701" y="474.955675" transform="rotate(-0 734.873701 474.955675)">n = 53</text>
+   </g>
+   <g id="text_47">
+    <text style="fill: #ffffff; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="103.578024" y="496.670857" transform="rotate(-0 103.578024 496.670857)">20.75%</text>
+   </g>
+   <g id="text_48">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="523.38082" transform="rotate(-0 41.720945 523.38082)">弹窗更干扰</text>
+   </g>
+   <g id="text_49">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="523.38082" transform="rotate(-0 371.43685 523.38082)">11人 / 20.75%</text>
+   </g>
+   <g id="text_50">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="316.224989" y="496.670857" transform="rotate(-0 316.224989 496.670857)">39.62%</text>
+   </g>
+   <g id="text_51">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="523.38082" transform="rotate(-0 401.411024 523.38082)">提示音更干扰</text>
+   </g>
+   <g id="text_52">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="523.38082" transform="rotate(-0 731.126929 523.38082)">21人 / 39.62%</text>
+   </g>
+   <g id="text_53">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="562.098042" y="496.670857" transform="rotate(-0 562.098042 496.670857)">30.19%</text>
+   </g>
+   <g id="text_54">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="543.705568" transform="rotate(-0 41.720945 543.705568)">两者干扰同样大</text>
+   </g>
+   <g id="text_55">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="543.705568" transform="rotate(-0 371.43685 543.705568)">16人 / 30.19%</text>
+   </g>
+   <g id="text_56">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="701.647613" y="496.670857" transform="rotate(-0 701.647613 496.670857)">9.43%</text>
+   </g>
+   <g id="text_57">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="543.705568" transform="rotate(-0 401.411024 543.705568)">两者干扰都不大</text>
+   </g>
+   <g id="text_58">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="543.705568" transform="rotate(-0 731.126929 543.705568)">5人 / 9.43%</text>
+   </g>
+   <g id="text_59">
+    <text style="fill: #172d39; font: 12px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="571.616926" transform="rotate(-0 30.48063 571.616926)">Q6   是否愿意提前设置筛选规则</text>
+   </g>
+   <g id="text_60">
+    <text style="fill: #62717a; font: 10px 'Source Han Serif SC'; text-anchor: end" x="734.873701" y="571.036301" transform="rotate(-0 734.873701 571.036301)">n = 50</text>
+   </g>
+   <g id="text_61">
+    <text style="fill: #ffffff; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="298.149997" y="592.751482" transform="rotate(-0 298.149997 592.751482)">76%</text>
+   </g>
+   <g id="text_62">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="619.461445" transform="rotate(-0 41.720945 619.461445)">愿花几分钟设置规则</text>
+   </g>
+   <g id="text_63">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="619.461445" transform="rotate(-0 371.43685 619.461445)">38人 / 76%</text>
+   </g>
+   <g id="text_64">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="650.346532" y="592.751482" transform="rotate(-0 650.346532 592.751482)">24%</text>
+   </g>
+   <g id="text_65">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="619.461445" transform="rotate(-0 401.411024 619.461445)">不愿设置，宁愿全部静音</text>
+   </g>
+   <g id="text_66">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="619.461445" transform="rotate(-0 731.126929 619.461445)">12人 / 24%</text>
+   </g>
+   <g id="text_67">
+    <text style="fill: #172d39; font: 12px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="667.661926" transform="rotate(-0 30.48063 667.661926)">Q7   是否会根据统计关闭无效打扰</text>
+   </g>
+   <g id="text_68">
+    <text style="fill: #62717a; font: 10px 'Source Han Serif SC'; text-anchor: end" x="734.873701" y="667.116926" transform="rotate(-0 734.873701 667.116926)">n = 50</text>
+   </g>
+   <g id="text_69">
+    <text style="fill: #ffffff; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="206.578898" y="688.832108" transform="rotate(-0 206.578898 688.832108)">50%</text>
+   </g>
+   <g id="text_70">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="715.542071" transform="rotate(-0 41.720945 715.542071)">统计有用，会使用</text>
+   </g>
+   <g id="text_71">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="715.542071" transform="rotate(-0 371.43685 715.542071)">25人 / 50%</text>
+   </g>
+   <g id="text_72">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="453.116472" y="688.832108" transform="rotate(-0 453.116472 688.832108)">20%</text>
+   </g>
+   <g id="text_73">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="715.542071" transform="rotate(-0 401.411024 715.542071)">偶尔查看，但懒得关闭</text>
+   </g>
+   <g id="text_74">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="715.542071" transform="rotate(-0 731.126929 715.542071)">10人 / 20%</text>
+   </g>
+   <g id="text_75">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="629.21474" y="688.832108" transform="rotate(-0 629.21474 688.832108)">30%</text>
+   </g>
+   <g id="text_76">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="735.866819" transform="rotate(-0 41.720945 735.866819)">不会查看，帮助不大</text>
+   </g>
+   <g id="text_77">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="735.866819" transform="rotate(-0 371.43685 735.866819)">15人 / 30%</text>
+   </g>
+   <g id="text_78">
+    <text style="fill: #172d39; font: 12px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="763.742552" transform="rotate(-0 30.48063 763.742552)">Q8   筛选通知时更看重什么</text>
+   </g>
+   <g id="text_79">
+    <text style="fill: #62717a; font: 10px 'Source Han Serif SC'; text-anchor: end" x="734.873701" y="763.197552" transform="rotate(-0 734.873701 763.197552)">n = 50</text>
+   </g>
+   <g id="text_80">
+    <text style="fill: #ffffff; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="213.622828" y="784.912733" transform="rotate(-0 213.622828 784.912733)">52%</text>
+   </g>
+   <g id="text_81">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="811.622696" transform="rotate(-0 41.720945 811.622696)">优先不漏重要信息</text>
+   </g>
+   <g id="text_82">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="811.622696" transform="rotate(-0 371.43685 811.622696)">26人 / 52%</text>
+   </g>
+   <g id="text_83">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="565.819364" y="784.912733" transform="rotate(-0 565.819364 784.912733)">48%</text>
+   </g>
+   <g id="text_84">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="811.622696" transform="rotate(-0 401.411024 811.622696)">接受重要消息偶尔延迟，减少干扰</text>
+   </g>
+   <g id="text_85">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="811.622696" transform="rotate(-0 731.126929 811.622696)">24人 / 48%</text>
+   </g>
+   <g id="text_86">
+    <text style="fill: #172d39; font: 12px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="859.84099" transform="rotate(-0 30.48063 859.84099)">Q9   读取通知内容的授权条件</text>
+   </g>
+   <g id="text_87">
+    <text style="fill: #62717a; font: 10px 'Source Han Serif SC'; text-anchor: end" x="734.873701" y="859.278177" transform="rotate(-0 734.873701 859.278177)">n = 50</text>
+   </g>
+   <g id="text_88">
+    <text style="fill: #ffffff; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="178.403175" y="880.993359" transform="rotate(-0 178.403175 880.993359)">42%</text>
+   </g>
+   <g id="text_89">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="907.703322" transform="rotate(-0 41.720945 907.703322)">好用即可，不介意授权</text>
+   </g>
+   <g id="text_90">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="907.703322" transform="rotate(-0 371.43685 907.703322)">21人 / 42%</text>
+   </g>
+   <g id="text_91">
+    <text style="fill: #172d39; font: 9px 'Source Han Serif SC'; text-anchor: middle" x="516.511849" y="880.993359" transform="rotate(-0 516.511849 880.993359)">54%</text>
+   </g>
+   <g id="text_92">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="401.411024" y="907.703322" transform="rotate(-0 401.411024 907.703322)">仅接受本地处理、不上传云端</text>
+   </g>
+   <g id="text_93">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="731.126929" y="907.703322" transform="rotate(-0 731.126929 907.703322)">27人 / 54%</text>
+   </g>
+   <g id="text_94">
+    <text style="fill: #172d39; font: 8.7px 'Source Han Serif SC'; text-anchor: start" x="41.720945" y="928.02807" transform="rotate(-0 41.720945 928.02807)">拒绝读取通知内容</text>
+   </g>
+   <g id="text_95">
+    <text style="fill: #62717a; font: 8.7px 'Source Han Serif SC'; text-anchor: end" x="371.43685" y="928.02807" transform="rotate(-0 371.43685 928.02807)">2人 / 4%</text>
+   </g>
+   <g id="text_96">
+    <text style="fill: #62717a; font: 8.5px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="988.947813" transform="rotate(-0 30.48063 988.947813)">读图：颜色仅区分本题选项；不同题的同色不代表同一人群。小比例请看行下标注。</text>
+   </g>
+   <g id="text_97">
+    <text style="fill: #62717a; font: 8.5px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="1014.076592" transform="rotate(-0 30.48063 1014.076592)">比例按人数重算，显示值四舍五入后合计可能略偏离100%。完整题目与选项见配套报告。</text>
+   </g>
+   <g id="text_98">
+    <text style="fill: #62717a; font: 8.5px 'Source Han Serif SC'; text-anchor: start" x="30.48063" y="1039.205371" transform="rotate(-0 30.48063 1039.205371)">来源：手机通知管理与专注状态调研（Word汇总）；无逐人数据，不作题间关联或因果推断。</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pbfb57299e3">
+   <rect x="8" y="14" width="749.354331" height="1049.496063"/>
+  </clipPath>
+ </defs>
+</svg>

@@ -1,0 +1,36 @@
+{
+  "renderer": "FigCompose",
+  "version": "0.1.1",
+  "chart": "100% stacked bars (custom panel)",
+  "source": {
+    "filename": "手机通知管理与专注状态调研_392334267 (1).docx",
+    "sha256": "c5b65b6c6df442fc11a3113ec3268e5d02b11a8b07ecfdccffb713b5a2c18f85"
+  },
+  "effectiveN": {
+    "Q1": 55,
+    "Q2": 55,
+    "Q3": 55,
+    "Q4": 55,
+    "Q5": 53,
+    "Q6": 50,
+    "Q7": 50,
+    "Q8": 50,
+    "Q9": 50
+  },
+  "checks": {
+    "countSums": true,
+    "sourcePercentages": true,
+    "stackLengths": true,
+    "layout": {
+      "ok": true,
+      "summary": "Figure check: passed (0 errors, 0 warnings)\nCanvas: 270.00 × 378.00 mm; 1 panels; data rectangles: 95.9%\nMinimum measured text: 8.5 pt"
+    }
+  },
+  "outputs": [
+    "F:\\notication_interceptor\\docs\\visualizations\\notification-survey.html",
+    "F:\\notication_interceptor\\docs\\visualizations\\data\\notification-survey.json",
+    "F:\\notication_interceptor\\docs\\visualizations\\notification-survey\\survey-overview.pdf",
+    "F:\\notication_interceptor\\docs\\visualizations\\notification-survey\\survey-overview.png",
+    "F:\\notication_interceptor\\docs\\visualizations\\notification-survey\\survey-overview.svg"
+  ]
+}
