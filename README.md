@@ -67,6 +67,8 @@ Flutter 只负责界面与配置，**监听、判定、取消、持久化全部�
 
 ## 快速开始
 
+内测用户请先看[APK 内测使用指南](docs/usage/apk-quick-start.md)，包含安装授权、过滤设置和内测数据分享步骤。
+
 ```powershell
 flutter pub get
 flutter build apk --debug
