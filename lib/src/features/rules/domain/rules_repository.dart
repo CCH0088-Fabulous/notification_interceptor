@@ -11,4 +11,7 @@ abstract interface class RulesRepository {
   Future<Decision> evaluate(NotificationRecord sample, {RuleSet? ruleSet});
 
   Future<List<String>> seenPackages();
+
+  /// 包名对应真实应用名；包含已安装可启动应用及已见通知来源。
+  Future<Map<String, String>> availableApps();
 }

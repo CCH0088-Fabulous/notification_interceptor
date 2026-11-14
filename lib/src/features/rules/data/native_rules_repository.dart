@@ -12,7 +12,9 @@ class NativeRulesRepository implements RulesRepository {
 
   @override
   Future<RuleSet> load() async {
-    final result = await _channel.invoke<Map<dynamic, dynamic>>(BridgeMethod.getRules);
+    final result = await _channel.invoke<Map<dynamic, dynamic>>(
+      BridgeMethod.getRules,
+    );
     return RuleSet.fromJson(asStringMap(asStringMap(result)['ruleSet']));
   }
 
@@ -30,7 +32,10 @@ class NativeRulesRepository implements RulesRepository {
   }
 
   @override
-  Future<Decision> evaluate(NotificationRecord sample, {RuleSet? ruleSet}) async {
+  Future<Decision> evaluate(
+    NotificationRecord sample, {
+    RuleSet? ruleSet,
+  }) async {
     final result = await _channel.invoke<Map<dynamic, dynamic>>(
       BridgeMethod.evaluateSample,
       {
@@ -43,7 +48,22 @@ class NativeRulesRepository implements RulesRepository {
 
   @override
   Future<List<String>> seenPackages() async {
-    final result = await _channel.invoke<List<dynamic>>(BridgeMethod.getSeenPackages);
+    final result = await _channel.invoke<List<dynamic>>(
+      BridgeMethod.getSeenPackages,
+    );
     return asStringList(result);
+  }
+
+  @override
+  Future<Map<String, String>> availableApps() async {
+    final result = await _channel.invoke<Map<dynamic, dynamic>>(
+      BridgeMethod.getAvailableApps,
+    );
+    return asStringMap(result).map(
+      (package, name) => MapEntry(
+        package,
+        name is String && name.trim().isNotEmpty ? name.trim() : package,
+      ),
+    );
   }
 }

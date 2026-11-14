@@ -56,6 +56,7 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _refreshAppNames();
   }
 
   @override
@@ -194,6 +195,8 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
   }
 
   String _appName(String package) {
+    final installedName = widget.rules.availableApps[package];
+    if (installedName != null && installedName != package) return installedName;
     for (final record in [
       ...widget.feed.items.map((item) => item.record),
       ...widget.history.allEntries.map((entry) => entry.record),
@@ -206,6 +209,15 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
     return package;
   }
 
+  Future<void> _refreshAppNames() async {
+    try {
+      await widget.rules.loadAvailableApps();
+      if (mounted) setState(() {});
+    } catch (_) {
+      // 应用目录失败时保留历史名称，选择应用时可重试。
+    }
+  }
+
   Future<void> _openPresets() async {
     final controller = widget.presets;
     if (controller == null) return;
@@ -215,11 +227,8 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
         builder: (_) => PresetsPage(
           controller: controller,
           refreshRules: widget.rules.load,
-          loadPackages: () async {
-            await widget.rules.loadSeenPackages();
-            if (widget.rules.error != null) throw StateError('应用列表读取失败');
-            return widget.rules.seenPackages;
-          },
+          loadPackages: () async =>
+              (await widget.rules.loadAvailableApps()).keys.toList(),
           appName: _appName,
           onCompare: widget.comparison == null ? null : _openComparison,
         ),
@@ -287,11 +296,7 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
         builder: (context) => RuleWizardPage(
           controller: widget.rules,
           initial: initial,
-          loadPackages: () async {
-            await widget.rules.loadSeenPackages();
-            if (widget.rules.error != null) throw StateError('应用列表读取失败');
-            return widget.rules.seenPackages;
-          },
+          loadApps: widget.rules.loadAvailableApps,
           loadSamples: _ruleSamples,
         ),
       ),
@@ -308,11 +313,7 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
       MaterialPageRoute(
         builder: (context) => RuleEditorPage(
           initial: initial,
-          loadPackages: () async {
-            await widget.rules.loadSeenPackages();
-            if (widget.rules.error != null) throw StateError('应用列表读取失败');
-            return widget.rules.seenPackages;
-          },
+          loadApps: widget.rules.loadAvailableApps,
           loadSamples: _ruleSamples,
           evaluate: (sample, draft) =>
               widget.rules.evaluate(sample, draft: draft),

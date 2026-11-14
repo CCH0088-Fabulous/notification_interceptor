@@ -14,13 +14,13 @@ class RuleEditorPage extends StatefulWidget {
   const RuleEditorPage({
     super.key,
     this.initial,
-    required this.loadPackages,
+    required this.loadApps,
     required this.loadSamples,
     required this.evaluate,
   });
 
   final RuleSpec? initial;
-  final Future<List<String>> Function() loadPackages;
+  final Future<Map<String, String>> Function() loadApps;
   final Future<List<NotificationRecord>> Function() loadSamples;
   final Future<Decision> Function(NotificationRecord sample, RuleSpec draft) evaluate;
 
@@ -89,10 +89,7 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
             onPressed: () => _runTest(draft),
             icon: const Icon(Icons.play_circle_outline),
           ),
-          TextButton(
-            onPressed: () => _save(draft),
-            child: const Text('保存'),
-          ),
+          TextButton(onPressed: () => _save(draft), child: const Text('保存')),
         ],
       ),
       body: ListView(
@@ -110,7 +107,10 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
           _Label('匹配后处理'),
           SegmentedButton<RuleAction>(
             segments: RuleAction.values
-                .map((action) => ButtonSegment(value: action, label: Text(action.label)))
+                .map(
+                  (action) =>
+                      ButtonSegment(value: action, label: Text(action.label)),
+                )
                 .toList(),
             selected: {draft.action},
             onSelectionChanged: (selection) {
@@ -121,7 +121,9 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
           _Label('条件组合'),
           SegmentedButton<MatchMode>(
             segments: MatchMode.values
-                .map((mode) => ButtonSegment(value: mode, label: Text(mode.label)))
+                .map(
+                  (mode) => ButtonSegment(value: mode, label: Text(mode.label)),
+                )
                 .toList(),
             selected: {draft.mode},
             onSelectionChanged: (selection) {
@@ -149,7 +151,7 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
               ),
               const SizedBox(width: 8),
               IconButton.filledTonal(
-                tooltip: '从已见应用选择',
+                tooltip: '选择已安装应用',
                 onPressed: () => _pickPackages(draft),
                 icon: const Icon(Icons.apps),
               ),
@@ -239,15 +241,18 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Row(
                   children: [
-                    Icon(Icons.warning_amber, size: 16, color: Theme.of(context).colorScheme.error),
+                    Icon(
+                      Icons.warning_amber,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
                         issue.message,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: Theme.of(context).colorScheme.error),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     ),
                   ],
@@ -278,7 +283,9 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
                 label: '开始',
                 minutes: quiet.fromMinutes,
                 onChanged: (value) => setState(
-                  () => _rule = _rule.copyWith(quietHours: quiet.copyWith(fromMinutes: value)),
+                  () => _rule = _rule.copyWith(
+                    quietHours: quiet.copyWith(fromMinutes: value),
+                  ),
                 ),
               ),
             ),
@@ -288,7 +295,9 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
                 label: '结束',
                 minutes: quiet.toMinutes,
                 onChanged: (value) => setState(
-                  () => _rule = _rule.copyWith(quietHours: quiet.copyWith(toMinutes: value)),
+                  () => _rule = _rule.copyWith(
+                    quietHours: quiet.copyWith(toMinutes: value),
+                  ),
                 ),
               ),
             ),
@@ -310,7 +319,9 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
                   days.remove(day);
                 }
                 setState(
-                  () => _rule = _rule.copyWith(quietHours: quiet.copyWith(days: days)),
+                  () => _rule = _rule.copyWith(
+                    quietHours: quiet.copyWith(days: days),
+                  ),
                 );
               },
             );
@@ -325,44 +336,83 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
   }
 
   Future<void> _pickPackages(RuleSpec draft) async {
-    final available = await widget.loadPackages();
+    Map<String, String> apps;
+    try {
+      apps = await widget.loadApps();
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('应用列表读取失败，请重试')));
+      return;
+    }
     if (!mounted) return;
+    final available = {...apps.keys, ...draft.packages}.toList()
+      ..sort((a, b) => (apps[a] ?? a).compareTo(apps[b] ?? b));
     if (available.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('还没有记录到任何包名，先让目标应用发一条通知')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('暂无可选应用，请稍后重试')));
       return;
     }
     final selected = <String>{...draft.packages};
+    var search = '';
     await showDialog<void>(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: const Text('选择应用包名'),
+          title: const Text('选择应用'),
           content: SizedBox(
             width: 400,
-            child: ListView(
-              shrinkWrap: true,
-              children: available
-                  .map(
-                    (packageName) => CheckboxListTile(
-                      dense: true,
-                      title: Text(packageName),
-                      value: selected.contains(packageName),
-                      onChanged: (checked) => setDialogState(() {
-                        if (checked == true) {
-                          selected.add(packageName);
-                        } else {
-                          selected.remove(packageName);
-                        }
-                      }),
-                    ),
-                  )
-                  .toList(),
+            height: 400,
+            child: Column(
+              children: [
+                TextField(
+                  decoration: const InputDecoration(
+                    hintText: '搜索应用名称或包名',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                  onChanged: (value) =>
+                      setDialogState(() => search = value.trim().toLowerCase()),
+                ),
+                Expanded(
+                  child: ListView(
+                    children: available
+                        .where(
+                          (package) => '${apps[package] ?? package} $package'
+                              .toLowerCase()
+                              .contains(search),
+                        )
+                        .map(
+                          (packageName) => CheckboxListTile(
+                            dense: true,
+                            title: Text(apps[packageName] ?? packageName),
+                            subtitle:
+                                apps[packageName] != null &&
+                                    apps[packageName] != packageName
+                                ? Text(packageName)
+                                : null,
+                            value: selected.contains(packageName),
+                            onChanged: (checked) => setDialogState(() {
+                              if (checked == true) {
+                                selected.add(packageName);
+                              } else {
+                                selected.remove(packageName);
+                              }
+                            }),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ],
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('取消'),
+            ),
             FilledButton(
               onPressed: () {
                 _packages.text = selected.join(', ');
@@ -414,7 +464,10 @@ class _RuleEditorPageState extends State<RuleEditorPage> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('关闭')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('关闭'),
+          ),
         ],
       ),
     );

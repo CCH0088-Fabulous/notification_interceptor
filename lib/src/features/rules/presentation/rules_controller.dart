@@ -22,6 +22,7 @@ class RulesController extends ChangeNotifier {
   RuleSet _ruleSet = RuleSet.empty;
   List<RuleIssue> _issues = const [];
   List<String> _seenPackages = const [];
+  Map<String, String> _availableApps = const {};
   bool _loading = false;
   bool _disposed = false;
   Future<void>? _pending;
@@ -30,6 +31,7 @@ class RulesController extends ChangeNotifier {
   RuleSet get ruleSet => _ruleSet;
   List<RuleIssue> get issues => _issues;
   List<String> get seenPackages => _seenPackages;
+  Map<String, String> get availableApps => _availableApps;
   bool get loading => _loading;
   bool get busy => _pending != null;
   String? get error => _error;
@@ -61,6 +63,12 @@ class RulesController extends ChangeNotifier {
       _notify();
     }
   });
+
+  Future<Map<String, String>> loadAvailableApps() async {
+    _availableApps = Map.unmodifiable(await _repository.availableApps());
+    _notify();
+    return _availableApps;
+  }
 
   Future<void> setGlobalEnabled(bool enabled) =>
       _enqueue(() => _persist(_ruleSet.copyWith(globalEnabled: enabled)));

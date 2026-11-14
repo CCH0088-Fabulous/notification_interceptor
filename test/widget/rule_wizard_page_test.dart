@@ -21,6 +21,11 @@ class _Repository implements RulesRepository {
   }
 
   @override
+  Future<Map<String, String>> availableApps() async => {
+    for (final package in await seenPackages()) package: package,
+  };
+
+  @override
   Future<List<String>> seenPackages() async => ['dev.poc.notifgen'];
   @override
   Future<Decision> evaluate(
@@ -45,7 +50,10 @@ void main() {
       MaterialApp(
         home: RuleWizardPage(
           controller: controller,
-          loadPackages: () async => ['dev.poc.notifgen'],
+          loadApps: () async => {
+            'dev.poc.notifgen': '通知生成器',
+            'com.tencent.mm': '微信',
+          },
           loadSamples: () async => empty
               ? []
               : [
@@ -70,6 +78,22 @@ void main() {
     await tester.tap(find.byKey(const Key('wizard-next')));
     await tester.pumpAndSettle();
   }
+
+  testWidgets('未发送过通知的已安装应用也能按名称和包名选择', (tester) async {
+    await open(tester, empty: true);
+    await tester.tap(find.text('指定应用'));
+    await tester.pumpAndSettle();
+    expect(find.text('微信'), findsOneWidget);
+    expect(find.textContaining('未命名应用'), findsNothing);
+    await tester.enterText(find.byType(TextField).first, 'com.tencent.mm');
+    await tester.pumpAndSettle();
+    expect(find.text('微信'), findsOneWidget);
+    expect(find.text('通知生成器'), findsNothing);
+    await tester.tap(find.byKey(const ValueKey('app-com.tencent.mm')));
+    await next(tester);
+    expect(find.text('微信'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('跨应用关键词流程、空值阻挡和整套原生预览调用', (tester) async {
     final repo = await open(tester);

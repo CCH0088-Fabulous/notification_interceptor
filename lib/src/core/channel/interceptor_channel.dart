@@ -30,6 +30,7 @@ abstract final class BridgeMethod {
   static const String getActiveNotifications = 'getActiveNotifications';
   static const String cancel = 'cancel';
   static const String getSeenPackages = 'getSeenPackages';
+  static const String getAvailableApps = 'getAvailableApps';
   static const String exportHistory = 'exportHistory';
   static const String getResearchStatus = 'getResearchStatus';
   static const String enrollResearch = 'enrollResearch';

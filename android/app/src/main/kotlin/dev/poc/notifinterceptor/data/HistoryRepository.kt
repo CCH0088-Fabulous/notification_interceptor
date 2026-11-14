@@ -7,6 +7,7 @@ import java.io.File
 
 /**
  * 历史记录：JSONL 追加写 + 内存环形缓冲。
+ * 常驻通知仅在实时页展示，不占用持久历史容量。
  * 超过 [maxEntries] 时整体重写文件，保留最新的 N 条。
  */
 class HistoryRepository(
@@ -21,6 +22,7 @@ class HistoryRepository(
     override fun append(entry: HistoryEntry) {
         synchronized(lock) {
             ensureLoaded()
+            if (entry.snapshot.isOngoing) return
             entries.addLast(entry)
             runCatching {
                 file.parentFile?.mkdirs()
@@ -105,19 +107,27 @@ class HistoryRepository(
         loaded = true
         if (!file.exists()) return
         val parsed = runCatching { file.readLines() }.getOrElse { emptyList() }
+        var removedOngoing = false
         for (line in parsed) {
             if (line.isBlank()) continue
             val map = Json.parseObject(line) ?: continue
-            HistoryEntry.fromMap(map)?.let { entries.addLast(it) }
+            HistoryEntry.fromMap(map)?.let {
+                if (it.snapshot.isOngoing) removedOngoing = true else entries.addLast(it)
+            }
         }
-        trimLocked()
+        // Upgrade existing histories without discarding surviving ordinary notifications.
+        trimLocked(forceRewrite = removedOngoing)
     }
 
-    private fun trimLocked() {
-        if (entries.size <= maxEntries) return
+    private fun trimLocked(forceRewrite: Boolean = false) {
+        if (entries.size <= maxEntries && !forceRewrite) return
         while (entries.size > maxEntries) {
             entries.removeFirst()
         }
+        rewriteLocked()
+    }
+
+    private fun rewriteLocked() {
         runCatching {
             val content = entries.joinToString(separator = "\n", postfix = "\n") {
                 Json.stringify(it.toMap())

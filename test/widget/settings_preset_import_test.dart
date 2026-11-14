@@ -58,8 +58,15 @@ class _Rules implements RulesRepository {
   }
 
   @override
-  Future<Decision> evaluate(NotificationRecord sample, {RuleSet? ruleSet}) async =>
-      const Decision();
+  Future<Decision> evaluate(
+    NotificationRecord sample, {
+    RuleSet? ruleSet,
+  }) async => const Decision();
+
+  @override
+  Future<Map<String, String>> availableApps() async => {
+    for (final package in await seenPackages()) package: package,
+  };
 
   @override
   Future<List<String>> seenPackages() async => const [];
@@ -75,7 +82,10 @@ void main() {
     addTearDown(events.close);
 
     final repository = _Rules();
-    final access = AccessController(repository: _Access(), events: events.stream);
+    final access = AccessController(
+      repository: _Access(),
+      events: events.stream,
+    );
     final history = HistoryController(repository: _History());
     final rules = RulesController(repository: repository);
     addTearDown(() {

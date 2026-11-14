@@ -46,6 +46,11 @@ class _Rules implements RulesRepository {
   Future<Decision> evaluate(NotificationRecord sample, {RuleSet? ruleSet}) =>
       throw UnimplementedError();
   @override
+  Future<Map<String, String>> availableApps() async => {
+    for (final package in await seenPackages()) package: package,
+  };
+
+  @override
   Future<List<String>> seenPackages() async => [];
 }
 

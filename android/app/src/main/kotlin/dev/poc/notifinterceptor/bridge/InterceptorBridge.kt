@@ -124,6 +124,9 @@ class InterceptorBridge(
         METHOD_GET_ACTIVE_NOTIFICATIONS -> activeNotifications()
         METHOD_CANCEL -> cancel(call)
         METHOD_GET_SEEN_PACKAGES -> graph.history.seenPackages()
+        METHOD_GET_AVAILABLE_APPS -> graph.appInfo.availableApps(
+            graph.history.seenPackages() + graph.rules.load().rules.flatMap { it.packages },
+        )
         METHOD_EXPORT_HISTORY -> graph.history.exportJson().also {
             runCatching { graph.research.count(mapOf("history_exported" to 1L)) }
         }
@@ -365,6 +368,7 @@ class InterceptorBridge(
         const val METHOD_GET_ACTIVE_NOTIFICATIONS = "getActiveNotifications"
         const val METHOD_CANCEL = "cancel"
         const val METHOD_GET_SEEN_PACKAGES = "getSeenPackages"
+        const val METHOD_GET_AVAILABLE_APPS = "getAvailableApps"
         const val METHOD_EXPORT_HISTORY = "exportHistory"
         const val METHOD_GET_RESEARCH_STATUS = "getResearchStatus"
         const val METHOD_ENROLL_RESEARCH = "enrollResearch"

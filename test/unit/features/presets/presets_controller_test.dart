@@ -108,6 +108,11 @@ class _Rules implements RulesRepository {
     RuleSet? ruleSet,
   }) async => const Decision();
   @override
+  Future<Map<String, String>> availableApps() async => {
+    for (final package in await seenPackages()) package: package,
+  };
+
+  @override
   Future<List<String>> seenPackages() async => [];
 }
 

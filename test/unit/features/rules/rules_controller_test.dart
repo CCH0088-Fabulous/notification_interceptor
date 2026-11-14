@@ -51,6 +51,11 @@ class _FakeRulesRepository implements RulesRepository {
   }
 
   @override
+  Future<Map<String, String>> availableApps() async => {
+    for (final package in await seenPackages()) package: package,
+  };
+
+  @override
   Future<List<String>> seenPackages() async => ['com.a', 'com.b'];
 }
 

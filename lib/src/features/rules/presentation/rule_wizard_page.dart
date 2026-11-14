@@ -14,13 +14,13 @@ class RuleWizardPage extends StatefulWidget {
   const RuleWizardPage({
     super.key,
     required this.controller,
-    required this.loadPackages,
+    required this.loadApps,
     required this.loadSamples,
     this.initial,
   });
 
   final RulesController controller;
-  final Future<List<String>> Function() loadPackages;
+  final Future<Map<String, String>> Function() loadApps;
   final Future<List<NotificationRecord>> Function() loadSamples;
   final RuleSpec? initial;
 
@@ -81,7 +81,7 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
     });
     try {
       final data = await Future.wait<Object>([
-        widget.loadPackages(),
+        widget.loadApps(),
         widget.loadSamples(),
       ]);
       if (!mounted) return;
@@ -93,28 +93,33 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
           labels[sample.packageName] = label;
         }
       }
+      final apps = data[0] as Map<String, String>;
+      for (final entry in apps.entries) {
+        final label = entry.value.trim();
+        if (label.isNotEmpty && label != entry.key) labels[entry.key] = label;
+      }
       setState(() {
         _packages = {
-          ...data[0] as List<String>,
+          ...apps.keys,
           ...samples.map((s) => s.packageName),
           ..._selected,
-        }.where((p) => p.trim().isNotEmpty).toList()..sort();
+        }.where((p) => p.trim().isNotEmpty).toList();
+        _labels.clear();
         _labels.addAll(labels);
+        _packages.sort((a, b) {
+          final byName = _appName(a).compareTo(_appName(b));
+          return byName != 0 ? byName : a.compareTo(b);
+        });
       });
     } catch (_) {
-      if (mounted) setState(() => _loadError = '通知读取失败，请重试。');
+      if (mounted) setState(() => _loadError = '应用列表读取失败，请重试。');
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
   String _appName(String package) {
-    final label = _labels[package];
-    final name = label ?? '未命名应用 ${_packages.indexOf(package) + 1}';
-    final duplicates = _packages.where((p) => _labels[p] == label).length;
-    return label != null && duplicates > 1
-        ? '$name（${_packages.indexOf(package) + 1}）'
-        : name;
+    return _labels[package] ?? package;
   }
 
   String get _scope => _allApps ? '所有应用' : _selected.map(_appName).join('、');
@@ -353,7 +358,7 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
       TextField(
         controller: _search,
         decoration: const InputDecoration(
-          hintText: '搜索应用名称',
+          hintText: '搜索应用名称或包名',
           prefixIcon: Icon(Icons.search),
         ),
         onChanged: (_) => setState(() {}),
@@ -369,15 +374,21 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
       ],
       ..._packages
           .where(
-            (p) => _appName(
-              p,
-            ).toLowerCase().contains(_search.text.trim().toLowerCase()),
+            (p) => '${_appName(p)} $p'.toLowerCase().contains(
+              _search.text.trim().toLowerCase(),
+            ),
           )
           .map(
             (p) => CheckboxListTile(
               key: ValueKey('app-$p'),
               contentPadding: EdgeInsets.zero,
               title: Text(_appName(p)),
+              subtitle:
+                  _packages.any(
+                    (other) => other != p && _appName(other) == _appName(p),
+                  )
+                  ? Text(p)
+                  : null,
               value: _selected.contains(p),
               onChanged: (value) => setState(() {
                 value == true ? _selected.add(p) : _selected.remove(p);
@@ -385,13 +396,13 @@ class _RuleWizardPageState extends State<RuleWizardPage> {
             ),
           ),
       if (!_loading && _packages.isEmpty && _loadError == null)
-        _hint('暂无应用。先让目标应用发一条通知，再点击刷新。'),
+        _hint('暂无可选应用，请点击刷新。'),
       TextButton.icon(
         onPressed: _loading ? null : _load,
         icon: const Icon(Icons.refresh, size: 18),
         label: const Text('刷新应用'),
       ),
-      _hint('列表来自已收到的通知，不需要输入包名。'),
+      _hint('列出已安装的可打开应用及已收到通知的来源，无需先发送通知。'),
     ],
   ];
 

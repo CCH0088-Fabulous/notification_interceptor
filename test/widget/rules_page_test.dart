@@ -31,6 +31,11 @@ class _FakeRulesRepository implements RulesRepository {
   }) async => const Decision();
 
   @override
+  Future<Map<String, String>> availableApps() async => {
+    for (final package in await seenPackages()) package: package,
+  };
+
+  @override
   Future<List<String>> seenPackages() async => const [];
 }
 
@@ -234,6 +239,46 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('编辑规则可搜索未发通知的已安装应用并保留已有选择', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(1200, 2400));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: RuleEditorPage(
+          initial: const RuleSpec(
+            id: 'r1',
+            name: '测试',
+            packages: ['com.old.app'],
+          ),
+          loadApps: () async => {'com.tencent.mm': '微信'},
+          loadSamples: () async => const [],
+          evaluate: (sample, draft) async => const Decision(),
+        ),
+      ),
+    );
+    await tester.tap(find.byTooltip('选择已安装应用'));
+    await tester.pumpAndSettle();
+    expect(find.text('微信'), findsOneWidget);
+    expect(
+      find.widgetWithText(CheckboxListTile, 'com.old.app'),
+      findsOneWidget,
+    );
+    await tester.enterText(
+      find.widgetWithText(TextField, '搜索应用名称或包名'),
+      'com.tencent.mm',
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(CheckboxListTile, '微信'));
+    await tester.tap(find.widgetWithText(FilledButton, '应用'));
+    await tester.pumpAndSettle();
+    final field = tester.widget<TextField>(
+      find.widgetWithText(TextField, 'com.example.shop'),
+    );
+    expect(field.controller!.text, contains('com.old.app'));
+    expect(field.controller!.text, contains('com.tencent.mm'));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('规则编辑器对非法正则即时提示', (tester) async {
     await tester.binding.setSurfaceSize(const Size(1200, 2400));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -242,7 +287,7 @@ void main() {
       MaterialApp(
         home: RuleEditorPage(
           initial: const RuleSpec(id: 'r1', name: '测试'),
-          loadPackages: () async => const [],
+          loadApps: () async => const {},
           loadSamples: () async => const [],
           evaluate: (sample, draft) async => const Decision(),
         ),
@@ -264,7 +309,7 @@ void main() {
       MaterialApp(
         home: RuleEditorPage(
           initial: const RuleSpec(id: 'r1', name: '空规则'),
-          loadPackages: () async => const [],
+          loadApps: () async => const {},
           loadSamples: () async => const [],
           evaluate: (sample, draft) async => const Decision(),
         ),
