@@ -35,8 +35,8 @@ class FeedPage extends StatelessWidget {
             else if (!status.connected)
               _PermissionBanner(
                 title: '已授权，但监听服务未连接',
-                message: '系统尚未绑定监听服务。点「重新连接」或重新开关一次通知使用权。',
-                actionLabel: '重新连接',
+                message: access.connectionMessage ?? '系统尚未绑定监听服务。点「重新连接」或重新开关一次通知使用权。',
+                actionLabel: access.reconnecting ? '连接中…' : '重新连接',
                 onAction: access.requestRebind,
                 isError: false,
               )

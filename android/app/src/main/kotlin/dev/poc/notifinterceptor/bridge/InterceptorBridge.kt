@@ -157,6 +157,7 @@ class InterceptorBridge(
     }
 
     private fun requestRebind(): Map<String, Any?> {
+        check(NotificationAccess.isGranted(appContext)) { "请先授予通知使用权" }
         NotificationListenerServiceCompat.requestRebind(appContext)
         return mapOf(
             "granted" to NotificationAccess.isGranted(appContext),
@@ -337,11 +338,9 @@ class InterceptorBridge(
     /** 兼容层：requestRebind 只在 API 24+ 存在，minSdk 26 已满足，保留集中入口便于替换。 */
     private object NotificationListenerServiceCompat {
         fun requestRebind(context: Context) {
-            runCatching {
-                NotificationListenerService.requestRebind(
-                    ComponentName(context, NotificationInterceptorService::class.java),
-                )
-            }
+            NotificationListenerService.requestRebind(
+                ComponentName(context, NotificationInterceptorService::class.java),
+            )
         }
     }
 

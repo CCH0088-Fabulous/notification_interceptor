@@ -76,6 +76,8 @@ class SettingsPage extends StatelessWidget {
                 children: [
                   _row('已授予权限', status.granted ? '是' : '否'),
                   _row('服务已连接', status.connected ? '是' : '否'),
+                  if (access.connectionMessage != null)
+                    Text(access.connectionMessage!),
                   _row('系统版本', 'API ${status.sdkInt}'),
                   _row('本应用包名', status.ownPackage),
                   if (status.serviceComponent.isNotEmpty)
@@ -89,8 +91,8 @@ class SettingsPage extends StatelessWidget {
                         child: const Text('打开系统设置'),
                       ),
                       OutlinedButton(
-                        onPressed: access.requestRebind,
-                        child: const Text('重新连接'),
+                        onPressed: access.reconnecting ? null : access.requestRebind,
+                        child: Text(access.reconnecting ? '连接中…' : '重新连接'),
                       ),
                       OutlinedButton(
                         onPressed: access.refresh,
@@ -107,7 +109,7 @@ class SettingsPage extends StatelessWidget {
               child: Column(
                 children: [
                   _row('已保存历史', '${history.stats.total} 条（上限 1000）'),
-                  const Text('存储条数包含常驻通知与系统汇总，通知效果统计另行排除。'),
+                  const Text('常驻通知不保存到历史；系统汇总不计入通知效果统计。'),
                   _row('规则数量', '${rules.ruleSet.rules.length} 条'),
                   const SizedBox(height: 12),
                   Wrap(
