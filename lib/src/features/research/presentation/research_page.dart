@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/widgets/section_card.dart';
 import '../domain/research_status.dart';
 import 'research_controller.dart';
+import 'research_setup_dialog.dart';
 
 class ResearchPage extends StatefulWidget {
   const ResearchPage({super.key, required this.controller});
@@ -219,18 +220,12 @@ class _ResearchPageState extends State<ResearchPage> {
   );
 
   Future<void> _start() async {
-    if (!await _confirm(
-      '参与内测数据记录',
-      '用于产品研究及 BP 汇总分析。在本机记录本应用使用时长、分时通知处理结果、操作类别和时间点。事件明细保留 14 天，小时汇总保留 30 天，并受容量限制。\n\n不包含通知正文、发送人、联系人或具体过滤词。无需登录，不自动上传。由你在结束后选择分享文件。可随时结束记录，删除数据另行确认。',
-      '同意并开始',
-    )) {
-      return;
-    }
-    await widget.controller.configure({
-      'enabled': true,
-      'disclosureAccepted': 2,
-      'autoUpload': false,
-    });
+    final choice = await showResearchSetupDialog(context);
+    if (choice == null || !mounted) return;
+    await widget.controller.applyRecordingChoice(
+      enabled: choice.enabled,
+      ruleStructures: choice.ruleStructures,
+    );
   }
 
   Future<void> _structures(bool value) async {

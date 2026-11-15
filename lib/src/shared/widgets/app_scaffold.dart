@@ -11,6 +11,7 @@ import '../../features/comparison/presentation/batch_comparison_controller.dart'
 import '../../features/comparison/presentation/batch_comparison_page.dart';
 import '../../features/research/presentation/research_controller.dart';
 import '../../features/research/presentation/research_page.dart';
+import '../../features/research/presentation/research_setup_dialog.dart';
 import '../domain/usage_recorder.dart';
 import '../../features/presets/domain/filter_preset.dart';
 import '../../features/rules/domain/rule_spec.dart';
@@ -51,16 +52,72 @@ class _AppScaffoldState extends State<AppScaffold> with WidgetsBindingObserver {
   static const _titles = ['实时通知', '过滤规则', '历史记录', '设置'];
 
   int _index = 0;
+  bool _researchSetupScheduled = false;
+  bool _researchSetupVisible = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _refreshAppNames();
+    widget.research?.addListener(_offerResearchSetup);
+    _offerResearchSetup();
+  }
+
+  @override
+  void didUpdateWidget(covariant AppScaffold oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.research != widget.research) {
+      oldWidget.research?.removeListener(_offerResearchSetup);
+      widget.research?.addListener(_offerResearchSetup);
+      _offerResearchSetup();
+    }
+  }
+
+  void _offerResearchSetup() {
+    final controller = widget.research;
+    if (!mounted ||
+        controller?.needsInitialSetup != true ||
+        _researchSetupScheduled ||
+        _researchSetupVisible) {
+      return;
+    }
+    _researchSetupScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _researchSetupScheduled = false;
+      if (!mounted ||
+          widget.research != controller ||
+          controller?.needsInitialSetup != true ||
+          _researchSetupVisible) {
+        return;
+      }
+      _researchSetupVisible = true;
+      try {
+        final choice = await showResearchSetupDialog(
+          context,
+          initialSetup: true,
+        );
+        if (choice != null && mounted && widget.research == controller) {
+          await controller!.applyRecordingChoice(
+            enabled: choice.enabled,
+            ruleStructures: choice.ruleStructures,
+          );
+        }
+      } catch (_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('采集设置未保存，可在“设置 → 内测数据”重试。')),
+          );
+        }
+      } finally {
+        _researchSetupVisible = false;
+      }
+    });
   }
 
   @override
   void dispose() {
+    widget.research?.removeListener(_offerResearchSetup);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

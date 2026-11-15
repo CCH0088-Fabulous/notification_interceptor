@@ -83,6 +83,9 @@ class FakeResearchRepository implements ResearchRepository {
     }
     if (config['enabled'] == true) {
       config.addAll({'participantId': 'test-install', 'consentAt': 123});
+      if (changes.containsKey('disclosureAccepted')) {
+        config['acceptedDisclosureVersion'] = changes['disclosureAccepted'];
+      }
     }
     config['revision'] = (config['revision'] as int) + 1;
     if ((changes['token'] as String?)?.isNotEmpty ?? false) {
@@ -108,11 +111,13 @@ class FakeResearchRepository implements ResearchRepository {
   @override
   Future<ResearchStatus> clear() async {
     clearCalls++;
+    final nextRevision = (config['revision'] as int) + 1;
     raw =
         jsonDecode(
               File('test/fixtures/research_status_v1.json').readAsStringSync(),
             )
             as Map<String, dynamic>;
+    config['revision'] = nextRevision;
     return status();
   }
 

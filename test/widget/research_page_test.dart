@@ -41,6 +41,22 @@ void main() {
     await tester.tap(find.byKey(const Key('research-start')));
     await tester.pumpAndSettle();
     expect(find.textContaining('事件明细保留 14 天'), findsOneWidget);
+    expect(
+      tester
+          .widget<SwitchListTile>(
+            find.byKey(const Key('research-default-recording')),
+          )
+          .value,
+      true,
+    );
+    expect(
+      tester
+          .widget<SwitchListTile>(
+            find.byKey(const Key('research-default-structures')),
+          )
+          .value,
+      true,
+    );
     await tester.tap(find.text('取消'));
     await tester.pumpAndSettle();
     expect(repo.configurations, isEmpty);
@@ -50,6 +66,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(repo.configurations.single['disclosureAccepted'], 2);
     expect(repo.configurations.single['autoUpload'], false);
+    expect(repo.configurations.single['ruleStructures'], true);
+    expect(repo.configurations.single['ruleDisclosureAccepted'], 2);
     expect(repo.enrollCalls, 0);
     expect(repo.syncCalls, 0);
     expect(controller.status!.configuration.enabled, true);

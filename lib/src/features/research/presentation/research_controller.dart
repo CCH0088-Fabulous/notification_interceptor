@@ -17,6 +17,27 @@ class ResearchController extends ChangeNotifier implements UsageRecorder {
   ResearchStatus? get status => _status;
   bool get busy => _busy;
   String? get error => _error;
+  bool get needsInitialSetup {
+    final current = _status;
+    return !_busy &&
+        _error == null &&
+        current != null &&
+        current.settingsError == null &&
+        !current.configuration.enabled &&
+        !current.configuration.hasStudy &&
+        current.configuration.revision == 0;
+  }
+
+  Future<void> applyRecordingChoice({
+    required bool enabled,
+    bool ruleStructures = true,
+  }) => configure({
+    'enabled': enabled,
+    'ruleStructures': enabled && ruleStructures,
+    'autoUpload': false,
+    if (enabled) 'disclosureAccepted': 2,
+    if (enabled && ruleStructures) 'ruleDisclosureAccepted': 2,
+  });
 
   Future<void> load() async {
     if (_busy) return;

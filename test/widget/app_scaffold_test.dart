@@ -20,6 +20,8 @@ import 'package:notifinterceptor/src/features/rules/presentation/rules_controlle
 import 'package:notifinterceptor/src/shared/domain/decision.dart';
 import 'package:notifinterceptor/src/shared/domain/rule_action.dart';
 import 'package:notifinterceptor/src/shared/widgets/app_scaffold.dart';
+import 'package:notifinterceptor/src/features/research/presentation/research_controller.dart';
+import '../support/fake_research_repository.dart';
 
 class _Access implements AccessRepository {
   @override
@@ -65,6 +67,7 @@ class _Feed implements FeedRepository {
 }
 
 class _Rules implements RulesRepository {
+  int availableAppsCalls = 0;
   RuleSet ruleSet = const RuleSet(
     rules: [
       RuleSpec(id: 'r1', name: '屏蔽营销', packages: ['com.demo.shop']),
@@ -87,9 +90,10 @@ class _Rules implements RulesRepository {
   }) async => const Decision();
 
   @override
-  Future<Map<String, String>> availableApps() async => {
-    for (final package in await seenPackages()) package: package,
-  };
+  Future<Map<String, String>> availableApps() async {
+    availableAppsCalls++;
+    return {for (final package in await seenPackages()) package: package};
+  }
 
   @override
   Future<List<String>> seenPackages() async => const ['com.demo.shop'];
@@ -125,6 +129,99 @@ class _History implements HistoryRepository {
 }
 
 void main() {
+  Future<ResearchController> openWithResearch(
+    WidgetTester tester,
+    FakeResearchRepository repository, {
+    _Rules? rulesRepository,
+  }) async {
+    final events = StreamController<Map<String, dynamic>>.broadcast();
+    final access = AccessController(
+      repository: _Access(),
+      events: events.stream,
+    );
+    final feed = FeedController(repository: _Feed(), events: events.stream);
+    final rules = RulesController(repository: rulesRepository ?? _Rules());
+    final history = HistoryController(repository: _History());
+    final research = ResearchController(repository: repository);
+    addTearDown(() async {
+      access.dispose();
+      feed.dispose();
+      rules.dispose();
+      history.dispose();
+      research.dispose();
+      await events.close();
+    });
+    await tester.pumpWidget(
+      MaterialApp(
+        home: AppScaffold(
+          access: access,
+          feed: feed,
+          rules: rules,
+          history: history,
+          research: research,
+        ),
+      ),
+    );
+    await research.load();
+    await tester.pumpAndSettle();
+    return research;
+  }
+
+  testWidgets('首次启动展示全部默认采集选项，确认后一次生效', (tester) async {
+    final repository = FakeResearchRepository();
+    final rulesRepository = _Rules();
+    final research = await openWithResearch(
+      tester,
+      repository,
+      rulesRepository: rulesRepository,
+    );
+    expect(rulesRepository.availableAppsCalls, 1);
+    expect(find.byKey(const Key('research-setup-dialog')), findsOneWidget);
+    expect(repository.configurations, isEmpty);
+    expect(
+      tester
+          .widget<SwitchListTile>(
+            find.byKey(const Key('research-default-recording')),
+          )
+          .value,
+      true,
+    );
+    expect(
+      tester
+          .widget<SwitchListTile>(
+            find.byKey(const Key('research-default-structures')),
+          )
+          .value,
+      true,
+    );
+    await tester.tap(find.byKey(const Key('research-setup-confirm')));
+    await tester.pumpAndSettle();
+    expect(repository.configurations.single['ruleStructures'], true);
+    expect(repository.configurations.single['ruleDisclosureAccepted'], 2);
+    expect(research.status!.configuration.enabled, true);
+    expect(find.byKey(const Key('research-setup-dialog')), findsNothing);
+    await research.load();
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('research-setup-dialog')), findsNothing);
+    expect(rulesRepository.availableAppsCalls, 1);
+  });
+
+  testWidgets('首次不参与会保存选择，已结束和已配置的安装不会反复提示', (tester) async {
+    final repository = FakeResearchRepository();
+    final research = await openWithResearch(tester, repository);
+    await tester.tap(find.byKey(const Key('research-setup-decline')));
+    await tester.pumpAndSettle();
+    expect(research.status!.configuration.enabled, false);
+    expect(
+      repository.configurations.single.containsKey('disclosureAccepted'),
+      false,
+    );
+    await research.load();
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('research-setup-dialog')), findsNothing);
+    expect(find.byType(NavigationBar), findsOneWidget);
+  });
+
   testWidgets('四个 tab 均可渲染且不抛异常', (tester) async {
     tester.view.physicalSize = const Size(1080, 2400);
     tester.view.devicePixelRatio = 1.0;
