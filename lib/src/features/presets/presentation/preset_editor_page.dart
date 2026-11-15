@@ -145,7 +145,7 @@ class _PresetEditorPageState extends State<PresetEditorPage> {
                     TextButton.icon(
                       onPressed: _choosePackages,
                       icon: const Icon(Icons.apps_outlined, size: 18),
-                      label: const Text('从已记录应用选择'),
+                      label: const Text('选择应用'),
                     ),
                 ],
               ),
@@ -261,7 +261,7 @@ class _PresetEditorPageState extends State<PresetEditorPage> {
       if (packages.isEmpty) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('还没有记录到应用，可先发送通知或手动填写包名')));
+        ).showSnackBar(const SnackBar(content: Text('暂无可选应用，可重试或手动填写包名。')));
         return;
       }
       final selected = parseListInput(_packages.text).toSet();
