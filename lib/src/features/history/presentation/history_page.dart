@@ -28,15 +28,24 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   final _search = TextEditingController();
+  final _scroll = ScrollController();
+  final _expandedApplications = <String>{};
+  bool _groupByApplication = true;
+  bool _showScrollToTop = false;
   @override
   void initState() {
     super.initState();
     _search.text = widget.controller.search;
+    _scroll.addListener(_onScroll);
     widget.controller.addListener(_syncSearch);
     widget.controller.load();
   }
 
   void _syncSearch() {
+    if (!widget.controller.loading && widget.controller.allEntries.isEmpty) {
+      _expandedApplications.clear();
+      _showScrollToTop = false;
+    }
     final search = widget.controller.search;
     if (_search.text.trim() != search) {
       _search.value = TextEditingValue(
@@ -46,10 +55,27 @@ class _HistoryPageState extends State<HistoryPage> {
     }
   }
 
+  void _onScroll() {
+    final show = _scroll.hasClients && _scroll.offset > 400;
+    if (show != _showScrollToTop && mounted) {
+      setState(() => _showScrollToTop = show);
+    }
+  }
+
+  void _scrollToTop() {
+    if (!_scroll.hasClients) return;
+    _scroll.animateTo(
+      0,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
   @override
   void didUpdateWidget(covariant HistoryPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller != widget.controller) {
+      _expandedApplications.clear();
       oldWidget.controller.removeListener(_syncSearch);
       widget.controller.addListener(_syncSearch);
       _syncSearch();
@@ -59,6 +85,8 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   void dispose() {
     widget.controller.removeListener(_syncSearch);
+    _scroll.removeListener(_onScroll);
+    _scroll.dispose();
     _search.dispose();
     super.dispose();
   }
@@ -71,223 +99,372 @@ class _HistoryPageState extends State<HistoryPage> {
       final theme = Theme.of(context);
       final entries = controller.entries;
       final overview = controller.overview;
-      return RefreshIndicator(
-        onRefresh: () async {
-          await Future.wait([
-            controller.load(),
-            if (widget.rules != null) widget.rules!.load(),
-          ]);
-        },
-        child: CustomScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (widget.rules != null) ...[
-                      HistoryRulesBanner(
-                        controller: widget.rules!,
-                        appName: widget.appName,
-                      ),
-                      const SizedBox(height: 14),
-                    ],
-                    _OverviewCard(
-                      controller: controller,
-                      overview: overview,
-                      onRuleFilter: _search.clear,
-                    ),
-                    if (controller.loading)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: LinearProgressIndicator(),
-                      ),
-                    if (controller.error != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Row(
+      final rows = _historyRows(
+        entries,
+        groupByApplication: _groupByApplication,
+        expandedApplications: _expandedApplications,
+      );
+      return Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: () async {
+              await Future.wait([
+                controller.load(),
+                if (widget.rules != null) widget.rules!.load(),
+              ]);
+            },
+            child: CustomScrollView(
+              controller: _scroll,
+              key: const Key('history-scroll-view'),
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (widget.rules != null) ...[
+                          HistoryRulesBanner(
+                            controller: widget.rules!,
+                            appName: widget.appName,
+                          ),
+                          const SizedBox(height: 14),
+                        ],
+                        _OverviewCard(
+                          controller: controller,
+                          overview: overview,
+                          onRuleFilter: _search.clear,
+                        ),
+                        if (controller.loading)
+                          const Padding(
+                            padding: EdgeInsets.only(top: 8),
+                            child: LinearProgressIndicator(),
+                          ),
+                        if (controller.error != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '历史读取失败，当前可能是上次的记录。',
+                                    style: TextStyle(
+                                      color: theme.colorScheme.error,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: controller.load,
+                                  child: const Text('重试'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 14),
+                        Row(
                           children: [
                             Expanded(
-                              child: Text(
-                                '历史读取失败，当前可能是上次的记录。',
-                                style: TextStyle(
-                                  color: theme.colorScheme.error,
+                              child: TextField(
+                                controller: _search,
+                                onChanged: controller.setSearch,
+                                textInputAction: TextInputAction.search,
+                                decoration: InputDecoration(
+                                  hintText: '搜索标题、内容或应用',
+                                  hintStyle: theme.textTheme.bodySmall,
+                                  prefixIcon: const Icon(
+                                    Icons.search,
+                                    size: 20,
+                                  ),
+                                  suffixIcon: controller.search.isEmpty
+                                      ? null
+                                      : IconButton(
+                                          tooltip: '清除搜索',
+                                          icon: const Icon(
+                                            Icons.close,
+                                            size: 18,
+                                          ),
+                                          onPressed: () {
+                                            _search.clear();
+                                            controller.setSearch('');
+                                          },
+                                        ),
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                    horizontal: 12,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
                               ),
                             ),
-                            TextButton(
-                              onPressed: controller.load,
-                              child: const Text('重试'),
+                            const SizedBox(width: 8),
+                            IconButton.outlined(
+                              tooltip: '筛选记录',
+                              icon: const Icon(Icons.filter_list),
+                              style: IconButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              onPressed: () => showHistoryFilters(
+                                context,
+                                controller,
+                                onReset: _search.clear,
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    const SizedBox(height: 14),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _search,
-                            onChanged: controller.setSearch,
-                            textInputAction: TextInputAction.search,
-                            decoration: InputDecoration(
-                              hintText: '搜索标题、内容或应用',
-                              hintStyle: theme.textTheme.bodySmall,
-                              prefixIcon: const Icon(Icons.search, size: 20),
-                              suffixIcon: controller.search.isEmpty
-                                  ? null
-                                  : IconButton(
-                                      tooltip: '清除搜索',
-                                      icon: const Icon(Icons.close, size: 18),
-                                      onPressed: () {
-                                        _search.clear();
-                                        controller.setSearch('');
-                                      },
-                                    ),
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                vertical: 12,
-                                horizontal: 12,
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: [
+                            for (final action in <RuleAction?>[
+                              null,
+                              ...RuleAction.values,
+                            ])
+                              ChoiceChip(
+                                key: ValueKey(
+                                  'history-action-${action?.wire ?? 'all'}',
+                                ),
+                                showCheckmark: false,
+                                label: Text(
+                                  action == null
+                                      ? '全部'
+                                      : action == RuleAction.allow
+                                      ? '保留'
+                                      : action.label,
+                                ),
+                                selected: controller.query.action == action,
+                                onSelected: (_) =>
+                                    controller.setActionFilter(action),
                               ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                          ],
+                        ),
+                        if (controller.query.action == RuleAction.intercept)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text(
+                              '按移除动作筛选，包含失败或待确认的记录。',
+                              style: theme.textTheme.bodySmall,
                             ),
                           ),
+                        if (controller.query.packageName != null ||
+                            controller.ruleFilter != null)
+                          Wrap(
+                            spacing: 8,
+                            children: [
+                              if (controller.query.packageName != null)
+                                InputChip(
+                                  label: Text(
+                                    controller.applications[controller
+                                            .query
+                                            .packageName] ??
+                                        controller.query.packageName!,
+                                  ),
+                                  onDeleted: () =>
+                                      controller.setPackageFilter(null),
+                                ),
+                              if (controller.ruleFilter != null)
+                                InputChip(
+                                  label: const Text('同规则记录'),
+                                  onDeleted: () =>
+                                      controller.setRuleFilter(null),
+                                ),
+                            ],
+                          ),
+                        const SizedBox(height: 10),
+                        SwitchListTile(
+                          key: const Key('history-group-applications'),
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('折叠同应用移除记录'),
+                          subtitle: const Text('点击应用展开，统计和导出不受影响。'),
+                          value: _groupByApplication,
+                          onChanged: (value) => setState(() {
+                            _groupByApplication = value;
+                            _expandedApplications.clear();
+                          }),
                         ),
-                        const SizedBox(width: 8),
-                        IconButton.outlined(
-                          tooltip: '筛选记录',
-                          icon: const Icon(Icons.filter_list),
-                          style: IconButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '通知记录',
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
-                          ),
-                          onPressed: () => showHistoryFilters(
-                            context,
-                            controller,
-                            onReset: _search.clear,
-                          ),
+                            Text(
+                              '${entries.length} 条 · ${controller.period.label}',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 8),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 4,
-                      children: [
-                        for (final action in <RuleAction?>[
-                          null,
-                          ...RuleAction.values,
-                        ])
-                          ChoiceChip(
-                            key: ValueKey(
-                              'history-action-${action?.wire ?? 'all'}',
-                            ),
-                            showCheckmark: false,
-                            label: Text(
-                              action == null
-                                  ? '全部'
-                                  : action == RuleAction.allow
-                                  ? '保留'
-                                  : action.label,
-                            ),
-                            selected: controller.query.action == action,
-                            onSelected: (_) =>
-                                controller.setActionFilter(action),
-                          ),
-                      ],
-                    ),
-                    if (controller.query.action == RuleAction.intercept)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6),
-                        child: Text(
-                          '按移除动作筛选，包含失败或待确认的记录。',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ),
-                    if (controller.query.packageName != null ||
-                        controller.ruleFilter != null)
-                      Wrap(
-                        spacing: 8,
-                        children: [
-                          if (controller.query.packageName != null)
-                            InputChip(
-                              label: Text(
-                                controller.applications[controller
-                                        .query
-                                        .packageName] ??
-                                    controller.query.packageName!,
-                              ),
-                              onDeleted: () =>
-                                  controller.setPackageFilter(null),
-                            ),
-                          if (controller.ruleFilter != null)
-                            InputChip(
-                              label: const Text('同规则记录'),
-                              onDeleted: () => controller.setRuleFilter(null),
-                            ),
-                        ],
-                      ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '通知记录',
-                            style: theme.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          '${entries.length} 条 · ${controller.period.label}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                  ],
+                  ),
                 ),
+                if (entries.isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 32),
+                      child: EmptyState(
+                        icon: Icons.history,
+                        title: controller.loading ? '正在读取记录' : '没有匹配的记录',
+                        message: '可调整搜索或筛选条件，或发送一条新通知。',
+                      ),
+                    ),
+                  )
+                else
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                    sliver: SliverList.builder(
+                      itemCount: rows.length,
+                      itemBuilder: (context, index) {
+                        final row = rows[index];
+                        final group = row.group;
+                        if (group != null) {
+                          final package = group.first.record.packageName;
+                          final expanded = _expandedApplications.contains(
+                            package,
+                          );
+                          return _HistoryApplicationGroup(
+                            key: ValueKey('history-app-group-$package'),
+                            entries: group,
+                            appName:
+                                widget.appName?.call(package) ??
+                                group.first.record.displayApp,
+                            expanded: expanded,
+                            onTap: () => setState(() {
+                              if (expanded) {
+                                _expandedApplications.remove(package);
+                              } else {
+                                _expandedApplications.add(package);
+                              }
+                            }),
+                          );
+                        }
+                        final entry = row.entry!;
+                        return Padding(
+                          padding: EdgeInsets.only(left: row.nested ? 12 : 0),
+                          child: _HistoryCard(
+                            entry: entry,
+                            onTap: () => showHistoryDetail(
+                              context,
+                              controller,
+                              entry,
+                              onRuleFilter: _search.clear,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (_showScrollToTop && entries.isNotEmpty)
+            Positioned(
+              right: 16,
+              bottom: 16,
+              child: FloatingActionButton.small(
+                key: const Key('history-scroll-top'),
+                heroTag: 'history-scroll-top',
+                tooltip: '回到顶部',
+                onPressed: _scrollToTop,
+                child: const Icon(Icons.vertical_align_top),
               ),
             ),
-            if (entries.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32),
-                  child: EmptyState(
-                    icon: Icons.history,
-                    title: controller.loading ? '正在读取记录' : '没有匹配的记录',
-                    message: '可调整搜索或筛选条件，或发送一条新通知。',
-                  ),
-                ),
-              )
-            else
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                sliver: SliverList.builder(
-                  itemCount: entries.length,
-                  itemBuilder: (context, index) => _HistoryCard(
-                    entry: entries[index],
-                    onTap: () => showHistoryDetail(
-                      context,
-                      controller,
-                      entries[index],
-                      onRuleFilter: _search.clear,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
+        ],
       );
     },
+  );
+}
+
+class _HistoryListRow {
+  const _HistoryListRow.entry(this.entry, {this.nested = false}) : group = null;
+  const _HistoryListRow.group(this.group) : entry = null, nested = false;
+  final HistoryEntry? entry;
+  final List<HistoryEntry>? group;
+  final bool nested;
+}
+
+List<_HistoryListRow> _historyRows(
+  List<HistoryEntry> entries, {
+  required bool groupByApplication,
+  required Set<String> expandedApplications,
+}) {
+  if (!groupByApplication) return entries.map(_HistoryListRow.entry).toList();
+  final groups = <String, List<HistoryEntry>>{};
+  for (final entry in entries) {
+    if (entry.action == RuleAction.intercept) {
+      groups.putIfAbsent(entry.record.packageName, () => []).add(entry);
+    }
+  }
+  final emitted = <String>{};
+  final rows = <_HistoryListRow>[];
+  for (final entry in entries) {
+    final package = entry.record.packageName;
+    final group = groups[package];
+    if (entry.action != RuleAction.intercept ||
+        group == null ||
+        group.length < 2) {
+      rows.add(_HistoryListRow.entry(entry));
+    } else if (emitted.add(package)) {
+      rows.add(_HistoryListRow.group(group));
+      if (expandedApplications.contains(package)) {
+        rows.addAll(
+          group.map((item) => _HistoryListRow.entry(item, nested: true)),
+        );
+      }
+    }
+  }
+  return rows;
+}
+
+class _HistoryApplicationGroup extends StatelessWidget {
+  const _HistoryApplicationGroup({
+    super.key,
+    required this.entries,
+    required this.appName,
+    required this.expanded,
+    required this.onTap,
+  });
+  final List<HistoryEntry> entries;
+  final String appName;
+  final bool expanded;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    margin: const EdgeInsets.only(bottom: 10),
+    child: ListTile(
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
+      title: Text(appName, maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('移除规则记录 · ${entries.length} 条 · ${expanded ? '点击收起' : '点击展开'}'),
+          Text(
+            entries.first.record.displayTitle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          if (entries.any((entry) => entry.record.isOngoing))
+            const Text('含常驻记录，不计入通知效果统计。'),
+        ],
+      ),
+      trailing: Icon(expanded ? Icons.expand_less : Icons.expand_more),
+    ),
   );
 }
 
